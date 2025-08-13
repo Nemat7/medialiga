@@ -1,0 +1,418 @@
+.upcoming-matches-slider {
+    margin: 20px auto;
+    max-width: 750px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.carousel-caption {
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.match-slide {
+    position: relative;
+    height: 1256px;
+    overflow: hidden;
+}
+
+.match-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-slider .carousel {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.image-slider .carousel-item {
+    transition: transform 0.6s ease;
+}
+
+.image-slider .carousel-caption {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 80%;
+}
+
+
+@media (max-width: 768px) {
+    #imageSlider .carousel-item img {
+        height: 300px;
+    }
+}
+
+/* Стили для блока матчей */
+.upcoming-matches {
+
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 3rem;
+}
+
+.matches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.match-card {
+
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid #ffcc00;
+    transition: transform 0.3s ease;
+}
+
+.match-card:hover {
+    transform: translateY(-5px);
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.teams-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.team-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.vs-badge {
+    background: #333;
+    color: #ffcc00;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.team-name {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .matches-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .match-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+
+/* Стили для блока бомбардиров */
+.top-scorers-section {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+}
+
+.section-heading {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #212529;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-heading:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: #dc3545;
+}
+
+.scorers-table {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.scorer-card {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.scorer-card:last-child {
+    border-bottom: none;
+}
+
+.scorer-card:hover {
+    background-color: #fefefe;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.scorer-rank {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6c757d;
+    width: 30px;
+    text-align: center;
+}
+
+.scorer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 15px;
+    background-color: #f1f1f1;
+}
+
+.scorer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+}
+
+.scorer-info {
+    flex-grow: 1;
+}
+
+.scorer-info h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.team-name {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.scorer-stats {
+    text-align: center;
+    min-width: 80px;
+}
+
+.goals-count {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: #dc3545;
+}
+
+.goals-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #6c757d;
+    letter-spacing: 1px;
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    .scorer-card {
+        padding: 12px 15px;
+    }
+
+    .scorer-avatar {
+        width: 40px;
+        height: 40px;
+        margin: 0 10px;
+    }
+
+    .scorer-info h3 {
+        font-size: 16px;
+    }
+}
+
+
+/* Стили для блока контактов */
+.contacts-block {
+    display: inline-block;
+    text-align: right;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.contacts-title {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.contacts-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #dc3545);
+}
+
+.contact-item {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.contact-item:hover {
+    color: #fff;
+    transform: translateX(-5px);
+}
+
+.social-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.social-link {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: #dc3545;
+    transform: translateY(-3px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .contacts-block {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .contacts-title:after {
+        right: 25%;
+        width: 50%;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .contact-item {
+        text-align: center;
+    }
+
+    .contact-item:hover {
+        transform: none;
+    }
+}
+
+
+/* Стили для страницы голосования */
+.player-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.player-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #f8f9fa;
+}
+
+.no-photo {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.header-divider {
+    width: 100px;
+    height: 3px;
+    background: #dc3545;
+    margin: 15px auto;
+}
+
+.vote-btn {
+    transition: all 0.3s ease;
+}
+
+.vote-btn:hover {
+    transform: scale(1.05);
+}
+
+.progress {
+    height: 25px;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}

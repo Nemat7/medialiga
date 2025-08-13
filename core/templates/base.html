@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+      body {
+        font-family: 'Tektur', sans-serif !important;
+      }
+    </style>
+
+    <title>{% block title %}Медиалига по футболу{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Кастомные стили -->
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .card {
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/Group 17.png' %}" alt="Логотип Медиалиги" id="logo">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'voting-page' %}">
+                            <i class="fas fa-vote-yea me-1"></i> Голосование
+                        </a>
+                    </li>
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">-->
+<!--                            Турниры-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu">-->
+<!--                            <li><a class="dropdown-item" href="#">Группа A</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#">Группа B</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+                </ul>
+
+                <div class="d-flex">
+                     <!-- Telegram -->
+                    <a href="https://t.me/medialeaguetj" class="btn btn-outline-light me-2" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/mediafootballtj/" class="btn btn-outline-light me-2" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                            <i class="fas fa-user-shield"></i> Админка
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основное содержимое -->
+    <main class="container">
+        {% block content %}
+        <!-- Сюда будет подставляться содержимое дочерних шаблонов -->
+        {% endblock %}
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Медиалига по футболу</h5>
+                    <p>Лучшие моменты, статистика и аналитика</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="contacts-block">
+                        <h5 class="contacts-title">Наши контакты</h5>
+
+                        <div class="contacts-list">
+                            <a href="tel:+992915600006" class="contact-item">
+                                <i class="fas fa-phone-alt me-2"></i>
+                                +992915600006
+                            </a>
+                            <a href="tel:+992070700707" class="contact-item">
+                                <i class="fas fa-phone-alt me-2"></i>
+                                +992070700707
+                            </a>
+
+                            <a href="mailto:mediafootballtj@gmail.com" class="contact-item">
+                                <i class="fas fa-envelope me-2"></i>
+                                mediafootballtj@gmail.com
+                            </a>
+
+                            <div class="social-links mt-2">
+                                <a href="https://t.me/medialeaguetj" target="_blank" class="social-link">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
+                                <a href="https://www.instagram.com/mediafootballtj/" target="_blank" class="social-link">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+<!--                                <a href="https://facebook.com/medialiga" target="_blank" class="social-link">-->
+<!--                                    <i class="fab fa-facebook-f"></i>-->
+<!--                                </a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <small>© 2025 Медиалига. Все права защищены.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/slider.js' %}"></script>
+</body>
+</html>

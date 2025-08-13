@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная страница | Медиалига{% endblock %}
+
+{% block content %}
+
+
+<br>
+{% if slider_images %}
+<div class="image-slider mb-5">
+    <div id="imageSlider" class="carousel slide" data-bs-ride="carousel">
+        <!-- Индикаторы -->
+        <div class="carousel-indicators">
+            {% for image in slider_images %}
+            <button type="button" data-bs-target="#imageSlider"
+                    data-bs-slide-to="{{ forloop.counter0 }}"
+                    {% if forloop.first %}class="active"{% endif %}
+                    aria-label="Слайд {{ forloop.counter }}"></button>
+            {% endfor %}
+        </div>
+
+        <!-- Слайды -->
+        <div class="carousel-inner">
+            {% for image in slider_images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ image.image.url }}"
+                     class="d-block w-100"
+                     alt="{{ image.title }}"
+                     loading="lazy"
+                     style="object-fit: cover; max-height: 500px;">
+<!--                {% if image.title %}-->
+<!--                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3">-->
+<!--                    <h5>{{ image.title }}</h5>-->
+<!--                </div>-->
+<!--                {% endif %}-->
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопки управления -->
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#imageSlider" data-bs-slide="prev"
+                aria-label="Предыдущий слайд">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#imageSlider" data-bs-slide="next"
+                aria-label="Следующий слайд">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+{% endif %}
+
+
+<!-- Вставьте этот код в нужное место вашего index.html -->
+<div class="upcoming-matches mt-5">
+    <h2 class="text-center mb-4">БЛИЖАЙШИЕ МАТЧИ</h2>
+
+    <div class="matches-grid">
+        {% for match in upcoming_matches %}
+        <div class="match-card">
+            <div class="match-header">
+                <span class="match-venue">{{ match.venue }}</span>
+                <span class="match-date">{{ match.get_short_date }} | {{ match.time|time:"H:i" }}</span>
+            </div>
+
+            <div class="teams-container">
+                <div class="team">
+                    {% if match.team_a_logo %}
+                    <img src="{{ match.team_a_logo.url }}" alt="{{ match.team_a }}" class="team-logo">
+                    {% endif %}
+                    <span class="team-name">{{ match.team_a }}</span>
+                </div>
+
+                <span class="vs-badge">VS</span>
+
+                <div class="team">
+                    {% if match.team_b_logo %}
+                    <img src="{{ match.team_b_logo.url }}" alt="{{ match.team_b }}" class="team-logo">
+                    {% endif %}
+                    <span class="team-name">{{ match.team_b }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+<!-- Основной контент -->
+<div class="container">
+    <!-- Турнирная таблица -->
+    <section class="mb-5">
+        <h2 class="mb-4 text-center">Турнирная таблица</h2>
+        <div class="row g-4">
+            <!-- Группа A -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0 text-center">Группа A</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>Команда</th>
+                                        <th width="8%">И</th>
+                                        <th width="8%">В</th>
+                                        <th width="8%">Н</th>
+                                        <th width="8%">П</th>
+                                        <th width="8%">РМ</th>
+                                        <th width="8%">О</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for team in group_a %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                         <td>
+                                            {% if team.logo %}
+                                             <img src="{{ team.logo.url }}"
+                                                     class="d-inline-block me-2"
+                                                     style="width: 30px; height: 30px; object-fit: contain;"
+                                                     alt="{{ team.name }}">
+                                            {% else %}
+                                                <span class="d-inline-block me-2" style="width: 20px; height: 20px; background-color: #{{ team.color }};"></span>
+                                            {% endif %}
+                                {{ team.name }}
+                                        </td>
+                                        <td>{{ team.games_played }}</td>
+                                        <td>{{ team.wins }}</td>
+                                        <td>{{ team.draws }}</td>
+                                        <td>{{ team.losses }}</td>
+                                        <td>{{ team.goal_difference }}</td>
+                                        <td><strong>{{ team.points }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Группа B -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="h5 mb-0 text-center">Группа B</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>Команда</th>
+                                        <th width="8%">И</th>
+                                        <th width="8%">В</th>
+                                        <th width="8%">Н</th>
+                                        <th width="8%">П</th>
+                                        <th width="8%">РМ</th>
+                                        <th width="8%">О</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for team in group_b %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                         <td>
+                                            {% if team.logo %}
+                                             <img src="{{ team.logo.url }}"
+                                                     class="d-inline-block me-2"
+                                                     style="width: 30px; height: 30px; object-fit: contain;"
+                                                     alt="{{ team.name }}">
+                                            {% else %}
+                                                <span class="d-inline-block me-2" style="width: 20px; height: 20px; background-color: #{{ team.color }};"></span>
+                                            {% endif %}
+                                {{ team.name }}
+                                        </td>
+                                        <td>{{ team.games_played }}</td>
+                                        <td>{{ team.wins }}</td>
+                                        <td>{{ team.draws }}</td>
+                                        <td>{{ team.losses }}</td>
+                                        <td>{{ team.goal_difference }}</td>
+                                        <td><strong>{{ team.points }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Лучшие бомбардиры -->
+<!-- Лучшие бомбардиры - минималистичный вариант -->
+<section class="top-scorers-section">
+    <div class="container">
+        <h2 class="section-heading">ТОП-5 БОМБАРДИРОВ ЛИГИ</h2>
+
+        <div class="scorers-table">
+            {% for player in top_scorers %}
+            <div class="scorer-card">
+                <div class="scorer-rank">{{ forloop.counter }}</div>
+
+                <div class="scorer-avatar">
+                    {% if player.photo %}
+                    <img src="{{ player.photo.url }}" alt="{{ player.name }}" loading="lazy">
+                    {% else %}
+                    <div class="avatar-placeholder"></div>
+                    {% endif %}
+                </div>
+
+                <div class="scorer-info">
+                    <h3>{{ player.name }}</h3>
+                    <p class="team-name">{{ player.team.name }}</p>
+                </div>
+
+                <div class="scorer-stats">
+                    <span class="goals-count">{{ player.goals }}</span>
+                    <span class="goals-label">голов</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+    <!-- Видеообзор -->
+    {% if latest_video %}
+    <section class="mb-5">
+        <h2 class="text-center mb-4">Обзор недели</h2>
+        <div class="ratio ratio-16x9 shadow-sm rounded-3 overflow-hidden">
+            <iframe src="{{ latest_video.get_embed_url }}?rel=0&showinfo=0"
+                    title="{{ latest_video.title }}"
+                    allowfullscreen
+                    loading="lazy"></iframe>
+        </div>
+        <h3 class="h5 text-center mt-3">{{ latest_video.title }}</h3>
+    </section>
+    {% endif %}
+
+    <!-- Спонсоры -->
+    {% if sponsors %}
+    <section class="mb-5">
+        <h2 class="text-center mb-4">Наши партнеры</h2>
+        <div class="d-flex flex-wrap justify-content-center align-items-center bg-light p-4 rounded-3">
+            {% for sponsor in sponsors %}
+            <a href="{{ sponsor.url }}" class="m-3" target="_blank" rel="noopener noreferrer">
+                {% if sponsor.logo %}
+                <img src="{{ sponsor.logo.url }}"
+                     alt="{{ sponsor.name }}"
+                     height="60"
+                     width="auto"
+                     loading="lazy"
+                     style="max-width: 150px; height: auto;">
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
