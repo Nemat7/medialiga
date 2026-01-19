@@ -413,7 +413,7 @@ const MatchSchedule = () => {
       setError(null);
 
       // Замените этот URL на ваш реальный эндпоинт
-      const response = await fetch("http://localhost:8000/api/efootball/matches/");
+      const response = await fetch("https://www.mfltj.com/api/efootball/matches/");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

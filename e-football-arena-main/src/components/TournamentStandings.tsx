@@ -33,7 +33,7 @@ const TournamentStandings = () => {
       setError(null);
 
       // Замените этот URL на ваш реальный эндпоинт
-      const response = await fetch("http://localhost:8000/tournament/api/standings/");
+      const response = await fetch("https://www.mfltj.com/api/efootball/standings/");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

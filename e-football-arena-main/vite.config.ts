@@ -7,13 +7,13 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/static/efootball/", // <--- важно для правильных путей к JS/CSS
   server: {
     port: 3000,
     host: true,
     proxy: {
       // Проксирование API запросов на Django бэкенд
       '/api': {
-        target: 'http://localhost:8000',  // Django порт
         changeOrigin: true,
         secure: false,
 //         rewrite: (path) => path.replace(/^\/api/, '')

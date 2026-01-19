@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from core.views import index, stats, voting_page, vote_player, statistics_view, efootball_app
+from core.views import index, stats, voting_page, vote_player, statistics_view, efootball_app, test_simple
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -11,7 +11,8 @@ urlpatterns = [
     path('api/efootball/', include('core.api.urls')),
     path('tournament/', include('core.api.urls')),
     # React page
-    path('efootball/', efootball_app),
+    path('efootball/', efootball_app, name='efootball'),
+    path('test/', test_simple, name='test_simple'),
     path('', index, name='index'),
     # path('stats/', stats, name='stats'),
     path('stats/', statistics_view, name='statistics'),

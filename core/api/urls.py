@@ -14,4 +14,5 @@ urlpatterns = [
     path('standings/update/', UpdateStandingsAPIView.as_view(), name='update-standings'),
 
 
+
 ]

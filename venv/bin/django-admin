@@ -1,4 +1,4 @@
-#!/Users/nematjr/medialiga/venv/bin/python3.12
+#!/home/mediafootballleague/medialiga/venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys

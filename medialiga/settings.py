@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(d^_s-b&c^27o5lsfthz76hi6(5u0vwgk+3n^and_p7(gb=&-v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -125,7 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Для разработки
+STATICFILES_DIRS = [BASE_DIR / 'static',
+                    BASE_DIR / 'static/efootball',]  # Для разработки
 STATIC_ROOT = BASE_DIR / 'staticfiles'    # Для collectstatic
 
 MEDIA_URL = 'media/'
@@ -140,8 +142,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Или более безопасно:
 CORS_ALLOWED_ORIGINS = [
+    "https://www.mfltj.com",
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
 
 ]
 

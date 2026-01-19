@@ -148,3 +148,8 @@ def vote_player(request, player_id):
 
 def efootball_app(request):
     return render(request, 'efootball/index.html')
+
+
+
+def test_simple(request):
+    return render(request, 'efootball/test.html')
