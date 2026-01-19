@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import ExpressionWrapper, F, IntegerField
+from django.db.models import ExpressionWrapper, F, IntegerField, Count
 from django.shortcuts import render
 
 from . import models
@@ -20,6 +20,22 @@ def stats(request):
     ).order_by('-day')[:30]
     return render(request, 'core/stats.html', {'visits': visits})
 
+
+def statistics_view(request):
+    # Получаем данные за последние 30 дней
+    date_from = timezone.now() - timedelta(days=30)
+
+    # Группируем по дням и считаем посещения и уникальные IP
+    visits = PageVisit.objects.filter(timestamp__gte=date_from).extra(
+        {'day': "date(timestamp)"}
+    ).values('day').annotate(
+        count=Count('id'),
+        unique_ips=Count('ip', distinct=True))
+
+    # Сортируем по дате
+    visits = visits.order_by('day')
+
+    return render(request, 'core/stats.html', {'visits': visits})
 
 def index(request):
     # Получаем текущие дату и время
@@ -85,17 +101,32 @@ def vote_player(request, player_id):
         ip_address = get_client_ip(request)
         user_agent = request.META.get('HTTP_USER_AGENT', '')[:500]
 
-        # Проверка последнего голоса
+        # Начало текущей недели (понедельник)
+        today = now()
+        start_of_week = today - timedelta(days=today.weekday())
+
         last_vote = VoteRecord.objects.filter(
             ip_address=ip_address,
-            timestamp__gte=now() - timedelta(days=7)
+            timestamp__gte=start_of_week
         ).first()
 
         if last_vote:
             return JsonResponse({
                 "success": False,
-                "message": f"Вы уже голосовали {last_vote.timestamp.strftime('%d.%m.%Y')} за {last_vote.player.name}"
+                "message": f"Вы уже голосовали на этой неделе {last_vote.timestamp.strftime('%d.%m.%Y')} за {last_vote.player.name}"
             })
+
+        # # Проверка последнего голоса
+        # last_vote = VoteRecord.objects.filter(
+        #     ip_address=ip_address,
+        #     timestamp__gte=now() - timedelta(days=7)
+        # ).first()
+        #
+        # if last_vote:
+        #     return JsonResponse({
+        #         "success": False,
+        #         "message": f"Вы уже голосовали {last_vote.timestamp.strftime('%d.%m.%Y')} за {last_vote.player.name}"
+        #     })
 
         player = get_object_or_404(MvpPlayers, id=player_id)
         player.votes += 1
@@ -113,3 +144,7 @@ def vote_player(request, player_id):
         })
 
     return JsonResponse({"success": False, "message": "Неверный запрос"})
+
+
+def efootball_app(request):
+    return render(request, 'efootball/index.html')

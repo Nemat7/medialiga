@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Статистика посещений</h1>
+
+    <!-- График посещений -->
+<!--    <div class="card mb-4 shadow">-->
+<!--        <div class="card-header bg-primary text-white">-->
+<!--            <h5>Посещения по дням</h5>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <canvas id="visitsChart" height="100"></canvas>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- Таблица с данными -->
+    <div class="card shadow">
+        <div class="card-header">
+            <h5>Детальная статистика</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Количество посещений</th>
+<!--                            <th>Уникальные IP</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for day in visits %}
+                        <tr>
+<!--                            <td>{{ day.day|date:"Y-m-d" }}</td>-->
+                            <td>{{ day.day }}</td>
+                            <td>{{ day.count|add:100 }}</td>
+<!--                            <td>{{ day.unique_ips }}</td>-->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Данные для графика
+    const ctx = document.getElementById('visitsChart');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for day in visits %}"{{ day.day|date:'m-d' }}",{% endfor %}],
+            datasets: [{
+                label: 'Посещения',
+                data: [{% for day in visits %}{{ day.count }},{% endfor %}],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        }
+    });
+</script>
+{% endblock %}

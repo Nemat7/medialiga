@@ -2,168 +2,518 @@
 {% load static %}
 <html lang="ru">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Media League 2026 - Premier Football Competition</title>
+    <meta name="description" content="The premier football competition uniting media professionals across the nation.">
 
-    <style>
-      body {
-        font-family: 'Tektur', sans-serif !important;
-      }
-    </style>
-
-    <title>{% block title %}Медиалига по футболу{% endblock %}</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Кастомные стили -->
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
     <style>
+        /* === ТОЧНЫЕ СТИЛИ ИЗ LOVABLE.DEV === */
+        :root {
+            --background: 337 100% 92%; /* #FFBAD5 - Точный розовый */
+            --foreground: 0 0% 0%; /* #000000 */
+            --card: 337 100% 95%; /* #FFE4F0 */
+            --primary: 0 0% 0%; /* #000000 */
+            --secondary: 337 100% 88%; /* #FFA1C9 */
+            --muted: 0 0% 0%; /* hsl(0, 0%, 0%) = #000000 */
+            --border: 337 60% 80%; /* #FF8AB8 */
+            --radius: 0.5rem;
+            --gradient-primary: linear-gradient(135deg, hsl(337, 100%, 85%), hsl(337, 80%, 75%));
+            --gradient-dark: linear-gradient(180deg, hsl(337, 100%, 90%), hsl(337, 100%, 85%));
+            --gradient-card: linear-gradient(145deg, hsl(337, 100%, 95%), hsl(337, 100%, 90%));
+            --shadow-glow: 0 0 30px hsl(0 0% 0% / 0.2);
+            --shadow-card: 0 10px 40px hsl(0 0% 0% / 0.15);
+            /* Добавляем переменную для фонового изображения */
+            --background-image: url('{% static "images/background.jpg" %}');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            padding-top: 56px;
-            background-color: #f8f9fa;
+            <!--font-family: 'Inter', sans-serif;
+            background-color: hsl(var(&#45;&#45;background));
+            color: hsl(var(&#45;&#45;foreground));
+            line-height: 1.6;
+
+            font-family: 'Inter', sans-serif;
+            background: var(--background-image) center/cover no-repeat fixed;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+            padding-top: 0;
+            min-height: 100vh;
+            margin: 0;
         }
-        .navbar-brand img {
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* === КОНТЕЙНЕРЫ КАК В LOVABLE.DEV === */
+        .container-lovable {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container-lovable {
+                padding: 0 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container-lovable {
+                padding: 0 4rem;
+            }
+        }
+
+        /* === NAVBAR ТОЧНАЯ КОПИЯ ИЗ Navbar.tsx === */
+        .navbar-lovable {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.5s;
+            background: transparent;
+            padding: 1rem 0;
+        }
+
+        .navbar-lovable.scrolled {
+            background: hsla(var(--background) / 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link-lovable {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: hsl(var(--foreground) / 0.8);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link-lovable:hover {
+            color: hsl(var(--primary));
+        }
+
+        .nav-link-lovable::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: hsl(var(--primary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link-lovable:hover::after {
+            width: 100%;
+        }
+
+        /* === КНОПКИ КАК В LOVABLE.DEV === */
+        .btn-hero {
+            background: hsl(var(--primary));
+            color: hsl(var(--background));
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline-lovable {
+            border: 2px solid hsl(var(--primary));
+            color: hsl(var(--primary));
+            background: transparent;
+            padding: 0.625rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-outline-lovable:hover {
+            background: hsl(var(--primary));
+            color: hsl(var(--background));
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .mobile-menu.open {
+            max-height: 400px;
+        }
+
+        /* === COMMON STYLES === */
+        .section-padding {
+            padding: 5rem 0;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            background: hsl(var(--primary) / 0.1);
+            border: 1px solid hsl(var(--primary) / 0.2);
+            border-radius: 9999px;
+            color: hsl(var(--primary));
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .section-title {
+                font-size: 5rem;
+            }
+        }
+
+        .section-title span {
+            color: hsl(var(--primary));
+        }
+
+        .section-description {
+            color: hsl(var(--muted));
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        /* === ФУТЕР ТОЧНАЯ КОПИЯ ИЗ Footer.tsx === */
+        .footer-lovable {
+            background: hsl(var(--card));
+            border-top: 1px solid hsl(var(--border));
+            padding: 4rem 0;
+        }
+
+        .footer-lovable h4 {
+            font-family: 'Bebas Neue';
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .footer-social-icon {
+            width: 40px;
             height: 40px;
+            border-radius: 50%;
+            background: hsl(var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: hsl(var(--muted));
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 20px 0;
-            margin-top: 40px;
+
+        .footer-social-icon:hover {
+            background: hsl(var(--primary));
+            color: hsl(var(--background));
+            transform: translateY(-3px);
         }
-        .card {
-            transition: transform 0.2s;
-            margin-bottom: 20px;
+
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: hsl(var(--muted));
+            margin-bottom: 1rem;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+        .footer-contact-item i {
+            color: hsl(var(--primary));
+            margin-top: 0.25rem;
+        }
+
+        .footer-contact-item a {
+            color: hsl(var(--muted));
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact-item a:hover {
+            color: hsl(var(--primary));
+        }
+
+        .footer-links-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links-list a {
+            color: hsl(var(--muted));
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links-list a:hover {
+            color: hsl(var(--primary));
+        }
+
+        .footer-bottom-lovable {
+            border-top: 1px solid hsl(var(--border));
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .footer-bottom-lovable a {
+            color: hsl(var(--muted));
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-lovable a:hover {
+            color: hsl(var(--primary));
         }
     </style>
 
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'images/Group 17.png' %}" alt="Логотип Медиалиги" id="logo">
-            </a>
+    <!-- === NAVBAR ТОЧНАЯ КОПИЯ ИЗ LOVABLE.DEV === -->
+    <nav class="navbar-lovable" id="navbar">
+        <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="d-flex justify-content-between align-items-center" style="height: 80px;">
+                <!-- Logo -->
+                <a href="#home" class="d-flex align-items-center gap-3 text-decoration-none">
+                    <img src="{% static 'images/league-logo.png' %}"
+                         alt="Media League Logo"
+                         class="transition-transform"
+                         style="height: 98px; width: 98px; object-fit: contain;">
+                    <!--<span class="font-display" style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 0.1em;">
+                        MEDIA LEAGUE
+                    </span>-->
+                </a>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'voting-page' %}">
-                            <i class="fas fa-vote-yea me-1"></i> Голосование
-                        </a>
-                    </li>
-<!--                    <li class="nav-item dropdown">-->
-<!--                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">-->
-<!--                            Турниры-->
-<!--                        </a>-->
-<!--                        <ul class="dropdown-menu">-->
-<!--                            <li><a class="dropdown-item" href="#">Группа A</a></li>-->
-<!--                            <li><a class="dropdown-item" href="#">Группа B</a></li>-->
-<!--                        </ul>-->
-<!--                    </li>-->
-                </ul>
+                <!-- Desktop Navigation -->
+                <div class="d-none d-lg-flex align-items-center gap-2">
+                    <a href="#home" class="nav-link-lovable">Home</a>
+                    <a href="#matches" class="nav-link-lovable">Матчи</a>
+                    <a href="#tables" class="nav-link-lovable">Таблица</a>
+                    <a href="#scorers" class="nav-link-lovable">Бомбордиры</a>
+                    <a href="#highlights" class="nav-link-lovable">Обзор матчей</a>
+                    <a href="http://localhost:3000/" class="nav-link-lovable">E - FOOTBALL</a>
+                    <button class="btn-hero ms-4">Vote Now</button>
+                </div>
 
-                <div class="d-flex">
-                     <!-- Telegram -->
-                    <a href="https://t.me/medialeaguetj" class="btn btn-outline-light me-2" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-telegram"></i>
-                    </a>
+                <!-- Mobile Menu Button -->
+                <button class="d-lg-none btn border-0 p-2" id="mobileMenuButton">
+                    <i class="fas fa-bars" style="font-size: 1.5rem;"></i>
+                </button>
+            </div>
 
-                    <!-- Instagram -->
-                    <a href="https://www.instagram.com/mediafootballtj/" class="btn btn-outline-light me-2" target="_blank" rel="noopener noreferrer">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
-                            <i class="fas fa-user-shield"></i> Админка
-                        </a>
-                    {% endif %}
+            <!-- Mobile Menu -->
+            <div class="mobile-menu d-lg-none" id="mobileMenu">
+                <div class="pt-4" style="border-top: 1px solid hsl(var(--border));">
+                    <div class="d-flex flex-column gap-2">
+                        <a href="#home" class="nav-link-lovable py-3 px-4" onclick="closeMobileMenu()">Home</a>
+                        <a href="#matches" class="nav-link-lovable py-3 px-4" onclick="closeMobileMenu()">Матчи</a>
+                        <a href="#tables" class="nav-link-lovable py-3 px-4" onclick="closeMobileMenu()">Таблица</a>
+                        <a href="#scorers" class="nav-link-lovable py-3 px-4" onclick="closeMobileMenu()">Бомбордиры</a>
+                        <a href="#highlights" class="nav-link-lovable py-3 px-4" onclick="closeMobileMenu()">Обзор матчей</a>
+                        <button class="btn-hero mt-2 mx-4 py-3" onclick="closeMobileMenu()">Vote Now</button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Основное содержимое -->
-    <main class="container">
-        {% block content %}
-        <!-- Сюда будет подставляться содержимое дочерних шаблонов -->
-        {% endblock %}
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
     </main>
 
-    <!-- Подвал -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Медиалига по футболу</h5>
-                    <p>Лучшие моменты, статистика и аналитика</p>
+    <!-- === ФУТЕР ТОЧНАЯ КОПИЯ ИЗ Footer.tsx === -->
+    <footer class="footer-lovable">
+        <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+            <div class="row g-8">
+                <!-- Brand Column -->
+                <div class="col-lg-6">
+                    <div class="d-flex align-items-center gap-3 mb-6">
+                        <img src="{% static 'images/league-logo.png' %}" alt="Media League" style="height: 56px; width: 56px; object-fit: contain;">
+                        <span style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 0.1em;">MEDIA LEAGUE</span>
+                    </div>
+                    <p style="color: hsl(0, 0%, 0%); margin-bottom: 1.5rem; max-width: 28rem;">
+                        The premier football competition bringing together media professionals from across the nation.
+                        Where passion meets journalism, and competition creates community.
+                    </p>
+                    <!-- Social Links -->
+                    <div class="d-flex gap-4">
+                        <a href="#" class="footer-social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="footer-social-icon">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-6 text-end">
-                    <div class="contacts-block">
-                        <h5 class="contacts-title">Наши контакты</h5>
 
-                        <div class="contacts-list">
-                            <a href="tel:+992915600006" class="contact-item">
-                                <i class="fas fa-phone-alt me-2"></i>
-                                +992915600006
-                            </a>
-                            <a href="tel:+992070700707" class="contact-item">
-                                <i class="fas fa-phone-alt me-2"></i>
-                                +992070700707
-                            </a>
+                <!-- Quick Links -->
+                <div class="col-lg-3">
+                    <h4>QUICK LINKS</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#matches">Матчи</a></li>
+                        <li><a href="#tables">Таблица</a></li>
+                        <li><a href="#scorers">Бомбардиры</a></li>
+                        <li><a href="#highlights">Обзор Матчей</a></li>
+                        <li><a href="#">Vote</a></li>
+                    </ul>
+                </div>
 
-                            <a href="mailto:mediafootballtj@gmail.com" class="contact-item">
-                                <i class="fas fa-envelope me-2"></i>
-                                mediafootballtj@gmail.com
-                            </a>
-
-                            <div class="social-links mt-2">
-                                <a href="https://t.me/medialeaguetj" target="_blank" class="social-link">
-                                    <i class="fab fa-telegram-plane"></i>
-                                </a>
-                                <a href="https://www.instagram.com/mediafootballtj/" target="_blank" class="social-link">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-<!--                                <a href="https://facebook.com/medialiga" target="_blank" class="social-link">-->
-<!--                                    <i class="fab fa-facebook-f"></i>-->
-<!--                                </a>-->
-                            </div>
-                        </div>
+                <!-- Contact Info -->
+                <div class="col-lg-3">
+                    <h4>CONTACT</h4>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Sports Avenue, Media City, MC 12345</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:mediafootballtj@gmail.com">mediafootballtj@gmail.com</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+992915600006">+992915600006</a>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="text-center">
-                <small>© 2025 Медиалига. Все права защищены.</small>
+
+            <!-- Bottom Bar -->
+            <div class="footer-bottom-lovable">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                    <p style="color: hsl(var(--muted)); font-size: 0.875rem; margin-bottom: 1rem;">
+                        © {% now "Y" %} Media League. All rights reserved.
+                    </p>
+                    <div class="d-flex gap-6" style="font-size: 0.875rem;">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS + Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Инициализация Lucide Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+        });
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('open');
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
 
     {% block extra_js %}{% endblock %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'js/slider.js' %}"></script>
 </body>
 </html>

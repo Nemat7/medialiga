@@ -1,233 +1,672 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Главная страница | Медиалига{% endblock %}
+{% block extra_css %}
+<style>
+    /* === HERO SLIDER ТОЧНАЯ КОПИЯ ИЗ HeroSlider.tsx === */
+    .hero-slider-lovable {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        overflow: hidden;
+    }
+
+    .hero-slide-lovable {
+        position: absolute;
+        inset: 0;
+        transition: all 0.7s ease-out;
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    .hero-slide-lovable.active {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .hero-slide-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-slide-overlay {
+        position: absolute;
+        inset: 0;
+        <!--background: linear-gradient(to right, hsl(var(&#45;&#45;background)) 0%, transparent 100%),
+                    linear-gradient(to top, hsl(var(&#45;&#45;background)) 0%, transparent 100%);-->
+    }
+
+    .hero-content-lovable {
+        position: relative;
+        z-index: 2;
+        max-width: 42rem;
+    }
+
+    .hero-title-lovable {
+        font-size: 3.5rem;
+        line-height: 1;
+    }
+
+    @media (min-width: 768px) {
+        .hero-title-lovable {
+            font-size: 5rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .hero-title-lovable {
+            font-size: 6rem;
+        }
+    }
+
+    .hero-subtitle-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: hsl(var(--primary) / 0.2);
+        border: 1px solid hsl(var(--primary) / 0.3);
+        border-radius: 9999px;
+        color: hsl(var(--primary));
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Navigation Arrows */
+    .slider-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 48px;
+        height: 48px;
+        background: hsl(var(--secondary) / 0.5);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: hsl(var(--foreground));
+        transition: all 0.3s ease;
+        backdrop-filter: blur(4px);
+        z-index: 10;
+    }
+
+    .slider-arrow:hover {
+        background: hsl(var(--primary));
+        color: hsl(var(--background));
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .slider-arrow.prev {
+        left: 1rem;
+    }
+
+    .slider-arrow.next {
+        right: 1rem;
+    }
+
+    /* Slide Indicators */
+    .slider-indicators {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+
+    .slider-indicator {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: hsl(var(--muted));
+        border: none;
+        padding: 0;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .slider-indicator.active {
+        width: 2.5rem;
+        border-radius: 0.25rem;
+        background: hsl(var(--primary));
+    }
+
+    /* === VIDEO HIGHLIGHTS (ТОЧНАЯ КОПИЯ) === */
+    .video-highlights-section {
+        padding: 5rem 0;
+        background: hsl(var(--background));
+    }
+
+    .video-card-lovable {
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .video-card-lovable:hover {
+        transform: translateY(-5px);
+    }
+
+    .video-thumbnail-lovable {
+        position: relative;
+        aspect-ratio: 16/9;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .video-thumbnail-lovable img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .video-card-lovable:hover .video-thumbnail-lovable img {
+        transform: scale(1.1);
+    }
+
+    .video-thumbnail-overlay {
+        position: absolute;
+        inset: 0;
+        background: hsla(var(--background) / 0.4);
+        transition: background 0.3s ease;
+    }
+
+    .video-card-lovable:hover .video-thumbnail-overlay {
+        background: hsla(var(--background) / 0.2);
+    }
+
+    .play-button-lovable {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .play-icon-lovable {
+        width: 56px;
+        height: 56px;
+        background: hsla(var(--primary) / 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: hsl(var(--background));
+        transition: all 0.3s ease;
+    }
+
+    .video-card-lovable:hover .play-icon-lovable {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px hsla(var(--primary) / 0.5);
+    }
+
+    .duration-badge-lovable {
+        position: absolute;
+        bottom: 0.75rem;
+        right: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        background: hsla(var(--background) / 0.8);
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: hsl(var(--foreground));
+        backdrop-filter: blur(4px);
+    }
+
+    /* === UPCOMING MATCHES (ТОЧНАЯ КОПИЯ) === */
+    .matches-section-lovable {
+        padding: 5rem 0;
+        background: hsl(var(--secondary) / 0.3);
+    }
+
+    .match-card-lovable {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .match-card-lovable:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-card);
+    }
+
+    .team-avatar-lovable {
+        width: 64px;
+        height: 64px;
+        background: hsl(var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Bebas Neue';
+        font-size: 1.5rem;
+        color: hsl(var(--primary));
+        margin: 0 auto 0.75rem;
+    }
+
+    .vs-badge-lovable {
+        width: 56px;
+        height: 56px;
+        background: hsl(var(--primary) / 0.1);
+        border: 1px solid hsl(var(--primary) / 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Bebas Neue';
+        font-size: 1.25rem;
+        color: hsl(var(--primary));
+    }
+
+    /* === TOURNAMENT TABLES (ТОЧНАЯ КОПИЯ) === */
+    .table-card-lovable {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.75rem;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .table-header-lovable {
+        background: hsl(var(--primary));
+        padding: 1rem 1.5rem;
+    }
+
+    .table-header-lovable h3 {
+        font-family: 'Bebas Neue';
+        font-size: 1.5rem;
+        color: hsl(var(--background));
+        letter-spacing: 0.1em;
+        margin: 0;
+    }
+
+    .standings-table-lovable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .standings-table-lovable th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: hsl(var(--muted));
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid hsl(var(--border));
+        background: hsl(var(--secondary) / 0.5);
+    }
+
+    .standings-table-lovable td {
+        padding: 1rem;
+        border-bottom: 1px solid hsl(var(--border) / 0.5);
+        transition: background 0.3s ease;
+    }
+
+    .standings-table-lovable tr:hover td {
+        background: hsl(var(--secondary) / 0.3);
+    }
+
+    .position-badge-lovable {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Bebas Neue';
+        font-size: 1.125rem;
+    }
+
+    .position-badge-lovable.top-2 {
+        background: hsl(var(--primary));
+        color: hsl(var(--background));
+    }
+
+    .position-badge-lovable.other {
+        background: hsl(var(--secondary));
+        color: hsl(var(--muted));
+    }
+
+    /* === TOP SCORERS (ТОЧНАЯ КОПИЯ) === */
+    .scorer-card-lovable {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .scorer-card-lovable:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-card);
+    }
+
+    .scorer-rank-lovable {
+        position: absolute;
+        top: -0.75rem;
+        right: -0.75rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Bebas Neue';
+        font-size: 1.125rem;
+    }
+
+    .rank-1 { background: hsl(var(--primary)); color: hsl(var(--background)); }
+    .rank-2 { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
+    .rank-3 { background: hsl(25, 85%, 45%); color: hsl(var(--background)); }
+    .rank-other { background: hsl(var(--secondary)); color: hsl(var(--muted)); }
+
+    .scorer-avatar-lovable {
+        width: 80px;
+        height: 80px;
+        background: hsl(var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-family: 'Bebas Neue';
+        font-size: 1.5rem;
+        color: hsl(var(--primary));
+    }
+
+    .stats-container-lovable {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .stat-number-lovable {
+        font-family: 'Bebas Neue';
+        font-size: 2rem;
+        color: hsl(var(--primary));
+    }
+
+    .stat-label-lovable {
+        font-size: 0.75rem;
+        color: hsl(var(--muted));
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* === PARTNERS SECTION ТОЧНАЯ КОПИЯ ИЗ Partners.tsx === */
+    .general-partner-section {
+        padding: 4rem 0;
+        background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--secondary) / 0.3));
+    }
+
+    .other-partners-section {
+        padding: 4rem 0;
+        background: hsl(var(--secondary) / 0.3);
+    }
+
+    .general-partner-card {
+        position: relative;
+        background: hsl(var(--card));
+        border: 2px solid hsl(var(--primary) / 0.3);
+        border-radius: 1rem;
+        padding: 3rem;
+        text-align: center;
+        max-width: 42rem;
+        margin: 0 auto;
+        box-shadow: var(--shadow-glow);
+    }
+
+    .partner-star-decoration {
+        position: absolute;
+        color: hsl(var(--primary) / 0.3);
+    }
+
+    .partner-logo-placeholder-large {
+        width: 128px;
+        height: 128px;
+        background: hsl(var(--secondary));
+        border-radius: 1rem;
+        border: 1px solid hsl(var(--border));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-family: 'Bebas Neue';
+        font-size: 2.5rem;
+        color: hsl(var(--primary));
+    }
+
+    .partner-badge-lovable {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: hsl(var(--primary) / 0.1);
+        border: 1px solid hsl(var(--primary) / 0.3);
+        border-radius: 9999px;
+        margin-top: 1rem;
+    }
+
+    .partner-badge-lovable i {
+        color: hsl(var(--primary));
+    }
+
+    .partner-badge-lovable span {
+        color: hsl(var(--primary));
+        font-weight: 500;
+    }
+
+    .partner-grid-item {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .partner-grid-item:hover {
+        border-color: hsl(var(--primary) / 0.5);
+        background: hsl(var(--card) / 0.8);
+        transform: translateY(-2px);
+    }
+
+    .partner-logo-small {
+        width: 64px;
+        height: 64px;
+        background: hsl(var(--secondary));
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-family: 'Bebas Neue';
+        font-size: 1.125rem;
+        color: hsl(var(--muted));
+        transition: all 0.3s ease;
+    }
+
+    .partner-grid-item:hover .partner-logo-small {
+        background: hsl(var(--primary) / 0.1);
+        color: hsl(var(--primary));
+    }
+
+    .tier-platinum { color: hsl(var(--primary)); }
+    .tier-gold { color: #D4AF37; }
+    .tier-silver { color: hsl(var(--muted)); }
+
+    /* === FIX FOR GRID LAYOUT === */
+    .custom-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+        .custom-grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .custom-grid-2-md {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .custom-grid-2-lg {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .custom-grid-4-lg {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .custom-grid-6-lg {
+            grid-template-columns: repeat(6, 1fr);
+        }
+    }
+
+    .custom-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+</style>
+{% endblock %}
 
 {% block content %}
+<!-- === HERO SLIDER ТОЧНАЯ КОПИЯ ИЗ LOVABLE.DEV === -->
+<section id="home" class="hero-slider-lovable">
+    <!-- Slide 1 -->
+    <div class="hero-slide-lovable active" id="slide1">
+        <div class="hero-slide-bg" style="background-image: url('{% static 'images/slider1.jpg' %}');"></div>
+        <div class="hero-slide-overlay"></div>
+        <div class="container-lovable h-100 d-flex align-items-center">
+            <div class="hero-content-lovable">
 
-
-<br>
-{% if slider_images %}
-<div class="image-slider mb-5">
-    <div id="imageSlider" class="carousel slide" data-bs-ride="carousel">
-        <!-- Индикаторы -->
-        <div class="carousel-indicators">
-            {% for image in slider_images %}
-            <button type="button" data-bs-target="#imageSlider"
-                    data-bs-slide-to="{{ forloop.counter0 }}"
-                    {% if forloop.first %}class="active"{% endif %}
-                    aria-label="Слайд {{ forloop.counter }}"></button>
-            {% endfor %}
-        </div>
-
-        <!-- Слайды -->
-        <div class="carousel-inner">
-            {% for image in slider_images %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ image.image.url }}"
-                     class="d-block w-100"
-                     alt="{{ image.title }}"
-                     loading="lazy"
-                     style="object-fit: cover; max-height: 500px;">
-<!--                {% if image.title %}-->
-<!--                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-3">-->
-<!--                    <h5>{{ image.title }}</h5>-->
-<!--                </div>-->
-<!--                {% endif %}-->
             </div>
-            {% endfor %}
         </div>
-
-        <!-- Кнопки управления -->
-        <button class="carousel-control-prev" type="button"
-                data-bs-target="#imageSlider" data-bs-slide="prev"
-                aria-label="Предыдущий слайд">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-        <button class="carousel-control-next" type="button"
-                data-bs-target="#imageSlider" data-bs-slide="next"
-                aria-label="Следующий слайд">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
     </div>
-</div>
-{% endif %}
 
+    <!-- Slide 2 -->
+    <div class="hero-slide-lovable" id="slide2">
+        <div class="hero-slide-bg" style="background-image: url('{% static 'images/hero-celebration.jpg' %}');"></div>
+        <div class="hero-slide-overlay"></div>
+        <div class="container-lovable h-100 d-flex align-items-center">
 
-<!-- Вставьте этот код в нужное место вашего index.html -->
-<div class="upcoming-matches mt-5">
-    <h2 class="text-center mb-4">БЛИЖАЙШИЕ МАТЧИ</h2>
-
-    <div class="matches-grid">
-        {% for match in upcoming_matches %}
-        <div class="match-card">
-            <div class="match-header">
-                <span class="match-venue">{{ match.venue }}</span>
-                <span class="match-date">{{ match.get_short_date }} | {{ match.time|time:"H:i" }}</span>
-            </div>
-
-            <div class="teams-container">
-                <div class="team">
-                    {% if match.team_a_logo %}
-                    <img src="{{ match.team_a_logo.url }}" alt="{{ match.team_a }}" class="team-logo">
-                    {% endif %}
-                    <span class="team-name">{{ match.team_a }}</span>
-                </div>
-
-                <span class="vs-badge">VS</span>
-
-                <div class="team">
-                    {% if match.team_b_logo %}
-                    <img src="{{ match.team_b_logo.url }}" alt="{{ match.team_b }}" class="team-logo">
-                    {% endif %}
-                    <span class="team-name">{{ match.team_b }}</span>
-                </div>
-            </div>
         </div>
-        {% endfor %}
     </div>
+
+
+<!-- Slide 3 -->
+<div class="hero-slide-lovable" id="slide3">
+
+        <div class="hero-slide-bg" style="background-image: url('{% static 'images/furik.jpg' %}');"></div>
+        <div class="hero-slide-overlay"></div>
+        <div class="container-lovable h-100 d-flex align-items-center"></div>
+
 </div>
 
+<!-- Slide 4 -->
+<div class="hero-slide-lovable" id="slide4">
+        <div class="hero-slide-bg" style="background-image: url('{% static 'images/fshfsh.png' %}');"></div>
+        <div class="hero-slide-overlay"></div>
+        <div class="container-lovable h-100 d-flex align-items-center">
 
-
-
-<!-- Основной контент -->
-<div class="container">
-    <!-- Турнирная таблица -->
-    <section class="mb-5">
-        <h2 class="mb-4 text-center">Турнирная таблица</h2>
-        <div class="row g-4">
-            <!-- Группа A -->
-            <div class="col-lg-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0 text-center">Группа A</h3>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="5%">#</th>
-                                        <th>Команда</th>
-                                        <th width="8%">И</th>
-                                        <th width="8%">В</th>
-                                        <th width="8%">Н</th>
-                                        <th width="8%">П</th>
-                                        <th width="8%">РМ</th>
-                                        <th width="8%">О</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for team in group_a %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                         <td>
-                                            {% if team.logo %}
-                                             <img src="{{ team.logo.url }}"
-                                                     class="d-inline-block me-2"
-                                                     style="width: 30px; height: 30px; object-fit: contain;"
-                                                     alt="{{ team.name }}">
-                                            {% else %}
-                                                <span class="d-inline-block me-2" style="width: 20px; height: 20px; background-color: #{{ team.color }};"></span>
-                                            {% endif %}
-                                {{ team.name }}
-                                        </td>
-                                        <td>{{ team.games_played }}</td>
-                                        <td>{{ team.wins }}</td>
-                                        <td>{{ team.draws }}</td>
-                                        <td>{{ team.losses }}</td>
-                                        <td>{{ team.goal_difference }}</td>
-                                        <td><strong>{{ team.points }}</strong></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Группа B -->
-            <div class="col-lg-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-success text-white">
-                        <h3 class="h5 mb-0 text-center">Группа B</h3>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="5%">#</th>
-                                        <th>Команда</th>
-                                        <th width="8%">И</th>
-                                        <th width="8%">В</th>
-                                        <th width="8%">Н</th>
-                                        <th width="8%">П</th>
-                                        <th width="8%">РМ</th>
-                                        <th width="8%">О</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for team in group_b %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                         <td>
-                                            {% if team.logo %}
-                                             <img src="{{ team.logo.url }}"
-                                                     class="d-inline-block me-2"
-                                                     style="width: 30px; height: 30px; object-fit: contain;"
-                                                     alt="{{ team.name }}">
-                                            {% else %}
-                                                <span class="d-inline-block me-2" style="width: 20px; height: 20px; background-color: #{{ team.color }};"></span>
-                                            {% endif %}
-                                {{ team.name }}
-                                        </td>
-                                        <td>{{ team.games_played }}</td>
-                                        <td>{{ team.wins }}</td>
-                                        <td>{{ team.draws }}</td>
-                                        <td>{{ team.losses }}</td>
-                                        <td>{{ team.goal_difference }}</td>
-                                        <td><strong>{{ team.points }}</strong></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Лучшие бомбардиры -->
-<!-- Лучшие бомбардиры - минималистичный вариант -->
-<section class="top-scorers-section">
-    <div class="container">
-        <h2 class="section-heading">ТОП-5 БОМБАРДИРОВ ЛИГИ</h2>
 
-        <div class="scorers-table">
-            {% for player in top_scorers %}
-            <div class="scorer-card">
-                <div class="scorer-rank">{{ forloop.counter }}</div>
 
-                <div class="scorer-avatar">
-                    {% if player.photo %}
-                    <img src="{{ player.photo.url }}" alt="{{ player.name }}" loading="lazy">
-                    {% else %}
-                    <div class="avatar-placeholder"></div>
-                    {% endif %}
-                </div>
+    <!-- Navigation Arrows -->
+    <button class="slider-arrow prev" onclick="prevSlide()">
+        <i data-lucide="chevron-left" width="24" height="24"></i>
+    </button>
+    <button class="slider-arrow next" onclick="nextSlide()">
+        <i data-lucide="chevron-right" width="24" height="24"></i>
+    </button>
 
-                <div class="scorer-info">
-                    <h3>{{ player.name }}</h3>
-                    <p class="team-name">{{ player.team.name }}</p>
-                </div>
+    <!-- Indicators -->
+    <div class="slider-indicators">
+        <button class="slider-indicator active" onclick="goToSlide(0)"></button>
+        <button class="slider-indicator" onclick="goToSlide(1)"></button>
+        <button class="slider-indicator" onclick="goToSlide(2)"></button>
+        <button class="slider-indicator" onclick="goToSlide(3)"></button>
+    </div>
+</section>
 
-                <div class="scorer-stats">
-                    <span class="goals-count">{{ player.goals }}</span>
-                    <span class="goals-label">голов</span>
+<!-- === UPCOMING MATCHES (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
+<section id="matches" class="matches-section-lovable">
+    <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-12">
+            <span class="section-badge">Match Schedule</span>
+            <h2 class="section-title">UPCOMING <span>MATCHES</span></h2>
+            <p class="section-description">
+                Don't miss the action! Check out the upcoming fixtures and mark your calendar.
+            </p>
+        </div>
+
+        <!-- Исправленная сетка: 2 карточки в ряд на десктопе -->
+        <div class="row">
+            {% for match in upcoming_matches %}
+            <div class="col-md-6 mb-4">
+                <div class="match-card-lovable h-100">
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-2" style="color: hsl(var(--muted));">
+                            <i class="far fa-calendar" style="color: hsl(var(--primary));"></i>
+                            <span>{{ match.get_short_date }}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2" style="color: hsl(var(--muted));">
+                            <i class="far fa-clock" style="color: hsl(var(--primary));"></i>
+                            <span>{{ match.time|time:"H:i" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="text-center flex-grow-1">
+                            {% if match.team_a_logo %}
+                            <img src="{{ match.team_a_logo.url }}"
+                                 alt="{{ match.team_a }}"
+                                 class="team-avatar-lovable"
+                                 style="object-fit: contain; padding: 5px; background: hsl(var(--background));">
+                            {% else %}
+                            <div class="team-avatar-lovable">{{ match.team_a|make_list|first|upper }}</div>
+                            {% endif %}
+                            <h4 class="fw-semibold mb-0">{{ match.team_a }}</h4>
+                        </div>
+                        <div class="px-3">
+                            <div class="vs-badge-lovable">VS</div>
+                        </div>
+                        <div class="text-center flex-grow-1">
+                            {% if match.team_b_logo %}
+                            <img src="{{ match.team_b_logo.url }}"
+                                 alt="{{ match.team_b }}"
+                                 class="team-avatar-lovable"
+                                 style="object-fit: contain; padding: 5px; background: hsl(var(--background));">
+                            {% else %}
+                            <div class="team-avatar-lovable">{{ match.team_b|make_list|first|upper }}</div>
+                            {% endif %}
+                            <h4 class="fw-semibold mb-0">{{ match.team_b }}</h4>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-top" style="border-color: hsl(var(--border));">
+                        <div class="d-flex align-items-center justify-content-center gap-2" style="color: hsl(var(--muted));">
+                            <i class="fas fa-map-marker-alt" style="color: hsl(var(--primary));"></i>
+                            <span>{{ match.venue }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -235,39 +674,448 @@
     </div>
 </section>
 
-    <!-- Видеообзор -->
-    {% if latest_video %}
-    <section class="mb-5">
-        <h2 class="text-center mb-4">Обзор недели</h2>
-        <div class="ratio ratio-16x9 shadow-sm rounded-3 overflow-hidden">
-            <iframe src="{{ latest_video.get_embed_url }}?rel=0&showinfo=0"
-                    title="{{ latest_video.title }}"
-                    allowfullscreen
-                    loading="lazy"></iframe>
+<!-- === TOURNAMENT TABLES (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
+<section id="tables" class="section-padding">
+    <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-12">
+            <span class="section-badge">League Standings</span>
+            <h2 class="section-title">TOURNAMENT <span>TABLES</span></h2>
+            <p class="section-description">
+                Track the current standings in both groups and see who's leading the charge to the finals.
+            </p>
         </div>
-        <h3 class="h5 text-center mt-3">{{ latest_video.title }}</h3>
-    </section>
-    {% endif %}
 
-    <!-- Спонсоры -->
-    {% if sponsors %}
-    <section class="mb-5">
-        <h2 class="text-center mb-4">Наши партнеры</h2>
-        <div class="d-flex flex-wrap justify-content-center align-items-center bg-light p-4 rounded-3">
-            {% for sponsor in sponsors %}
-            <a href="{{ sponsor.url }}" class="m-3" target="_blank" rel="noopener noreferrer">
-                {% if sponsor.logo %}
-                <img src="{{ sponsor.logo.url }}"
-                     alt="{{ sponsor.name }}"
-                     height="60"
-                     width="auto"
-                     loading="lazy"
-                     style="max-width: 150px; height: auto;">
-                {% endif %}
-            </a>
+        <!-- Исправленная сетка: 2 таблицы в ряд на десктопе -->
+        <div class="row">
+            <!-- Group A Table -->
+            <div class="col-lg-6 mb-4">
+                <div class="table-card-lovable">
+                    <div class="table-header-lovable">
+                        <h3>GROUP A</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="standings-table-lovable">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Team</th>
+                                    <th class="text-center">P</th>
+                                    <th class="text-center d-none d-sm-table-cell">W</th>
+                                    <th class="text-center d-none d-sm-table-cell">D</th>
+                                    <th class="text-center d-none d-sm-table-cell">L</th>
+                                    <th class="text-center d-none d-md-table-cell">GF</th>
+                                    <th class="text-center d-none d-md-table-cell">GA</th>
+                                    <th class="text-center" style="color: hsl(var(--primary));">PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for team in group_a %}
+                                <tr>
+                                    <td><div class="position-badge-lovable {% if forloop.counter <= 2 %}top-2{% else %}other{% endif %}">{{ forloop.counter }}</div></td>
+                                    <td>
+                                        {% if team.logo %}
+                                        <img src="{{ team.logo.url }}"
+                                             alt="{{ team.name }}"
+                                             class="d-inline-block me-2"
+                                             style="width: 30px; height: 30px; object-fit: contain; vertical-align: middle;">
+                                        {% endif %}
+                                        <span class="fw-medium">{{ team.name }}</span>
+                                    </td>
+                                    <td class="text-center" style="color: hsl(var(--muted));">{{ team.games_played }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.wins }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.draws }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.losses }}</td>
+                                    <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_for }}</td>
+                                    <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_against }}</td>
+                                    <td class="text-center"><span class="fw-bold" style="color: hsl(var(--primary)); font-size: 1.25rem;">{{ team.points }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Group B Table -->
+            <div class="col-lg-6 mb-4">
+                <div class="table-card-lovable">
+                    <div class="table-header-lovable">
+                        <h3>GROUP B</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="standings-table-lovable">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th>Team</th>
+                                    <th class="text-center">P</th>
+                                    <th class="text-center d-none d-sm-table-cell">W</th>
+                                    <th class="text-center d-none d-sm-table-cell">D</th>
+                                    <th class="text-center d-none d-sm-table-cell">L</th>
+                                    <th class="text-center d-none d-md-table-cell">GF</th>
+                                    <th class="text-center d-none d-md-table-cell">GA</th>
+                                    <th class="text-center" style="color: hsl(var(--primary));">PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for team in group_b %}
+                                <tr>
+                                    <td><div class="position-badge-lovable {% if forloop.counter <= 2 %}top-2{% else %}other{% endif %}">{{ forloop.counter }}</div></td>
+                                    <td>
+                                        {% if team.logo %}
+                                        <img src="{{ team.logo.url }}"
+                                             alt="{{ team.name }}"
+                                             class="d-inline-block me-2"
+                                             style="width: 30px; height: 30px; object-fit: contain; vertical-align: middle;">
+                                        {% endif %}
+                                        <span class="fw-medium">{{ team.name }}</span>
+                                    </td>
+                                    <td class="text-center" style="color: hsl(var(--muted));">{{ team.games_played }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.wins }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.draws }}</td>
+                                    <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.losses }}</td>
+                                    <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_for }}</td>
+                                    <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_against }}</td>
+                                    <td class="text-center"><span class="fw-bold" style="color: hsl(var(--primary)); font-size: 1.25rem;">{{ team.points }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- === TOP SCORERS (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
+<section id="scorers" class="section-padding" style="background: hsl(var(--secondary) / 0.3);">
+    <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-12">
+            <span class="section-badge">Golden Boot Race</span>
+            <h2 class="section-title">TOP <span>SCORERS</span></h2>
+            <p class="section-description">
+                Meet the bombardiers leading the goal-scoring charts this season.
+            </p>
+        </div>
+
+        <!-- Исправленная сетка: 3 бомбардира в ряд на десктопе -->
+        <div class="row">
+            {% for player in top_scorers %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="scorer-card-lovable card-hover {% if forloop.counter == 1 %}border-color: hsl(var(--primary) / 0.5); background: linear-gradient(135deg, hsl(var(--primary) / 0.1), transparent);{% endif %}">
+                    <div class="scorer-rank-lovable rank-{% if forloop.counter == 1 %}1{% elif forloop.counter == 2 %}2{% elif forloop.counter == 3 %}3{% else %}other{% endif %}">
+                        {{ forloop.counter }}
+                    </div>
+                    <div class="scorer-avatar-lovable">
+                        {% if player.photo %}
+                        <img src="{{ player.photo.url }}"
+                             alt="{{ player.name }}"
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        {% else %}
+                        {{ player.name|make_list|slice:":2"|join:""|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="text-center">
+                        <h4 class="fw-semibold mb-1">{{ player.name }}</h4>
+                        <p class="text-muted mb-4">{{ player.team.name }}</p>
+                        <div class="stats-container-lovable">
+                            <div class="text-center">
+                                <div class="stat-number-lovable">{{ player.goals }}</div>
+                                <div class="stat-label-lovable">Goals</div>
+                            </div>
+                            {% if player.assists %}
+                            <div style="width: 1px; background: hsl(var(--border));"></div>
+                            <div class="text-center">
+                                <div class="stat-number-lovable">{{ player.assists }}</div>
+                                <div class="stat-label-lovable">Assists</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </div>
-    </section>
-    {% endif %}
-</div>
+    </div>
+</section>
+
+<!-- === VIDEO HIGHLIGHTS ТОЧНАЯ КОПИЯ ИЗ LOVABLE.DEV === -->
+<section id="highlights" class="video-highlights-section">
+    <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-12">
+            <span class="section-badge">Media Center</span>
+            <h2 class="section-title">VIDEO <span>HIGHLIGHTS</span></h2>
+            <p class="section-description">
+                Relive the best moments from the tournament with our exclusive video content.
+            </p>
+        </div>
+
+        <!-- Исправленная сетка: 4 видео в ряд на десктопе -->
+        <div class="row">
+            <!-- Video 1 -->
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="video-card-lovable">
+                    <div class="video-thumbnail-lovable">
+                        <img src="{% static 'images/hero-stadium.jpg' %}" alt="Media United vs Press FC">
+                        <div class="video-thumbnail-overlay"></div>
+                        <div class="play-button-lovable">
+                            <div class="play-icon-lovable">
+                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
+                            </div>
+                        </div>
+                        <div class="duration-badge-lovable">4:32</div>
+                    </div>
+                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Media United vs Press FC - Match Highlights</h4>
+                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
+                        <span>12.5K views</span>
+                        <span>•</span>
+                        <span>Jan 10, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="video-card-lovable">
+                    <div class="video-thumbnail-lovable">
+                        <img src="{% static 'images/hero-celebration.jpg' %}" alt="Goal of the Week">
+                        <div class="video-thumbnail-overlay"></div>
+                        <div class="play-button-lovable">
+                            <div class="play-icon-lovable">
+                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
+                            </div>
+                        </div>
+                        <div class="duration-badge-lovable">1:15</div>
+                    </div>
+                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Goal of the Week - Alex Johnson's Screamer</h4>
+                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
+                        <span>8.2K views</span>
+                        <span>•</span>
+                        <span>Jan 9, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="video-card-lovable">
+                    <div class="video-thumbnail-lovable">
+                        <img src="{% static 'images/hero-stadium.jpg' %}" alt="News Network's Unbeaten Run">
+                        <div class="video-thumbnail-overlay"></div>
+                        <div class="play-button-lovable">
+                            <div class="play-icon-lovable">
+                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
+                            </div>
+                        </div>
+                        <div class="duration-badge-lovable">5:48</div>
+                    </div>
+                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">News Network's Unbeaten Run Continues</h4>
+                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
+                        <span>6.8K views</span>
+                        <span>•</span>
+                        <span>Jan 8, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 4 -->
+            <div class="col-sm-6 col-lg-3 mb-4">
+                <div class="video-card-lovable">
+                    <div class="video-thumbnail-lovable">
+                        <img src="{% static 'images/hero-celebration.jpg' %}" alt="Best Saves">
+                        <div class="video-thumbnail-overlay"></div>
+                        <div class="play-button-lovable">
+                            <div class="play-icon-lovable">
+                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
+                            </div>
+                        </div>
+                        <div class="duration-badge-lovable">3:21</div>
+                    </div>
+                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Best Saves - Matchweek 5</h4>
+                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
+                        <span>5.1K views</span>
+                        <span>•</span>
+                        <span>Jan 7, 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View All Button -->
+        <div class="text-center mt-10">
+            <button class="btn-outline-lovable px-8 py-3">View All Highlights</button>
+        </div>
+    </div>
+</section>
+
+<!-- === PARTNERS SECTION ТОЧНАЯ КОПИЯ ИЗ Partners.tsx === -->
+<!-- General Partner Section -->
+<section class="general-partner-section">
+    <div class="container-lovable">
+        <div class="text-center mb-8">
+            <span class="section-badge">Title Sponsor</span>
+            <h2 class="section-title" style="font-size: 3.5rem;">GENERAL <span>PARTNER</span></h2>
+        </div>
+
+        <!-- General Partner Card -->
+        <div class="max-w-2xl mx-auto">
+            <div class="general-partner-card">
+                <!-- Star Decorations -->
+                <i class="partner-star-decoration" style="top: 1rem; left: 1rem; font-size: 1.5rem;">★</i>
+                <i class="partner-star-decoration" style="top: 1rem; right: 1rem; font-size: 1.5rem;">★</i>
+                <i class="partner-star-decoration" style="bottom: 1rem; left: 1rem; font-size: 1.5rem;">★</i>
+                <i class="partner-star-decoration" style="bottom: 1rem; right: 1rem; font-size: 1.5rem;">★</i>
+
+                <!-- Partner Logo Placeholder -->
+                <div class="partner-logo-placeholder-large">MC</div>
+
+                <h3 class="mb-3" style="font-family: 'Bebas Neue'; font-size: 2.5rem;">MediaCorp International</h3>
+                <p class="mb-4" style="color: hsl(var(--muted)); font-size: 1.125rem;">Official Title Sponsor of the Media League</p>
+
+                <!-- Badge -->
+                <div class="partner-badge-lovable">
+                    <i class="fas fa-star"></i>
+                    <span>Premium Partner</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Other Partners Section -->
+<section class="other-partners-section">
+    <div class="container-lovable"  style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-12">
+            <span class="section-badge">Our Sponsors</span>
+            <h2 class="section-title" style="font-size: 3.5rem;">OFFICIAL <span>PARTNERS</span></h2>
+        </div>
+
+        <!-- Исправленная сетка: 6 партнеров в ряд на десктопе -->
+        <div class="row">
+            {% if sponsors %}
+                {% for sponsor in sponsors %}
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item"
+                         style="border-color: {% if sponsor.tier == 'platinum' %}hsl(var(--primary) / 0.3){% elif sponsor.tier == 'gold' %}rgba(212, 175, 55, 0.3){% else %}hsl(var(--border)){% endif %};">
+                        <div class="partner-logo-small">
+                            {% if sponsor.logo %}
+                                <img src="{{ sponsor.logo.url }}"
+                                     alt="{{ sponsor.name }}"
+                                     style="width: 100%; height: 100%; object-fit: contain; border-radius: 0.5rem;">
+                            {% else %}
+                                {{ sponsor.name|make_list|slice:":2"|join:""|upper }}
+                            {% endif %}
+                        </div>
+                        <h4 class="text-sm font-medium mb-1">{{ sponsor.name }}</h4>
+                        <span class="tier-{{ sponsor.tier }} text-xs uppercase tracking-wider">
+                            {{ sponsor.tier }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Platinum -->
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item" style="border-color: hsl(var(--primary) / 0.3);">
+                        <div class="partner-logo-small">BP</div>
+                        <h4 class="text-sm font-medium mb-1">BroadcastPro</h4>
+                        <span class="tier-platinum text-xs uppercase tracking-wider">platinum</span>
+                    </div>
+                </div>
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item" style="border-color: hsl(var(--primary) / 0.3);">
+                        <div class="partner-logo-small">ND</div>
+                        <h4 class="text-sm font-medium mb-1">NewsDigital</h4>
+                        <span class="tier-platinum text-xs uppercase tracking-wider">platinum</span>
+                    </div>
+                </div>
+                <!-- Gold -->
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item" style="border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="partner-logo-small">SC</div>
+                        <h4 class="text-sm font-medium mb-1">SportsCast</h4>
+                        <span class="tier-gold text-xs uppercase tracking-wider">gold</span>
+                    </div>
+                </div>
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item" style="border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="partner-logo-small">MT</div>
+                        <h4 class="text-sm font-medium mb-1">MediaTech</h4>
+                        <span class="tier-gold text-xs uppercase tracking-wider">gold</span>
+                    </div>
+                </div>
+                <!-- Silver -->
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item">
+                        <div class="partner-logo-small">SM</div>
+                        <h4 class="text-sm font-medium mb-1">StreamMax</h4>
+                        <span class="tier-silver text-xs uppercase tracking-wider">silver</span>
+                    </div>
+                </div>
+                <div class="col-4 col-md-2 mb-4">
+                    <div class="partner-grid-item">
+                        <div class="partner-logo-small">PW</div>
+                        <h4 class="text-sm font-medium mb-1">PrintWorld</h4>
+                        <span class="tier-silver text-xs uppercase tracking-wider">silver</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Hero Slider Functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide-lovable');
+    const indicators = document.querySelectorAll('.slider-indicator');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => {
+            slide.classList.remove('active');
+        });
+
+        // Remove active class from all indicators
+        indicators.forEach(indicator => {
+            indicator.classList.remove('active');
+        });
+
+        // Show current slide
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        let next = currentSlide + 1;
+        if (next >= totalSlides) next = 0;
+        showSlide(next);
+    }
+
+    function prevSlide() {
+        let prev = currentSlide - 1;
+        if (prev < 0) prev = totalSlides - 1;
+        showSlide(prev);
+    }
+
+    function goToSlide(index) {
+        showSlide(index);
+    }
+
+    // Auto slide every 6 seconds
+    setInterval(nextSlide, 6000);
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        showSlide(0);
+        lucide.createIcons();
+    });
+
+
+</script>
 {% endblock %}

@@ -82,31 +82,85 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!--<script>-->
+<!--document.querySelectorAll('.vote-btn').forEach(btn => {-->
+<!--    btn.addEventListener('click', function() {-->
+<!--        const playerId = this.dataset.playerId;-->
+<!--        fetch(`/vote/${playerId}/`, {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'X-CSRFToken': '{{ csrf_token }}',-->
+<!--                'Content-Type': 'application/json'-->
+<!--            }-->
+<!--        })-->
+<!--        .then(response => response.json())-->
+<!--        .then(data => {-->
+<!--            if (data.success) {-->
+<!--                Swal.fire({-->
+<!--                    icon: 'success',-->
+<!--                    title: 'Спасибо!',-->
+<!--                    text: data.message,-->
+<!--                    timer: 2000-->
+<!--                }).then(() => location.reload());-->
+<!--            } else {-->
+<!--                Swal.fire({-->
+<!--                    icon: 'error',-->
+<!--                    title: 'Ошибка',-->
+<!--                    text: data.message-->
+<!--                });-->
+<!--            }-->
+<!--        })-->
+<!--        .catch(error => {-->
+<!--            console.error('Error:', error);-->
+<!--            Swal.fire({-->
+<!--                icon: 'error',-->
+<!--                title: 'Ошибка',-->
+<!--                text: 'Произошла ошибка при отправке голоса'-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--});-->
+<!--</script>-->
 <script>
 document.querySelectorAll('.vote-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         const playerId = this.dataset.playerId;
+
         fetch(`/vote/${playerId}/`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'same-origin'
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Response data:', data); // Для отладки
+
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Спасибо!',
                     text: data.message,
-                    timer: 2000
-                }).then(() => location.reload());
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Ошибка',
-                    text: data.message
+                    text: data.message,
+                    confirmButtonText: 'OK'
                 });
             }
         })
@@ -114,8 +168,8 @@ document.querySelectorAll('.vote-btn').forEach(btn => {
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Ошибка',
-                text: 'Произошла ошибка при отправке голоса'
+                title: 'Ошибка сети',
+                text: 'Произошла ошибка при отправке голоса. Проверьте соединение.'
             });
         });
     });

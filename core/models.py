@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class SliderImage(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название", blank=True)
@@ -156,3 +156,238 @@ class VoteRecord(models.Model):
 
     def __str__(self):
         return f"{self.timestamp} ({self.user_agent}) -> {self.player.name}"
+
+
+
+
+# ================================= E - FOOTBALL MODELS ================================================
+
+
+class EMatch(models.Model):
+    """Модель для матчей eFootball"""
+    STATUS_CHOICES = [
+        ('upcoming', 'Предстоящий'),
+        ('live', 'В прямом эфире'),
+        ('completed', 'Завершен'),
+    ]
+
+    # Основные поля
+    team_a = models.CharField(max_length=100, verbose_name='Команда A')
+    team_b = models.CharField(max_length=100, verbose_name='Команда B')
+
+    # Счет (только для завершенных матчей)
+    score_a = models.IntegerField(
+        verbose_name='Счет команды A',
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(99)]
+    )
+    score_b = models.IntegerField(
+        verbose_name='Счет команды B',
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(99)]
+    )
+
+    # Дата и время
+    match_date = models.DateField(verbose_name='Дата матча')
+    match_time = models.TimeField(verbose_name='Время матча')
+
+    # Статус
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='upcoming',
+        verbose_name='Статус'
+    )
+
+    # Дополнительные поля
+    location = models.CharField(
+        max_length=200,
+        verbose_name='Место проведения',
+        blank=True,
+        null=True
+    )
+
+    tournament_round = models.CharField(
+        max_length=100,
+        verbose_name='Тур/раунд',
+        blank=True,
+        null=True
+    )
+
+    # Метаданные
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+
+    class Meta:
+        verbose_name = 'Матч'
+        verbose_name_plural = 'Матчи'
+        ordering = ['match_date', 'match_time']
+        indexes = [
+            models.Index(fields=['match_date']),
+            models.Index(fields=['status']),
+        ]
+
+    def __str__(self):
+        return f"{self.team_a} vs {self.team_b} ({self.match_date})"
+
+    @property
+    def formatted_date(self):
+        """Форматированная дата как в React (Jan 15)"""
+        return self.match_date.strftime('%b %d')
+
+    @property
+    def formatted_time(self):
+        """Форматированное время (20:00)"""
+        return self.match_time.strftime('%H:%M')
+
+    def save(self, *args, **kwargs):
+        """Автоматическая валидация при сохранении"""
+        # Если матч завершен, должны быть счет
+        if self.status == 'completed' and (self.score_a is None or self.score_b is None):
+            raise ValueError("Для завершенного матча должен быть указан счет")
+
+        # Если матч upcoming, счет должен быть None
+        if self.status == 'upcoming':
+            self.score_a = None
+            self.score_b = None
+
+        super().save(*args, **kwargs)
+
+
+
+class TournamentStanding(models.Model):
+    class GroupChoices(models.TextChoices):
+        GROUP_A = 'A', 'Group A'
+        GROUP_B = 'B', 'Group B'
+
+    position = models.PositiveIntegerField(
+        verbose_name="Position",
+        validators=[MinValueValidator(1)]
+    )
+
+    team_name = models.CharField(
+        max_length=100,
+        verbose_name="Team Name"
+    )
+
+    group = models.CharField(
+        max_length=1,
+        choices=GroupChoices.choices,
+        verbose_name="Group"
+    )
+
+    # Статистика
+    played = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Matches Played",
+        validators=[MinValueValidator(0)]
+    )
+
+    won = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Won",
+        validators=[MinValueValidator(0)]
+    )
+
+    drawn = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Drawn",
+        validators=[MinValueValidator(0)]
+    )
+
+    lost = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Lost",
+        validators=[MinValueValidator(0)]
+    )
+
+    # Голы
+    goals_for = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Goals For (GF)",
+        validators=[MinValueValidator(0)]
+    )
+
+    goals_against = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Goals Against (GA)",
+        validators=[MinValueValidator(0)]
+    )
+
+    # Очки (заполняем вручную или вычисляем при сохранении)
+    points = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Points",
+        validators=[MinValueValidator(0)]
+    )
+
+    # Автоматически вычисляемое поле
+    @property
+    def goal_difference(self):
+        return self.goals_for - self.goals_against
+
+    # Форма команды (последние 5 матчей)
+    form_results = models.JSONField(
+        default=list,
+        verbose_name="Form Results",
+        help_text="List of last 5 results: W (Win), D (Draw), L (Loss). Example: ['W', 'D', 'L', 'W', 'W']"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Tournament Standing"
+        verbose_name_plural = "Tournament Standings"
+        ordering = ['group', 'position']
+        unique_together = ['group', 'position']
+        indexes = [
+            models.Index(fields=['group', 'position']),
+            models.Index(fields=['group', 'points']),
+        ]
+
+    def __str__(self):
+        return f"{self.position}. {self.team_name} (Group {self.group})"
+
+    def clean(self):
+        """Валидация данных перед сохранением"""
+        from django.core.exceptions import ValidationError
+
+        # Проверка form_results
+        if self.form_results:
+            if len(self.form_results) > 5:
+                raise ValidationError({
+                    'form_results': 'Maximum 5 form results allowed'
+                })
+
+            for result in self.form_results:
+                if result not in ['W', 'D', 'L']:
+                    raise ValidationError({
+                        'form_results': f"Invalid result '{result}'. Use 'W', 'D', or 'L'"
+                    })
+
+        # Проверка статистики
+        if self.played != (self.won + self.drawn + self.lost):
+            raise ValidationError({
+                'played': f"Played ({self.played}) must equal Won ({self.won}) + Drawn ({self.drawn}) + Lost ({self.lost}) = {self.won + self.drawn + self.lost}"
+            })
+
+        # Проверка позиции в группе
+        if self.position < 1 or self.position > 6:
+            raise ValidationError({
+                'position': 'Position must be between 1 and 6 for each group'
+            })
+
+        # Автоматический расчет очков (опционально)
+        calculated_points = (self.won * 3) + self.drawn
+        if self.points != calculated_points:
+            # Можно предупредить, но не блокировать
+            pass
+
+    def save(self, *args, **kwargs):
+        # Автоматически вычисляем очки при сохранении
+        self.points = (self.won * 3) + self.drawn
+        self.full_clean()  # Выполняем валидацию
+        super().save(*args, **kwargs)
