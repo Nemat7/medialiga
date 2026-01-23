@@ -1,257 +1,246 @@
-import { motion } from "framer-motion";
-import { Users, Crown, Gamepad } from "lucide-react";
+import { Users, Trophy, Target } from "lucide-react";
 
-interface Player {
-  name: string;
-  role: string;
-}
-
-interface Team {
-  id: number;
-  name: string;
-  tag: string;
-  color: string;
-  players: Player[];
-}
-
-const teamsData: Team[] = [
+const teams = [
   {
     id: 1,
-    name: "Thunder FC",
-    tag: "THU",
-    color: "#FEFE00",
+    name: "Media United",
+    image: "/src/assets/team-logos/Калапоча.png", // локальный путь
+    color: "from-red-500 to-red-700",
     players: [
-      { name: "Alex Storm", role: "Captain" },
-      { name: "Marcus Wave", role: "Striker" },
-      { name: "Jake Thunder", role: "Midfielder" },
-      { name: "Ryan Bolt", role: "Defender" },
-      { name: "Sam Shield", role: "Goalkeeper" },
+      { name: "Alex Johnson", role: "Captain", image: "/src/assets/player-photos/alex-johnson.jpg" },
+      { name: "Mike Smith", role: "Striker", image: "/src/assets/player-photos/mike-smith.jpg" },
+      { name: "David Brown", role: "Midfielder", image: "/src/assets/player-photos/david-brown.jpg" },
     ],
+    stats: { wins: 4, goals: 12 },
   },
   {
     id: 2,
-    name: "Digital Lions",
-    tag: "DGL",
-    color: "#EB5186",
+    name: "News Network",
+    image: "/src/assets/team-logos/Криф.png", // локальный путь
+    color: "from-blue-500 to-blue-700",
     players: [
-      { name: "Leo Byte", role: "Captain" },
-      { name: "Ryan Code", role: "Striker" },
-      { name: "Tom Data", role: "Midfielder" },
-      { name: "Chris Server", role: "Defender" },
-      { name: "Dan Keeper", role: "Goalkeeper" },
+      { name: "James Wilson", role: "Captain", image: "/src/assets/player-photos/james-wilson.jpg" },
+      { name: "Tom Anderson", role: "Goalkeeper", image: "/src/assets/player-photos/tom-anderson.jpg" },
+      { name: "Chris Taylor", role: "Defender", image: "/src/assets/player-photos/chris-taylor.jpg" },
     ],
+    stats: { wins: 5, goals: 15 },
   },
   {
     id: 3,
-    name: "Cyber Eagles",
-    tag: "CYE",
-    color: "#00FFFF",
+    name: "TV Titans",
+    image: "/src/assets/team-logos/Менчос.png", // локальный путь
+    color: "from-purple-500 to-purple-700",
     players: [
-      { name: "Jake Pixel", role: "Captain" },
-      { name: "Tom Circuit", role: "Striker" },
-      { name: "Mike Binary", role: "Midfielder" },
-      { name: "Luke Firewall", role: "Defender" },
-      { name: "Ben Net", role: "Goalkeeper" },
+      { name: "Ryan Garcia", role: "Captain", image: "/src/assets/player-photos/ryan-garcia.jpg" },
+      { name: "Kevin Lee", role: "Striker", image: "/src/assets/player-photos/kevin-lee.jpg" },
+      { name: "Brian White", role: "Midfielder", image: "/src/assets/player-photos/brian-white.jpg" },
     ],
+    stats: { wins: 3, goals: 10 },
   },
   {
     id: 4,
-    name: "Neon Strikers",
-    tag: "NEO",
-    color: "#00FF00",
+    name: "Press FC",
+    image: "/src/assets/team-logos/Персы.png", // локальный путь
+    color: "from-green-500 to-green-700",
     players: [
-      { name: "Sam Glow", role: "Captain" },
-      { name: "Chris Flash", role: "Striker" },
-      { name: "Nick Laser", role: "Midfielder" },
-      { name: "Josh Volt", role: "Defender" },
-      { name: "Matt Guard", role: "Goalkeeper" },
+      { name: "Sam Miller", role: "Captain", image: "/src/assets/player-photos/sam-miller.jpg" },
+      { name: "Jack Davis", role: "Defender", image: "/src/assets/player-photos/jack-davis.jpg" },
+      { name: "Matt Wilson", role: "Midfielder", image: "/src/assets/player-photos/matt-wilson.jpg" },
     ],
+    stats: { wins: 3, goals: 9 },
   },
   {
     id: 5,
-    name: "Pixel Warriors",
-    tag: "PIX",
-    color: "#FF6B00",
+    name: "Broadcast XI",
+    image: "/src/assets/team-logos/Поизд.png", // локальный путь
+    color: "from-orange-500 to-orange-700",
     players: [
-      { name: "Mike Vector", role: "Captain" },
-      { name: "Dan Sprite", role: "Striker" },
-      { name: "Alex Frame", role: "Midfielder" },
-      { name: "Ryan Render", role: "Defender" },
-      { name: "Tom Save", role: "Goalkeeper" },
+      { name: "Nick Brown", role: "Captain", image: "/src/assets/player-photos/nick-brown.jpg" },
+      { name: "Eric Jones", role: "Striker", image: "/src/assets/player-photos/eric-jones.jpg" },
+      { name: "Paul Martin", role: "Goalkeeper", image: "/src/assets/player-photos/paul-martin.jpg" },
     ],
+    stats: { wins: 2, goals: 7 },
   },
   {
     id: 6,
-    name: "Storm United",
-    tag: "STU",
-    color: "#8B5CF6",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/Себистон.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Ben Thunder", role: "Captain" },
-      { name: "Luke Rain", role: "Striker" },
-      { name: "Jack Cloud", role: "Midfielder" },
-      { name: "Max Wind", role: "Defender" },
-      { name: "Leo Storm", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 7,
-    name: "Blaze FC",
-    tag: "BLZ",
-    color: "#FF4444",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/смузи.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Nick Fire", role: "Captain" },
-      { name: "Josh Ember", role: "Striker" },
-      { name: "Sam Flame", role: "Midfielder" },
-      { name: "Chris Burn", role: "Defender" },
-      { name: "Ryan Ash", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 8,
-    name: "Shadow Wolves",
-    tag: "SHW",
-    color: "#888888",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/Сомони.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Matt Night", role: "Captain" },
-      { name: "Eric Dark", role: "Striker" },
-      { name: "Tom Shade", role: "Midfielder" },
-      { name: "Jake Moon", role: "Defender" },
-      { name: "Dan Shadow", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 9,
-    name: "Volt Gaming",
-    tag: "VLT",
-    color: "#FFD700",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/Фавик.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Zack Spark", role: "Captain" },
-      { name: "Kyle Charge", role: "Striker" },
-      { name: "Drew Amp", role: "Midfielder" },
-      { name: "Cole Watt", role: "Defender" },
-      { name: "Ian Power", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 10,
-    name: "Apex United",
-    tag: "APX",
-    color: "#FF1493",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/хамако 4.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Finn Peak", role: "Captain" },
-      { name: "Owen Summit", role: "Striker" },
-      { name: "Evan Height", role: "Midfielder" },
-      { name: "Blake Top", role: "Defender" },
-      { name: "Dean Rise", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "fft_logo 1", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 11,
-    name: "Nova Esports",
-    tag: "NOV",
-    color: "#9370DB",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/fft_logo 1.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Theo Star", role: "Captain" },
-      { name: "Liam Cosmic", role: "Striker" },
-      { name: "Noah Orbit", role: "Midfielder" },
-      { name: "Eli Galaxy", role: "Defender" },
-      { name: "Jace Nebula", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
   {
     id: 12,
-    name: "Fury FC",
-    tag: "FRY",
-    color: "#DC143C",
+    name: "Digital Stars",
+    image: "/src/assets/team-logos/Кефтеме.png", // локальный путь
+    color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Axel Rage", role: "Captain" },
-      { name: "Rex Havoc", role: "Striker" },
-      { name: "Wade Chaos", role: "Midfielder" },
-      { name: "Troy Mayhem", role: "Defender" },
-      { name: "Brock Fury", role: "Goalkeeper" },
+      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
     ],
+    stats: { wins: 1, goals: 5 },
   },
 ];
 
-const ParticipantTeams = () => {
+const Teams = () => {
   return (
-    <section id="teams" className="py-20 relative">
-      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-      
-      <div className="container px-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="section-title gradient-border pb-4">
-            <Users className="inline-block w-10 h-10 mr-3 text-secondary" />
-            Participating <span className="text-secondary">Teams</span>
+    <section id="teams" className="py-24 bg-gradient-to-b from-background to-secondary/20">
+      <div className="container mx-auto px-4 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-6">
+            <Users className="w-4 h-4 text-primary" />
+            <span className="text-primary font-semibold tracking-wider uppercase text-sm">
+              Participants
+            </span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
+            COMPETING <span className="text-gradient">TEAMS</span>
           </h2>
-        </motion.div>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            Meet the media organizations battling for e-football supremacy.
+          </p>
+        </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {teamsData.map((team, index) => (
-            <motion.div
+        {/* Teams Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teams.map((team) => (
+            <div
               key={team.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="card-esports overflow-hidden group hover:scale-105 transition-transform duration-300"
+              className="esports-card p-6 card-hover group"
             >
-              {/* Team header with accent color */}
-              <div 
-                className="h-2"
-                style={{ background: `linear-gradient(90deg, ${team.color}, transparent)` }}
-              />
-              
-              <div className="p-6">
-                {/* Team tag */}
-                <div className="flex items-center justify-between mb-4">
-                  <span 
-                    className="text-xs font-bold px-2 py-1 rounded"
-                    style={{ backgroundColor: `${team.color}20`, color: team.color }}
-                  >
-                    {team.tag}
-                  </span>
-                  <Gamepad className="w-5 h-5 text-muted-foreground group-hover:text-secondary transition-colors" />
+              {/* Team Header */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${team.color} flex items-center justify-center shadow-lg overflow-hidden`}>
+                  {team.image ? (
+                    <img 
+                      src={team.image} 
+                      alt={team.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="font-display text-xl text-white">
+                      {team.name.substring(0, 3).toUpperCase()}
+                    </span>
+                  )}
                 </div>
-                
-                {/* Team name */}
-                <h3 className="font-heading font-extrabold text-xl mb-4 group-hover:text-primary transition-colors">
-                  {team.name}
-                </h3>
-                
-                {/* Players */}
-                <div className="space-y-3">
-                  {team.players.map((player, pIndex) => (
-                    <div key={pIndex} className="flex items-center gap-3">
-                      {/* Player avatar placeholder */}
-                      <div 
-                        className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
-                        style={{ 
-                          backgroundColor: `${team.color}30`,
-                          color: team.color 
-                        }}
-                      >
-                        {player.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm flex items-center gap-1">
-                          {player.name}
-                          {player.role === "Captain" && (
-                            <Crown className="w-3 h-3 text-primary" />
-                          )}
-                        </div>
-                        <div className="text-xs text-muted-foreground">{player.role}</div>
-                      </div>
+                <div>
+                  <h3 className="font-display text-xl text-foreground group-hover:text-primary transition-colors">
+                    {team.name}
+                  </h3>
+                  <div className="flex items-center gap-4 mt-1">
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <Trophy size={14} className="text-accent" />
+                      <span>{team.stats.wins} Wins</span>
                     </div>
-                  ))}
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <Target size={14} className="text-primary" />
+                      <span>{team.stats.goals} Goals</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+
+              {/* Players */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Key Players
+                </h4>
+                {team.players.map((player, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+                  >
+                    <img
+                      src={player.image}
+                      alt={player.name}
+                      className="w-10 h-10 rounded-lg object-cover border border-border"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-foreground text-sm truncate">
+                        {player.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{player.role}</p>
+                    </div>
+                    {player.role === "Captain" && (
+                      <span className="px-2 py-0.5 text-xs font-bold bg-primary/20 text-primary rounded uppercase">
+                        C
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* View Team Button */}
+              <button className="w-full mt-6 py-3 border border-border rounded-lg text-muted-foreground font-semibold text-sm hover:border-primary hover:text-primary transition-colors uppercase tracking-wider">
+                View Full Roster
+              </button>
+            </div>
           ))}
         </div>
       </div>
@@ -259,4 +248,4 @@ const ParticipantTeams = () => {
   );
 };
 
-export default ParticipantTeams;
+export default Teams;
