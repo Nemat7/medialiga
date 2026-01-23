@@ -7,141 +7,141 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Калапоча.png", // локальный путь
     color: "from-red-500 to-red-700",
     players: [
-      { name: "Alex Johnson", role: "Captain", image: "/src/assets/player-photos/alex-johnson.jpg" },
-      { name: "Mike Smith", role: "Striker", image: "/src/assets/player-photos/mike-smith.jpg" },
-      { name: "David Brown", role: "Midfielder", image: "/src/assets/player-photos/david-brown.jpg" },
+      { name: "Alex Johnson", role: "Captain", image: "/static/efootball/assets/player-photos/alex-johnson.jpg" },
+      { name: "Mike Smith", role: "Striker", image: "/static/efootball/assets/player-photos/mike-smith.jpg" },
+      { name: "David Brown", role: "Midfielder", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
     ],
     stats: { wins: 4, goals: 12 },
   },
   {
     id: 2,
     name: "News Network",
-    image: "/src/assets/team-logos/Криф.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Криф.png", // локальный путь
     color: "from-blue-500 to-blue-700",
     players: [
-      { name: "James Wilson", role: "Captain", image: "/src/assets/player-photos/james-wilson.jpg" },
-      { name: "Tom Anderson", role: "Goalkeeper", image: "/src/assets/player-photos/tom-anderson.jpg" },
-      { name: "Chris Taylor", role: "Defender", image: "/src/assets/player-photos/chris-taylor.jpg" },
+      { name: "James Wilson", role: "Captain", image: "/static/efootball/assets/player-photos/james-wilson.jpg" },
+      { name: "Tom Anderson", role: "Goalkeeper", image: "/static/efootball/assets/player-photos/tom-anderson.jpg" },
+      { name: "Chris Taylor", role: "Defender", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
     ],
     stats: { wins: 5, goals: 15 },
   },
   {
     id: 3,
     name: "TV Titans",
-    image: "/src/assets/team-logos/Менчос.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Менчос.png", // локальный путь
     color: "from-purple-500 to-purple-700",
     players: [
-      { name: "Ryan Garcia", role: "Captain", image: "/src/assets/player-photos/ryan-garcia.jpg" },
-      { name: "Kevin Lee", role: "Striker", image: "/src/assets/player-photos/kevin-lee.jpg" },
-      { name: "Brian White", role: "Midfielder", image: "/src/assets/player-photos/brian-white.jpg" },
+      { name: "Ryan Garcia", role: "Captain", image: "/static/efootball/assets/player-photos/ryan-garcia.jpg" },
+      { name: "Kevin Lee", role: "Striker", image: "/static/efootball/assets/player-photos/kevin-lee.jpg" },
+      { name: "Brian White", role: "Midfielder", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
     ],
     stats: { wins: 3, goals: 10 },
   },
   {
     id: 4,
     name: "Press FC",
-    image: "/src/assets/team-logos/Персы.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Персы.png", // локальный путь
     color: "from-green-500 to-green-700",
     players: [
-      { name: "Sam Miller", role: "Captain", image: "/src/assets/player-photos/sam-miller.jpg" },
-      { name: "Jack Davis", role: "Defender", image: "/src/assets/player-photos/jack-davis.jpg" },
-      { name: "Matt Wilson", role: "Midfielder", image: "/src/assets/player-photos/matt-wilson.jpg" },
+      { name: "Sam Miller", role: "Captain", image: "/static/efootball/assets/player-photos/sam-miller.jpg" },
+      { name: "Jack Davis", role: "Defender", image: "/static/efootball/assets/player-photos/jack-davis.jpg" },
+      { name: "Matt Wilson", role: "Midfielder", image: "/static/efootball/assets/player-photos/matt-wilson.jpg" },
     ],
     stats: { wins: 3, goals: 9 },
   },
   {
     id: 5,
     name: "Broadcast XI",
-    image: "/src/assets/team-logos/Поизд.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Поизд.png", // локальный путь
     color: "from-orange-500 to-orange-700",
     players: [
-      { name: "Nick Brown", role: "Captain", image: "/src/assets/player-photos/nick-brown.jpg" },
-      { name: "Eric Jones", role: "Striker", image: "/src/assets/player-photos/eric-jones.jpg" },
-      { name: "Paul Martin", role: "Goalkeeper", image: "/src/assets/player-photos/paul-martin.jpg" },
+      { name: "Nick Brown", role: "Captain", image: "/static/efootball/assets/player-photos/nick-brown.jpg" },
+      { name: "Eric Jones", role: "Striker", image: "/static/efootball/assets/player-photos/eric-jones.jpg" },
+      { name: "Paul Martin", role: "Goalkeeper", image: "/static/efootball/assets/player-photos/paul-martin.jpg" },
     ],
     stats: { wins: 2, goals: 7 },
   },
   {
     id: 6,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/Себистон.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Себистон.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 7,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/смузи.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/смузи.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 8,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/Сомони.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Сомони.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 9,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/Фавик.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Фавик.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 10,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/хамако 4.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/хамако 4.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "fft_logo 1", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "fft_logo 1", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 11,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/fft_logo 1.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/fft_logo 1.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 12,
     name: "Digital Stars",
-    image: "/src/assets/team-logos/Кефтеме.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Кефтеме.png", // локальный путь
     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/src/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/src/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/src/assets/player-photos/dan-moore.jpg" },
+      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
