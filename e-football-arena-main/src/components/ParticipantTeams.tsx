@@ -4,7 +4,7 @@ const teams = [
   {
     id: 1,
     name: "Media United",
-    image: "/src/assets/team-logos/Калапоча.png", // локальный путь
+    image: "/static/efootball/assets/team-logos/Калапоча.png", // локальный путь
     color: "from-red-500 to-red-700",
     players: [
       { name: "Alex Johnson", role: "Captain", image: "/src/assets/player-photos/alex-johnson.jpg" },
