@@ -20,7 +20,7 @@ const Footer = () => {
               </div>
             </a>
             <p className="text-sm text-muted-foreground max-w-xs">
-              The ultimate competitive e-football tournament bringing together the best players from around the world.
+              Крупнейший соревновательный турнир по киберфутболу, объединяющий лучших игроков со всего мира.
             </p>
           </div>
 
@@ -46,10 +46,10 @@ const Footer = () => {
             <h4 className="font-heading font-bold text-lg mb-4">Follow Us</h4>
             <div className="flex gap-4">
               {[
-                { icon: Youtube, href: "#", label: "YouTube" },
-                { icon: Twitch, href: "#", label: "Twitch" },
-                { icon: Twitter, href: "#", label: "Twitter" },
-                { icon: Instagram, href: "#", label: "Instagram" },
+                { icon: Youtube, href: "https://www.youtube.com/@mediafootballtj", label: "YouTube" },
+                // { icon: Twitch, href: "#", label: "Twitch" },
+                // { icon: Twitter, href: "#", label: "Twitter" },
+                { icon: Instagram, href: "https://www.instagram.com/mediafootballtj?igsh=MTYxZjcxM3lyaW55dg==", label: "Instagram" },
               ].map((social) => (
                 <a
                   key={social.label}
@@ -67,7 +67,7 @@ const Footer = () => {
         {/* Bottom */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 E Football Media League. All rights reserved.
+            © 2026 E Football Media League. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>

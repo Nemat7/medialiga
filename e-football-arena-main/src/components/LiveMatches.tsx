@@ -14,154 +14,153 @@ interface LiveMatch {
 const liveMatches: LiveMatch[] = [
   {
     id: 1,
-    title: "Quarter Final - Match 1",
-    teamA: "Pixel Warriors",
-    teamB: "Storm United",
-    videoId: "mleAl-Z_uTQ",
+    // title: "Финальный матч сезона",
+    teamA: "Media United",
+    teamB: "News Network",
+    videoId: "dQw4w9WgXcQ",
     isLive: true,
-//     viewers: 2847,
-  },
-  {
-    id: 2,
-    title: "Group Stage - Highlights",
-    teamA: "Thunder FC",
-    teamB: "Cyber Eagles",
-    videoId: "dQw4w9WgXcQ",
-    isLive: false,
-  },
-  {
-    id: 3,
-    title: "Week 4 - Best Moments",
-    teamA: "Digital Lions",
-    teamB: "Neon Strikers",
-    videoId: "dQw4w9WgXcQ",
-    isLive: false,
+    viewers: 3150,
   },
 ];
 
 const LiveMatches = () => {
+  const mainMatch = liveMatches[0];
+
   return (
     <section id="live" className="py-20 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-secondary/10 rounded-full blur-3xl" />
-      
+
       <div className="container px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="text-center"
         >
           <h2 className="section-title gradient-border pb-4">
             <Radio className="inline-block w-10 h-10 mr-3 text-secondary animate-pulse" />
-            Live <span className="text-secondary">Matches</span>
+            Прямой <span className="text-secondary">Эфир</span>
           </h2>
+          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+            Смотрите трансляцию главного матча сезона в прямом эфире
+          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mt-12">
-          {/* Featured Live Stream */}
+        <div className="mt-12 max-w-4xl mx-auto">
+          {/* Main Live Stream */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:row-span-2"
           >
-            <div className="card-esports overflow-hidden h-full">
+            <div className="card-esports overflow-hidden relative">
               {/* Live badge */}
-              <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-secondary text-secondary-foreground">
-                <Radio className="w-4 h-4 animate-pulse" />
+              <div className="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground shadow-lg">
+                <Radio className="w-5 h-5 animate-pulse" />
                 <span className="text-sm font-bold uppercase">Live Now</span>
               </div>
-              
+
+              {/* Viewer count */}
+              {/* {mainMatch.viewers && (
+                <div className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-background/80 backdrop-blur-sm border border-border">
+                  <span className="text-sm font-bold text-secondary">
+                    {mainMatch.viewers.toLocaleString()} зрителей
+                  </span>
+                </div>
+              )} */}
+
               {/* Video thumbnail */}
               <div className="relative aspect-video bg-muted">
                 <img
-                  src={`https://img.youtube.com/vi/${liveMatches[0].videoId}/maxresdefault.jpg`}
-                  alt={liveMatches[0].title}
+                  src={`https://img.youtube.com/vi/${mainMatch.videoId}/maxresdefault.jpg`}
+                  alt={mainMatch.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-background/40 flex items-center justify-center group cursor-pointer hover:bg-background/30 transition-colors">
-                  <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                    <Play className="w-10 h-10 text-secondary-foreground fill-current ml-1" />
+                <div className="absolute inset-0 bg-background/30 flex items-center justify-center group cursor-pointer hover:bg-background/20 transition-colors">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-secondary rounded-full animate-ping opacity-50"></div>
+                    <div className="relative w-24 h-24 rounded-full bg-secondary flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
+                      <Play className="w-12 h-12 text-secondary-foreground fill-current ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              {/* Info */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-muted-foreground">{liveMatches[0].title}</span>
-                  {liveMatches[0].viewers && (
-                    <span className="text-sm text-secondary font-medium">
-                      {liveMatches[0].viewers.toLocaleString()} watching
-                    </span>
-                  )}
+
+              {/* Match Info */}
+              <div className="p-8 text-center">
+                <span className="text-sm text-muted-foreground uppercase tracking-wider">
+                  {mainMatch.title}
+                </span>
+
+                <div className="flex items-center justify-center gap-4 mt-4 mb-6">
+                  <div className="text-center">
+                    <div className="font-heading text-3xl font-extrabold">{mainMatch.teamA}</div>
+                    <div className="text-sm text-muted-foreground mt-1">Команда А</div>
+                  </div>
+
+                  <div className="px-4 py-2 bg-secondary/20 rounded-lg">
+                    <span className="text-2xl font-heading font-extrabold text-secondary">VS</span>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="font-heading text-3xl font-extrabold">{mainMatch.teamB}</div>
+                    <div className="text-sm text-muted-foreground mt-1">Команда Б</div>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-heading font-extrabold mb-4">
-                  {liveMatches[0].teamA} <span className="text-secondary">VS</span> {liveMatches[0].teamB}
-                </h3>
-                <a
-                  href={`https://youtube.com/watch?v=${liveMatches[0].videoId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-esports btn-accent inline-flex items-center gap-2 w-full justify-center"
-                >
-                  <Youtube className="w-5 h-5" />
-                  Watch on YouTube
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a
+                    href={`https://youtube.com/watch?v=${mainMatch.videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-esports btn-accent inline-flex items-center gap-3 px-8 py-4 text-lg"
+                  >
+                    <Youtube className="w-6 h-6" />
+                    Смотреть на YouTube
+                    <ExternalLink className="w-5 h-5" />
+                  </a>
+
+                  <button className="btn-esports inline-flex items-center gap-3 px-8 py-4 text-lg border border-border hover:border-secondary transition-colors">
+                    <Play className="w-6 h-6" />
+                    Следующий матч
+                  </button>
+                </div>
+
+                {/* Additional Info */}
+                <div className="mt-8 pt-6 border-t border-border/50">
+                  {/* <p className="text-sm text-muted-foreground">
+                    📍 Стадион: Media Football Arena | ⏰ Начало: 19:00 МСК | 🏆 Турнир: Media Football League
+                  </p> */}
+                </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Other videos */}
-          <div className="space-y-4">
-            {liveMatches.slice(1).map((match, index) => (
-              <motion.div
-                key={match.id}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="card-esports overflow-hidden hover:scale-[1.02] transition-transform"
-              >
-                <div className="flex flex-col sm:flex-row">
-                  {/* Thumbnail */}
-                  <div className="relative sm:w-48 aspect-video sm:aspect-auto">
-                    <img
-                      src={`https://img.youtube.com/vi/${match.videoId}/mqdefault.jpg`}
-                      alt={match.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-background/40 flex items-center justify-center group cursor-pointer hover:bg-background/30 transition-colors">
-                      <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Play className="w-6 h-6 text-primary-foreground fill-current ml-0.5" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Info */}
-                  <div className="flex-1 p-4">
-                    <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                      {match.title}
-                    </span>
-                    <h4 className="font-heading font-bold text-lg mt-1">
-                      {match.teamA} <span className="text-secondary">vs</span> {match.teamB}
-                    </h4>
-                    <a
-                      href={`https://youtube.com/watch?v=${match.videoId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-secondary hover:underline mt-2"
-                    >
-                      Watch Now <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-center mt-12"
+          >
+            <p className="text-muted-foreground mb-4">
+              Подпишитесь на наш канал, чтобы не пропустить следующие трансляции
+            </p>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-secondary hover:underline font-semibold"
+            >
+              <Youtube className="w-5 h-5" />
+              Перейти на YouTube канал
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

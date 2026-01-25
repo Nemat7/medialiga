@@ -179,7 +179,7 @@ const TournamentStandings = () => {
         >
           <h2 className="section-title gradient-border pb-4">
             <Trophy className="inline-block w-10 h-10 mr-3 text-secondary" />
-            League <span className="text-secondary">Standings</span>
+            Турнирная <span className="text-secondary">таблица</span>
           </h2>
         </motion.div>
 

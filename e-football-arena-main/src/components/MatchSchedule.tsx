@@ -484,7 +484,7 @@ const MatchSchedule = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="section-title gradient-border pb-4">
-            Match <span className="text-secondary">Schedule</span>
+            Расписание <span className="text-secondary">матчей</span>
           </h2>
         </motion.div>
 

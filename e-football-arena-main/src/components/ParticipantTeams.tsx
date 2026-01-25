@@ -3,145 +3,162 @@ import { Users, Trophy, Target } from "lucide-react";
 const teams = [
   {
     id: 1,
-    name: "Media United",
+    name: "FC Kalapocha",
     image: "/static/efootball/assets/team-logos/Калапоча.png", // локальный путь
-    color: "from-red-500 to-red-700",
+//     color: "from-red-500 to-red-700",
     players: [
-      { name: "Alex Johnson", role: "Captain", image: "/static/efootball/assets/player-photos/alex-johnson.jpg" },
-      { name: "Mike Smith", role: "Striker", image: "/static/efootball/assets/player-photos/mike-smith.jpg" },
-      { name: "David Brown", role: "Midfielder", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
+      { name: "Шарифчон Сатторзода", role: "Captain", image: "/static/efootball/assets/player-photos/alex-johnson.jpg" },
+      { name: "Асроров Сомон", role: "Игрок", image: "/static/efootball/assets/player-photos/mike-smith.jpg" },
+      { name: "Беков Аюб", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
+      { name: "Сайфуллозода Зафар", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
     ],
-    stats: { wins: 4, goals: 12 },
+    stats: { wins: 2, goals: 7 },
   },
   {
     id: 2,
-    name: "News Network",
+    name: "FC CRIF",
     image: "/static/efootball/assets/team-logos/Криф.png", // локальный путь
-    color: "from-blue-500 to-blue-700",
+//     color: "from-blue-500 to-blue-700",
     players: [
-      { name: "James Wilson", role: "Captain", image: "/static/efootball/assets/player-photos/james-wilson.jpg" },
-      { name: "Tom Anderson", role: "Goalkeeper", image: "/static/efootball/assets/player-photos/tom-anderson.jpg" },
-      { name: "Chris Taylor", role: "Defender", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
+      { name: "Хошимов Алишер", role: "Captain", image: "/static/efootball/assets/player-photos/james-wilson.jpg" },
+      { name: "Исматзода Некруз", role: "Игрок", image: "/static/efootball/assets/player-photos/tom-anderson.jpg" },
+      { name: "Абдусамадзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
+      { name: "Дильшод Садиков", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
+      { name: "Далер Азимзода", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
     ],
-    stats: { wins: 5, goals: 15 },
+    stats: { wins: 2, goals: 7 },
   },
   {
     id: 3,
-    name: "TV Titans",
+    name: "FC Menchos",
     image: "/static/efootball/assets/team-logos/Менчос.png", // локальный путь
-    color: "from-purple-500 to-purple-700",
+//     color: "from-purple-500 to-purple-700",
     players: [
-      { name: "Ryan Garcia", role: "Captain", image: "/static/efootball/assets/player-photos/ryan-garcia.jpg" },
-      { name: "Kevin Lee", role: "Striker", image: "/static/efootball/assets/player-photos/kevin-lee.jpg" },
-      { name: "Brian White", role: "Midfielder", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
+      { name: "Джалилов Бахром", role: "Captain", image: "/static/efootball/assets/player-photos/ryan-garcia.jpg" },
+      { name: "Абдуалимов Бехруз", role: "Игрок", image: "/static/efootball/assets/player-photos/kevin-lee.jpg" },
+      { name: "Саидов Самир", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
+      { name: "Субхон Халимов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
+      { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
     ],
-    stats: { wins: 3, goals: 10 },
+    stats: { wins: 2, goals: 7 },
   },
   {
     id: 4,
-    name: "Press FC",
+    name: "Persians",
     image: "/static/efootball/assets/team-logos/Персы.png", // локальный путь
-    color: "from-green-500 to-green-700",
+//     color: "from-green-500 to-green-700",
     players: [
-      { name: "Sam Miller", role: "Captain", image: "/static/efootball/assets/player-photos/sam-miller.jpg" },
-      { name: "Jack Davis", role: "Defender", image: "/static/efootball/assets/player-photos/jack-davis.jpg" },
-      { name: "Matt Wilson", role: "Midfielder", image: "/static/efootball/assets/player-photos/matt-wilson.jpg" },
+      { name: "Беназирзода Шерзод", role: "Captain", image: "/static/efootball/assets/player-photos/sam-miller.jpg" },
+      { name: "Беназирзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/jack-davis.jpg" },
+      { name: "Сахибов Хусниддин", role: "Менеджер", image: "/static/efootball/assets/player-photos/matt-wilson.jpg" },
     ],
-    stats: { wins: 3, goals: 9 },
+    stats: { wins: 2, goals: 7 },
   },
   {
     id: 5,
-    name: "Broadcast XI",
+    name: "The Poizd CF",
     image: "/static/efootball/assets/team-logos/Поизд.png", // локальный путь
-    color: "from-orange-500 to-orange-700",
+//     color: "from-orange-500 to-orange-700",
     players: [
-      { name: "Nick Brown", role: "Captain", image: "/static/efootball/assets/player-photos/nick-brown.jpg" },
-      { name: "Eric Jones", role: "Striker", image: "/static/efootball/assets/player-photos/eric-jones.jpg" },
-      { name: "Paul Martin", role: "Goalkeeper", image: "/static/efootball/assets/player-photos/paul-martin.jpg" },
+      { name: "Розиков Шерзод", role: "Менеджер", image: "/static/efootball/assets/player-photos/nick-brown.jpg" },
+      { name: "Мирзоев Джахонгир", role: "Тренер", image: "/static/efootball/assets/player-photos/eric-jones.jpg" },
+      { name: "Фозилов Аминчон", role: "Игрок", image: "/static/efootball/assets/player-photos/paul-martin.jpg" },
     ],
     stats: { wins: 2, goals: 7 },
   },
   {
     id: 6,
-    name: "Digital Stars",
+    name: "FC Sebiston",
     image: "/static/efootball/assets/team-logos/Себистон.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Курбонов Фарход", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Саидов Хамод", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Шарифов Исомиддин", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Шарапов Азиз", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Шарипов Манучер ", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 7,
-    name: "Digital Stars",
+    name: "FC Smuzi",
     image: "/static/efootball/assets/team-logos/смузи.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Аскаров Аскар", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Фируз Карачаев", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Ардашер Исаев", role: "Тренер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Низор Мамеджанов", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 8,
-    name: "Digital Stars",
+    name: "MFC Somonion",
     image: "/static/efootball/assets/team-logos/Сомони.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Латипов Карим", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Хусейнов Шахбоз", role: "Тренер", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Файзуллоев Сорбон", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Халимов Хуршед", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Одинаев Зиедулло", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 9,
-    name: "Digital Stars",
+    name: "Favik",
     image: "/static/efootball/assets/team-logos/Фавик.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Фаридун Сафаров", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Далери Сафарали", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Гадоев Алишер", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Гадоев Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Бобочони Холмурод", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 10,
-    name: "Digital Stars",
+    name: "FC Xamako",
     image: "/static/efootball/assets/team-logos/хамако 4.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "fft_logo 1", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Боваров Шерзод", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Нематов Фаридун", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Мирзоев Рамазон", role: "Менеджер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Хакимов Шухратджон", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Хайдаров Дильшод", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 11,
-    name: "Digital Stars",
+    name: "FFT",
     image: "/static/efootball/assets/team-logos/fft_logo 1.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Сухроб Джалилов", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Мехрубон Каримов", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Салохиддин Иргашев", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Мухаммад", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Шериддин Бобоев ", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
   {
     id: 12,
-    name: "Digital Stars",
+    name: "Kefteme FC",
     image: "/static/efootball/assets/team-logos/Кефтеме.png", // локальный путь
-    color: "from-cyan-500 to-cyan-700",
+//     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Steve Clark", role: "Captain", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Mark Lewis", role: "Midfielder", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Dan Moore", role: "Defender", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Махмадалиев Фаррух", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Мухаммад Рахмонов", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Курбанов Ибра", role: "Менеджер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Сухайли Эльчибеков", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
     stats: { wins: 1, goals: 5 },
   },
@@ -156,14 +173,14 @@ const Teams = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/30 rounded-full mb-6">
             <Users className="w-4 h-4 text-primary" />
             <span className="text-primary font-semibold tracking-wider uppercase text-sm">
-              Participants
+              Участники
             </span>
           </div>
           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
-            COMPETING <span className="text-gradient">TEAMS</span>
+            КОМАНДЫ <span className="text-gradient">СОПЕРНИКИ</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Meet the media organizations battling for e-football supremacy.
+            Познакомьтесь с медиа-командами, борющимися за первенство в киберфутболе.
           </p>
         </div>
 
@@ -196,11 +213,11 @@ const Teams = () => {
                   <div className="flex items-center gap-4 mt-1">
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Trophy size={14} className="text-accent" />
-                      <span>{team.stats.wins} Wins</span>
+                      <span>{team.stats.wins} Победы</span>
                     </div>
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Target size={14} className="text-primary" />
-                      <span>{team.stats.goals} Goals</span>
+                      <span>{team.stats.goals} Голы</span>
                     </div>
                   </div>
                 </div>
@@ -209,7 +226,7 @@ const Teams = () => {
               {/* Players */}
               <div className="space-y-3">
                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Key Players
+                  Ключевые игроки
                 </h4>
                 {team.players.map((player, index) => (
                   <div
@@ -237,9 +254,9 @@ const Teams = () => {
               </div>
 
               {/* View Team Button */}
-              <button className="w-full mt-6 py-3 border border-border rounded-lg text-muted-foreground font-semibold text-sm hover:border-primary hover:text-primary transition-colors uppercase tracking-wider">
+              /* <button className="w-full mt-6 py-3 border border-border rounded-lg text-muted-foreground font-semibold text-sm hover:border-primary hover:text-primary transition-colors uppercase tracking-wider">
                 View Full Roster
-              </button>
+              </button> */
             </div>
           ))}
         </div>

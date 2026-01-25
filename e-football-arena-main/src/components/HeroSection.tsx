@@ -61,8 +61,7 @@ const HeroSection = () => {
             transition={{ delay: 0.5 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
           >
-            The ultimate competitive e-football tournament. Watch elite players battle 
-            for glory on the world's biggest virtual football stage.
+            Крупнейший соревновательный турнир по киберфутболу. Наблюдайте за тем, как элитные игроки сражаются за славу на крупнейшей в мире виртуальной футбольной арене.
           </motion.p>
           
           {/* CTA Buttons */}
@@ -90,10 +89,10 @@ const HeroSection = () => {
             className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-3xl mx-auto"
           >
             {[
-              { value: "16", label: "Teams" },
-              { value: "48", label: "Matches" },
-              { value: "10K+", label: "Viewers" },
-              { value: "$5K", label: "Prize Pool" },
+              { value: "12", label: "Команд" },
+              { value: "38", label: "Игр" },
+              { value: "2 млн", label: "Охват" },
+              { value: "30K", label: "Призовой фонд" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-heading font-extrabold text-primary glow-text">
