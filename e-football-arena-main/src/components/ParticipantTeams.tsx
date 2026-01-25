@@ -254,9 +254,7 @@ const Teams = () => {
               </div>
 
               {/* View Team Button */}
-              /* <button className="w-full mt-6 py-3 border border-border rounded-lg text-muted-foreground font-semibold text-sm hover:border-primary hover:text-primary transition-colors uppercase tracking-wider">
-                View Full Roster
-              </button> */
+              
             </div>
           ))}
         </div>
