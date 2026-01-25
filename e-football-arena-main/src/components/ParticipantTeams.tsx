@@ -12,7 +12,7 @@ const teams = [
       { name: "Беков Аюб", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
       { name: "Сайфуллозода Зафар", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
     ],
-    stats: { wins: 2, goals: 7 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ const teams = [
       { name: "Дильшод Садиков", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
       { name: "Далер Азимзода", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
     ],
-    stats: { wins: 2, goals: 7 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ const teams = [
       { name: "Субхон Халимов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
       { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
     ],
-    stats: { wins: 2, goals: 7 },
+    stats: { wins: 0, goals: 1 },
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const teams = [
       { name: "Беназирзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/jack-davis.jpg" },
       { name: "Сахибов Хусниддин", role: "Менеджер", image: "/static/efootball/assets/player-photos/matt-wilson.jpg" },
     ],
-    stats: { wins: 2, goals: 7 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 5,
@@ -64,7 +64,7 @@ const teams = [
       { name: "Мирзоев Джахонгир", role: "Тренер", image: "/static/efootball/assets/player-photos/eric-jones.jpg" },
       { name: "Фозилов Аминчон", role: "Игрок", image: "/static/efootball/assets/player-photos/paul-martin.jpg" },
     ],
-    stats: { wins: 2, goals: 7 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 6,
@@ -78,7 +78,7 @@ const teams = [
       { name: "Шарапов Азиз", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Шарипов Манучер ", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 7,
@@ -91,7 +91,7 @@ const teams = [
       { name: "Ардашер Исаев", role: "Тренер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Низор Мамеджанов", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 0, goals: 1 },
   },
   {
     id: 8,
@@ -119,7 +119,7 @@ const teams = [
       { name: "Гадоев Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Бобочони Холмурод", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 10,
@@ -133,7 +133,7 @@ const teams = [
       { name: "Хакимов Шухратджон", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Хайдаров Дильшод", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 1, goals: 8 },
   },
   {
     id: 11,
@@ -147,7 +147,7 @@ const teams = [
       { name: "Мухаммад", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Шериддин Бобоев ", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 1, goals: 3 },
   },
   {
     id: 12,
@@ -160,7 +160,7 @@ const teams = [
       { name: "Курбанов Ибра", role: "Менеджер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Сухайли Эльчибеков", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 1, goals: 5 },
+    stats: { wins: 0, goals: 3 },
   },
 ];
 
@@ -254,7 +254,7 @@ const Teams = () => {
               </div>
 
               {/* View Team Button */}
-              
+
             </div>
           ))}
         </div>
