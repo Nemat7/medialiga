@@ -8,11 +8,11 @@ const teams = [
 //     color: "from-red-500 to-red-700",
     players: [
       { name: "Шарифчон Сатторзода", role: "Captain", image: "/static/efootball/assets/player-photos/alex-johnson.jpg" },
-      { name: "Асроров Сомон", role: "Игрок", image: "/static/efootball/assets/player-photos/mike-smith.jpg" },
-      { name: "Беков Аюб", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
-      { name: "Сайфуллозода Зафар", role: "Игрок", image: "/static/efootball/assets/player-photos/david-brown.jpg" },
+      { name: "Асроров Сомон", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 7.png" },
+      { name: "Беков Аюб", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 14.png" },
+      { name: "Сайфуллозода Зафар", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 16.png" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 0, goals: 1 },
   },
   {
     id: 2,
@@ -20,13 +20,13 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Криф.png", // локальный путь
 //     color: "from-blue-500 to-blue-700",
     players: [
-      { name: "Хошимов Алишер", role: "Captain", image: "/static/efootball/assets/player-photos/james-wilson.jpg" },
-      { name: "Исматзода Некруз", role: "Игрок", image: "/static/efootball/assets/player-photos/tom-anderson.jpg" },
-      { name: "Абдусамадзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
+      { name: "Хошимов Алишер", role: "Captain", image: "/static/efootball/assets/player-photos/Frame 15.png" },
+      { name: "Исматзода Некруз", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 13.png" },
+      { name: "Абдусамадзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 12.png" },
       { name: "Дильшод Садиков", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
       { name: "Далер Азимзода", role: "Игрок", image: "/static/efootball/assets/player-photos/chris-taylor.jpg" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 1, goals: 6 },
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ const teams = [
       { name: "Абдуалимов Бехруз", role: "Игрок", image: "/static/efootball/assets/player-photos/kevin-lee.jpg" },
       { name: "Саидов Самир", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
       { name: "Субхон Халимов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
-      { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
+      { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 1 (1).png" },
     ],
     stats: { wins: 0, goals: 1 },
   },
@@ -49,10 +49,10 @@ const teams = [
 //     color: "from-green-500 to-green-700",
     players: [
       { name: "Беназирзода Шерзод", role: "Captain", image: "/static/efootball/assets/player-photos/sam-miller.jpg" },
-      { name: "Беназирзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/jack-davis.jpg" },
-      { name: "Сахибов Хусниддин", role: "Менеджер", image: "/static/efootball/assets/player-photos/matt-wilson.jpg" },
+      { name: "Беназирзода Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 18.png" },
+      { name: "Орипов Сино", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 17.png" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 0, goals: 1 },
   },
   {
     id: 5,
@@ -60,11 +60,11 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Поизд.png", // локальный путь
 //     color: "from-orange-500 to-orange-700",
     players: [
-      { name: "Розиков Шерзод", role: "Менеджер", image: "/static/efootball/assets/player-photos/nick-brown.jpg" },
+      { name: "Розиков Шерзод", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 22.png" },
       { name: "Мирзоев Джахонгир", role: "Тренер", image: "/static/efootball/assets/player-photos/eric-jones.jpg" },
-      { name: "Фозилов Аминчон", role: "Игрок", image: "/static/efootball/assets/player-photos/paul-martin.jpg" },
+      { name: "Фозилов Аминчон", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 21.png" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 1, goals: 4 },
   },
   {
     id: 6,
@@ -72,13 +72,13 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Себистон.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Курбонов Фарход", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Курбонов Фарход", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 19.png" },
       { name: "Саидов Хамод", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Шарифов Исомиддин", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Шарифов Исомиддин", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 20.png" },
       { name: "Шарапов Азиз", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Шарипов Манучер ", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 0, goals: 3 },
   },
   {
     id: 7,
@@ -101,9 +101,9 @@ const teams = [
     players: [
       { name: "Латипов Карим", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Хусейнов Шахбоз", role: "Тренер", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Файзуллоев Сорбон", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Файзуллоев Сорбон", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 6.png" },
       { name: "Халимов Хуршед", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Одинаев Зиедулло", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Одинаев Зиедулло", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 5.png" },
     ],
     stats: { wins: 1, goals: 5 },
   },
@@ -113,13 +113,13 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Фавик.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Фаридун Сафаров", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Фаридун Сафаров", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 23.png" },
       { name: "Далери Сафарали", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
       { name: "Гадоев Алишер", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Гадоев Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Бобочони Холмурод", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
     ],
-    stats: { wins: 0, goals: 0 },
+    stats: { wins: 0, goals: 2 },
   },
   {
     id: 10,
@@ -127,11 +127,11 @@ const teams = [
     image: "/static/efootball/assets/team-logos/хамако 4.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Боваров Шерзод", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Боваров Шерзод", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 4.png" },
       { name: "Нематов Фаридун", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
       { name: "Мирзоев Рамазон", role: "Менеджер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Хакимов Шухратджон", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Хайдаров Дильшод", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Хайдаров Дильшод", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 2.png" },
     ],
     stats: { wins: 1, goals: 8 },
   },
@@ -141,11 +141,11 @@ const teams = [
     image: "/static/efootball/assets/team-logos/fft_logo 1.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Сухроб Джалилов", role: "Менеджер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Сухроб Джалилов", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 11.png" },
       { name: "Мехрубон Каримов", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
       { name: "Салохиддин Иргашев", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Мухаммад", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Шериддин Бобоев ", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Шериддин Бобоев ", role: "Тренер", image: "/static/efootball/assets/player-photos/Frame 24.png" },
     ],
     stats: { wins: 1, goals: 3 },
   },
@@ -155,10 +155,10 @@ const teams = [
     image: "/static/efootball/assets/team-logos/Кефтеме.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Махмадалиев Фаррух", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Мухаммад Рахмонов", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Махмадалиев Фаррух", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 8.png" },
+      { name: "Мухаммад Рахмонов", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 9 (1).png" },
       { name: "Курбанов Ибра", role: "Менеджер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
-      { name: "Сухайли Эльчибеков", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
+      { name: "Сухайли Эльчибеков", role: "Тренер", image: "/static/efootball/assets/player-photos/Frame 10 (1).png" },
     ],
     stats: { wins: 0, goals: 3 },
   },
