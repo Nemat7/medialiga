@@ -391,3 +391,61 @@ class TournamentStanding(models.Model):
         self.points = (self.won * 3) + self.drawn
         self.full_clean()  # Выполняем валидацию
         super().save(*args, **kwargs)
+
+
+
+
+
+class LiveMatch(models.Model):
+    class StatusChoices(models.TextChoices):
+        LIVE = 'live', 'Live'
+        UPCOMING = 'upcoming', 'Upcoming'
+        FINISHED = 'finished', 'Finished'
+
+    title = models.CharField('Название матча', max_length=200, blank=True)
+    home_team = models.CharField('Хозяева', max_length=100)
+    away_team = models.CharField('Гости', max_length=100)
+
+    # YouTube или Twitch ссылка
+    video_url = models.URLField('Ссылка на трансляцию')
+    video_id = models.CharField('ID видео (YouTube)', max_length=50, blank=True, help_text='Автоматически извлекается из ссылки')
+
+    # Статус матча
+    status = models.CharField(
+        'Статус',
+        max_length=20,
+        choices=StatusChoices.choices,
+        default=StatusChoices.UPCOMING
+    )
+
+    def __str__(self):
+        return f"{self.home_team} vs {self.away_team} - {self.get_status_display()}"
+
+    def save(self, *args, **kwargs):
+        # Автоматическое извлечение video_id из YouTube ссылки
+        if self.video_url and 'youtube.com' in self.video_url:
+            if 'v=' in self.video_url:
+                self.video_id = self.video_url.split('v=')[1].split('&')[0]
+            elif 'youtu.be/' in self.video_url:
+                self.video_id = self.video_url.split('youtu.be/')[1].split('?')[0]
+
+        # Генерация заголовка если пустой
+        if not self.title:
+            self.title = f"{self.home_team} vs {self.away_team}"
+
+        super().save(*args, **kwargs)
+
+    def get_youtube_thumbnail(self, quality='maxresdefault'):
+        """Получить превью YouTube"""
+        if self.video_id:
+            return f"https://img.youtube.com/vi/{self.video_id}/{quality}.jpg"
+        return None
+
+    @property
+    def is_live(self):
+        return self.status == 'live'
+
+    class Meta:
+        verbose_name = 'Прямой эфир'
+        verbose_name_plural = 'Прямые эфиры'
+        ordering = ['-id']

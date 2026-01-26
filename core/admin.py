@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Match, Team, Player, VideoReview, Sponsor, SliderImage, MvpPlayers, VoteRecord, PageVisit, EMatch, TournamentStanding
+from .models import Match, Team, Player, VideoReview, Sponsor, SliderImage, MvpPlayers, VoteRecord, PageVisit, EMatch, TournamentStanding, LiveMatch
 from django.utils.html import format_html
 
 @admin.register(Team)
@@ -448,4 +448,25 @@ class TournamentStandingAdmin(admin.ModelAdmin):
     reset_group_b.short_description = "Сбросить группу B"
 
 
+
+
+@admin.register(LiveMatch)
+class LiveMatchAdmin(admin.ModelAdmin):
+    list_display = ['id', 'home_team', 'away_team', 'status', 'video_id']
+    list_filter = ['status']
+    search_fields = ['home_team', 'away_team', 'title']
+    list_editable = ['status']
+    readonly_fields = ['video_id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'home_team', 'away_team')
+        }),
+        ('Трансляция', {
+            'fields': ('video_url', 'status')
+        }),
+        ('Системная информация', {
+            'fields': ('video_id',),
+            'classes': ('collapse',)
+        }),
+    )
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import EMatch, TournamentStanding
+from .models import EMatch, TournamentStanding, LiveMatch
 
 
 class MatchSerializer(serializers.ModelSerializer):
@@ -83,3 +83,32 @@ class TournamentStandingSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='team_name')
     gf = serializers.IntegerField(source='goals_for')
     ga = serializers.IntegerField(source='goals_against')
+
+
+
+class LiveMatchSerializer(serializers.ModelSerializer):
+    youtube_thumbnail = serializers.SerializerMethodField()
+    is_live = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LiveMatch
+        fields = [
+            'id',
+            'title',
+            'home_team',
+            'away_team',
+            'video_url',
+            'video_id',
+            'status',
+            'youtube_thumbnail',
+            'is_live',
+        ]
+        read_only_fields = ['video_id']
+
+    def get_youtube_thumbnail(self, obj):
+        if obj.video_id:
+            return f"https://img.youtube.com/vi/{obj.video_id}/maxresdefault.jpg"
+        return None
+
+    def get_is_live(self, obj):
+        return obj.is_live

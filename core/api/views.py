@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from ..models import EMatch, TournamentStanding
-from ..serializers import MatchSerializer, TournamentStandingSerializer
+from ..models import EMatch, TournamentStanding, LiveMatch
+from ..serializers import MatchSerializer, TournamentStandingSerializer, LiveMatchSerializer
 from rest_framework.views import APIView
 from django.shortcuts import render
 class MatchViewSet(viewsets.ModelViewSet):
@@ -203,4 +203,44 @@ class UpdateStandingsAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+
+class LiveMatchViewSet(viewsets.ModelViewSet):
+    queryset = LiveMatch.objects.all()
+    serializer_class = LiveMatchSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status']
+    search_fields = ['home_team', 'away_team', 'title']
+    ordering_fields = ['id']
+    ordering = ['-id']
+
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        """Получить главный матч"""
+        featured_match = LiveMatch.objects.filter(status='live').first()
+
+        if not featured_match:
+            # Если нет live, берем upcoming
+            featured_match = LiveMatch.objects.filter(status='upcoming').first()
+
+        if featured_match:
+            serializer = self.get_serializer(featured_match)
+            return Response(serializer.data)
+        return Response({'detail': 'Нет доступных матчей'}, status=404)
+
+class FeaturedMatchAPIView(APIView):
+    """API для получения главного матча"""
+
+    def get(self, request):
+        featured_match = LiveMatch.objects.filter(status='live').first()
+
+        if not featured_match:
+            # Ищем upcoming
+            featured_match = LiveMatch.objects.filter(status='upcoming').first()
+
+        if featured_match:
+            serializer = LiveMatchSerializer(featured_match)
+            return Response(serializer.data)
+
+        return Response({'detail': 'Нет доступных трансляций'}, status=404)
 
