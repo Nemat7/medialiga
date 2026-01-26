@@ -4,8 +4,8 @@ import { Handshake } from "lucide-react";
 const partners = [
   {
     name: "1xBet",
-    logo: "/static/efootball/assets/partners/1x.png", // Путь к логотипу
-    // description: "Официальный партнер лиги"
+    logo: "/static/efootball/assets/partners/1x.png",
+    url: "https://1xbet.tj/ru?tag=d_4823112m_141816c_"
   },
 ];
 
@@ -32,13 +32,16 @@ const Partners = () => {
 
         <div className="flex justify-center mt-12">
           {partners.map((partner, index) => (
-            <motion.div
+            <motion.a
               key={partner.name}
+              href={partner.url}
+              target="_blank"
+              rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className="relative group cursor-pointer"
+              className="relative group cursor-pointer no-underline"
             >
               {/* Основной блок партнера */}
               <div className="card-esports p-8 flex flex-col items-center justify-center gap-4 hover:scale-105 transition-transform duration-300 max-w-md w-full">
@@ -60,12 +63,14 @@ const Partners = () => {
                   {partner.name}
                 </span>
 
-                {/* Описание */}
-                <span className="text-center text-muted-foreground group-hover:text-foreground transition-colors">
-                  {partner.description}
-                </span>
+                {/* Описание (если нужно) */}
+                {partner.description && (
+                  <span className="text-center text-muted-foreground group-hover:text-foreground transition-colors">
+                    {partner.description}
+                  </span>
+                )}
 
-                {/* Индикатор официального партнера */}
+                {/* Индикатор официального партнера (если нужно) */}
                 {/* <div className="mt-4 px-4 py-2 bg-green-900/30 border border-green-700/50 rounded-full">
                   <span className="text-sm font-semibold text-green-400">Официальный партнер</span>
                 </div> */}
@@ -73,7 +78,7 @@ const Partners = () => {
 
               {/* Эффект свечения при наведении */}
               <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10"></div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
 
@@ -85,7 +90,6 @@ const Partners = () => {
           transition={{ delay: 0.4 }}
           className="text-center mt-12"
         >
-          {/* <p className="text-muted-foreground mb-4">Хотите стать нашим партнером?</p> */}
           <a href="#contact" className="btn-esports inline-flex">
             Стать партнером
           </a>

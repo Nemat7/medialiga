@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy } from "lucide-react";
+import { Trophy, ChevronRight, BarChart3 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Team {
@@ -26,13 +26,13 @@ const TournamentStandings = () => {
   const [groupB, setGroupB] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeGroup, setActiveGroup] = useState<"A" | "B">("A");
 
   const fetchStandings = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Замените этот URL на ваш реальный эндпоинт
       const response = await fetch("https://www.mfltj.com/api/efootball/standings/");
 
       if (!response.ok) {
@@ -44,7 +44,7 @@ const TournamentStandings = () => {
       setGroupB(data.groupB || []);
     } catch (err) {
       console.error("Error fetching standings:", err);
-      setError("Failed to load tournament standings");
+      setError("Не удалось загрузить турнирную таблицу");
 
       // Fallback на статические данные при ошибке
       setGroupA([
@@ -72,7 +72,6 @@ const TournamentStandings = () => {
   useEffect(() => {
     fetchStandings();
 
-    // Опционально: обновление данных каждые 60 секунд
     const interval = setInterval(() => {
       fetchStandings();
     }, 60000);
@@ -89,30 +88,118 @@ const TournamentStandings = () => {
   };
 
   const getPositionStyle = (position: number) => {
-    if (position <= 2) return "text-primary glow-text";
+    if (position <= 2) return "text-primary";
+    if (position <= 4) return "text-blue-400";
     return "text-muted-foreground";
   };
 
-  const renderTable = (teams: Team[], groupName: string) => (
-    <div className="mb-12 last:mb-0">
-      <h3 className="font-heading font-extrabold text-2xl mb-6 flex items-center gap-2">
-        <span className="text-secondary">{groupName}</span>
+  const getPositionBg = (position: number) => {
+    if (position === 1) return "bg-yellow-500/10 border-yellow-500/20";
+    if (position === 2) return "bg-gray-400/10 border-gray-400/20";
+    if (position === 3) return "bg-orange-700/10 border-orange-700/20";
+    if (position <= 4) return "bg-blue-500/5 border-blue-500/10";
+    return "";
+  };
+
+  // Компактный вид для мобильных
+  const renderMobileTable = (teams: Team[]) => (
+    <div className="space-y-3 md:hidden">
+      {teams.map((team, index) => (
+        <motion.div
+          key={team.position}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: index * 0.05 }}
+          className={`card-esports p-4 border-2 ${getPositionBg(team.position)}`}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-heading font-bold ${getPositionStyle(team.position)}`}>
+                {team.position}
+              </div>
+              <div>
+                <h4 className="font-heading font-bold text-sm md:text-base">{team.name}</h4>
+                <div className="flex gap-1 mt-1">
+                  {team.form.map((result, i) => (
+                    <span
+                      key={i}
+                      className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-background ${getFormColor(result)}`}
+                    >
+                      {result}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="font-heading font-extrabold text-lg text-primary">{team.points}</div>
+              <div className="text-xs text-muted-foreground">очков</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2 text-center border-t border-border/50 pt-3">
+            <div>
+              <div className="text-xs text-muted-foreground">И</div>
+              <div className="font-semibold">{team.played}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">В</div>
+              <div className="font-semibold text-green-400">{team.won}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Н</div>
+              <div className="font-semibold">{team.drawn}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">П</div>
+              <div className="font-semibold text-secondary">{team.lost}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 text-center mt-3">
+            <div>
+              <div className="text-xs text-muted-foreground">З</div>
+              <div className="font-semibold">{team.gf}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">П</div>
+              <div className="font-semibold">{team.ga}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Р</div>
+              <div className={`font-semibold ${team.gd > 0 ? 'text-green-400' : team.gd < 0 ? 'text-secondary' : ''}`}>
+                {team.gd > 0 ? `+${team.gd}` : team.gd}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+
+  // Полная таблица для десктопа
+  const renderDesktopTable = (teams: Team[], groupName: string) => (
+    <div className="hidden md:block">
+      <h3 className="font-heading font-extrabold text-xl md:text-2xl mb-4 md:mb-6 flex items-center gap-2">
+        <BarChart3 className="w-5 h-5 md:w-6 md:h-6 text-secondary" />
+        <span className="text-secondary">Группа {groupName}</span>
       </h3>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[650px]">
-          <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-              <th className="py-3 px-2">#</th>
-              <th className="py-3 px-2">Team</th>
-              <th className="py-3 px-2 text-center">P</th>
-              <th className="py-3 px-2 text-center">W</th>
-              <th className="py-3 px-2 text-center">D</th>
-              <th className="py-3 px-2 text-center">L</th>
-              <th className="py-3 px-2 text-center">GF</th>
-              <th className="py-3 px-2 text-center">GA</th>
-              <th className="py-3 px-2 text-center">GD</th>
-              <th className="py-3 px-2 text-center">Pts</th>
-              <th className="py-3 px-2 text-center">Form</th>
+      <div className="overflow-x-auto rounded-xl border border-border/50">
+        <table className="w-full">
+          <thead className="bg-muted/30">
+            <tr className="text-left text-xs md:text-sm uppercase tracking-wider text-muted-foreground">
+              <th className="py-3 px-3 md:px-4 text-center w-12">#</th>
+              <th className="py-3 px-3 md:px-4 min-w-[150px]">Команда</th>
+              <th className="py-3 px-2 text-center w-12" title="Сыграно">И</th>
+              <th className="py-3 px-2 text-center w-12" title="Победы">В</th>
+              <th className="py-3 px-2 text-center w-12" title="Ничьи">Н</th>
+              <th className="py-3 px-2 text-center w-12" title="Поражения">П</th>
+              <th className="py-3 px-2 text-center w-12" title="Забито">З</th>
+              <th className="py-3 px-2 text-center w-12" title="Пропущено">П</th>
+              <th className="py-3 px-2 text-center w-12" title="Разница">Р</th>
+              <th className="py-3 px-3 md:px-4 text-center w-16" title="Очки">О</th>
+              <th className="py-3 px-3 md:px-4 text-center min-w-[100px]">Форма</th>
             </tr>
           </thead>
           <tbody>
@@ -123,32 +210,34 @@ const TournamentStandings = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                className="border-t border-border/50 hover:bg-muted/20 transition-colors"
               >
-                <td className={`py-3 px-2 font-heading font-extrabold ${getPositionStyle(team.position)}`}>
+                <td className={`py-3 px-3 md:px-4 text-center font-heading font-extrabold ${getPositionStyle(team.position)}`}>
                   {team.position}
                 </td>
-                <td className="py-3 px-2 font-heading font-bold">{team.name}</td>
-                <td className="py-3 px-2 text-center text-muted-foreground text-sm">{team.played}</td>
-                <td className="py-3 px-2 text-center text-sm">{team.won}</td>
-                <td className="py-3 px-2 text-center text-muted-foreground text-sm">{team.drawn}</td>
-                <td className="py-3 px-2 text-center text-muted-foreground text-sm">{team.lost}</td>
-                <td className="py-3 px-2 text-center text-sm">{team.gf}</td>
-                <td className="py-3 px-2 text-center text-muted-foreground text-sm">{team.ga}</td>
-                <td className="py-3 px-2 text-center text-sm">
+                <td className="py-3 px-3 md:px-4 font-heading font-bold text-sm md:text-base">
+                  {team.name}
+                </td>
+                <td className="py-3 px-2 text-center text-sm">{team.played}</td>
+                <td className="py-3 px-2 text-center text-sm text-green-400 font-semibold">{team.won}</td>
+                <td className="py-3 px-2 text-center text-sm">{team.drawn}</td>
+                <td className="py-3 px-2 text-center text-sm text-secondary">{team.lost}</td>
+                <td className="py-3 px-2 text-center text-sm font-semibold">{team.gf}</td>
+                <td className="py-3 px-2 text-center text-sm">{team.ga}</td>
+                <td className="py-3 px-2 text-center text-sm font-semibold">
                   <span className={team.gd > 0 ? "text-green-400" : team.gd < 0 ? "text-secondary" : ""}>
                     {team.gd > 0 ? `+${team.gd}` : team.gd}
                   </span>
                 </td>
-                <td className="py-3 px-2 text-center font-heading font-extrabold text-lg text-primary glow-text">
+                <td className="py-3 px-3 md:px-4 text-center font-heading font-extrabold text-base md:text-lg text-primary">
                   {team.points}
                 </td>
-                <td className="py-3 px-2">
+                <td className="py-3 px-3 md:px-4">
                   <div className="flex gap-1 justify-center">
                     {team.form.map((result, i) => (
                       <span
                         key={i}
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-background ${getFormColor(result)}`}
+                        className={`w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-xs font-bold text-background ${getFormColor(result)}`}
                       >
                         {result}
                       </span>
@@ -164,24 +253,46 @@ const TournamentStandings = () => {
   );
 
   return (
-    <section id="standings" className="py-20 relative">
+    <section id="standings" className="py-12 md:py-20 relative">
       <div
         className="absolute inset-0 opacity-30"
         style={{ background: 'radial-gradient(ellipse at top, hsl(338, 80%, 63%, 0.1) 0%, transparent 50%)' }}
       />
 
-      <div className="container px-4 relative z-10">
+      <div className="container px-4 md:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="text-center"
         >
-          <h2 className="section-title gradient-border pb-4">
-            <Trophy className="inline-block w-10 h-10 mr-3 text-secondary" />
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold mb-4">
+            <Trophy className="inline-block w-6 h-6 md:w-8 md:h-8 mr-2 md:mr-3 text-secondary" />
             Турнирная <span className="text-secondary">таблица</span>
           </h2>
+          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+            Актуальное положение команд в группах турнира
+          </p>
         </motion.div>
+
+        {/* Мобильный переключатель групп */}
+        <div className="flex justify-center mb-6 md:hidden">
+          <div className="flex bg-muted/30 rounded-lg p-1">
+            <button
+              onClick={() => setActiveGroup("A")}
+              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${activeGroup === "A" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            >
+              Группа A
+            </button>
+            <button
+              onClick={() => setActiveGroup("B")}
+              className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${activeGroup === "B" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            >
+              Группа B
+            </button>
+          </div>
+        </div>
 
         {loading && (
           <motion.div
@@ -204,7 +315,7 @@ const TournamentStandings = () => {
               onClick={fetchStandings}
               className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
             >
-              Retry
+              Попробовать снова
             </button>
           </motion.div>
         )}
@@ -215,14 +326,60 @@ const TournamentStandings = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-12"
+            className="mt-8 md:mt-12"
           >
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="card-esports p-6">
-                {renderTable(groupA, "Group A")}
+            {/* Мобильная версия (одна группа за раз) */}
+            <div className="md:hidden">
+              {activeGroup === "A" && renderMobileTable(groupA)}
+              {activeGroup === "B" && renderMobileTable(groupB)}
+            </div>
+
+            {/* Десктоп версия (обе группы рядом) */}
+            <div className="hidden md:grid lg:grid-cols-2 gap-6 lg:gap-8">
+              <div className="card-esports p-4 md:p-6">
+                {renderDesktopTable(groupA, "A")}
               </div>
-              <div className="card-esports p-6">
-                {renderTable(groupB, "Group B")}
+              <div className="card-esports p-4 md:p-6">
+                {renderDesktopTable(groupB, "B")}
+              </div>
+            </div>
+
+            {/* Легенда */}
+            <div className="mt-8 md:mt-10 p-4 md:p-6 card-esports">
+              <h4 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+                <ChevronRight className="w-5 h-5 text-secondary" />
+                Обозначения
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
+                    <span className="text-xs font-bold text-yellow-400">1</span>
+                  </div>
+                  <span className="text-sm">1 место</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gray-400/10 border border-gray-400/20 flex items-center justify-center">
+                    <span className="text-xs font-bold text-gray-400">2</span>
+                  </div>
+                  <span className="text-sm">2 место</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-orange-700/10 border border-orange-700/20 flex items-center justify-center">
+                    <span className="text-xs font-bold text-orange-400">3</span>
+                  </div>
+                  <span className="text-sm">3 место</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <span className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center text-[8px] font-bold text-background">W</span>
+                    <span className="w-4 h-4 rounded-full bg-primary/50 flex items-center justify-center text-[8px] font-bold text-background">D</span>
+                    <span className="w-4 h-4 rounded-full bg-secondary flex items-center justify-center text-[8px] font-bold text-background">L</span>
+                  </div>
+                  <span className="text-sm">Форма</span>
+                </div>
+              </div>
+              <div className="mt-4 text-xs text-muted-foreground">
+                <p>И - сыграно, В - победы, Н - ничьи, П - поражения, З - забито, П - пропущено, Р - разница, О - очки</p>
               </div>
             </div>
           </motion.div>
@@ -233,5 +390,3 @@ const TournamentStandings = () => {
 };
 
 export default TournamentStandings;
-
-
