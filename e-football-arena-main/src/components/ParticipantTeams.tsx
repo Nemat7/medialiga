@@ -35,7 +35,7 @@ const teams = [
 //     color: "from-purple-500 to-purple-700",
     players: [
       { name: "Джалилов Бахром", role: "Captain", image: "/static/efootball/assets/player-photos/ryan-garcia.jpg" },
-      { name: "Абдуалимов Бехруз", role: "Игрок", image: "/static/efootball/assets/player-photos/kevin-lee.jpg" },
+      { name: "Абдуалимов Бехруз", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 3.png" },
       { name: "Саидов Самир", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
       { name: "Субхон Халимов", role: "Игрок", image: "/static/efootball/assets/player-photos/brian-white.jpg" },
       { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 1 (1).png" },
@@ -86,10 +86,10 @@ const teams = [
     image: "/static/efootball/assets/team-logos/смузи.png", // локальный путь
 //     color: "from-cyan-500 to-cyan-700",
     players: [
-      { name: "Аскаров Аскар", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
-      { name: "Фируз Карачаев", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
-      { name: "Ардашер Исаев", role: "Тренер", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
-      { name: "Низор Мамеджанов", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
+      { name: "Аскаров Аскар", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 27.png" },
+      { name: "Фируз Карачаев", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 26.png" },
+      { name: "Ардашер Исаев", role: "Тренер", image: "/static/efootball/assets/player-photos/Frame 28.png" },
+      { name: "Низор Мамеджанов", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 25.png" },
     ],
     stats: { wins: 0, goals: 1 },
   },
@@ -114,7 +114,7 @@ const teams = [
 //     color: "from-cyan-500 to-cyan-700",
     players: [
       { name: "Фаридун Сафаров", role: "Менеджер", image: "/static/efootball/assets/player-photos/Frame 23.png" },
-      { name: "Далери Сафарали", role: "Игрок", image: "/static/efootball/assets/player-photos/mark-lewis.jpg" },
+      { name: "Далери Сафарали", role: "Игрок", image: "/static/efootball/assets/player-photos/Frame 29.png" },
       { name: "Гадоев Алишер", role: "Игрок", image: "/static/efootball/assets/player-photos/dan-moore.jpg" },
       { name: "Гадоев Манучер", role: "Игрок", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
       { name: "Бобочони Холмурод", role: "Тренер", image: "/static/efootball/assets/player-photos/steve-clark.jpg" },
