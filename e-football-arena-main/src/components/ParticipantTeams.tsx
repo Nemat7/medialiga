@@ -40,7 +40,7 @@ const teams = [
       { name: "Субхон Халимов", role: "Игрок", image: "/static/efootball/assets/player-fotos/brian-white.jpg" },
       { name: "Манучер Мухторов", role: "Игрок", image: "/static/efootball/assets/player-fotos/Frame 1 (1).png" },
     ],
-    stats: { wins: 0, goals: 1 },
+    stats: { wins: 0, goals: 0 },
   },
   {
     id: 4,
@@ -91,7 +91,7 @@ const teams = [
       { name: "Ардашер Исаев", role: "Тренер", image: "/static/efootball/assets/player-fotos/Frame 28.png" },
       { name: "Низор Мамеджанов", role: "Игрок", image: "/static/efootball/assets/player-fotos/Frame 25.png" },
     ],
-    stats: { wins: 0, goals: 1 },
+    stats: { wins: 1, goals: 4 },
   },
   {
     id: 8,
@@ -133,7 +133,7 @@ const teams = [
       { name: "Хакимов Шухратджон", role: "Тренер", image: "/static/efootball/assets/player-fotos/steve-clark.jpg" },
       { name: "Хайдаров Дильшод", role: "Игрок", image: "/static/efootball/assets/player-fotos/Frame 2.png" },
     ],
-    stats: { wins: 1, goals: 8 },
+    stats: { wins: 2, goals: 14 },
   },
   {
     id: 11,
@@ -147,7 +147,7 @@ const teams = [
       { name: "Мухаммад", role: "Игрок", image: "/static/efootball/assets/player-fotos/steve-clark.jpg" },
       { name: "Шериддин Бобоев ", role: "Тренер", image: "/static/efootball/assets/player-fotos/Frame 24.png" },
     ],
-    stats: { wins: 1, goals: 3 },
+    stats: { wins: 1, goals: 4 },
   },
   {
     id: 12,
@@ -160,7 +160,7 @@ const teams = [
       { name: "Курбанов Ибра", role: "Менеджер", image: "/static/efootball/assets/player-fotos/dan-moore.jpg" },
       { name: "Сухайли Эльчибеков", role: "Тренер", image: "/static/efootball/assets/player-fotos/Frame 10 (1).png" },
     ],
-    stats: { wins: 0, goals: 3 },
+    stats: { wins: 1, goals: 5 },
   },
 ];
 
