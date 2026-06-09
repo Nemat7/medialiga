@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db.models import F, Case, When, Value
-from django.db.models.functions import Coalesce
+
 
 class SliderImage(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название", blank=True)
@@ -377,7 +376,7 @@ class TournamentStanding(models.Model):
             })
 
         # Проверка позиции в группе
-        if self.position < 1 or self.position > 6:
+        if self.position < 1 or self.position > 8:
             raise ValidationError({
                 'position': 'Position must be between 1 and 6 for each group'
             })
@@ -388,39 +387,12 @@ class TournamentStanding(models.Model):
             # Можно предупредить, но не блокировать
             pass
 
-    # def save(self, *args, **kwargs):
-    #     # Автоматически вычисляем очки при сохранении
-    #     self.points = (self.won * 3) + self.drawn
-    #     self.full_clean()  # Выполняем валидацию
-    #     super().save(*args, **kwargs)
-
     def save(self, *args, **kwargs):
-        # Автоматически вычисляем очки
+        # Автоматически вычисляем очки при сохранении
         self.points = (self.won * 3) + self.drawn
-
-        # Сохраняем объект
+        self.full_clean()  # Выполняем валидацию
         super().save(*args, **kwargs)
 
-        # После сохранения пересчитываем позиции ВСЕХ команд в этой группе
-        self.update_group_positions(self.group)
-
-    @classmethod
-    def update_group_positions(cls, group):
-        """Обновляет позиции команд в указанной группе"""
-        # Получаем все команды в группе, сортированные по критериям
-        standings = cls.objects.filter(group=group).order_by(
-            '-points',  # 1. По очкам (убывание)
-            '-goal_difference',  # 2. По разнице голов (убывание)
-            '-goals_for',  # 3. По забитым голам (убывание)
-            'team_name'  # 4. По алфавиту (как tiebreaker последнего уровня)
-        )
-
-        # Обновляем позиции
-        for position, standing in enumerate(standings, start=1):
-            if standing.position != position:
-                standing.position = position
-                # Используем update чтобы избежать рекурсивного save()
-                cls.objects.filter(id=standing.id).update(position=position)
 
 
 
