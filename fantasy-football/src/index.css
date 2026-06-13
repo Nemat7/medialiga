@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    /* Prevent font size inflation on mobile after orientation change */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-gray-950 text-white antialiased;
+    font-family: "Inter", system-ui, sans-serif;
+    /* Respect iPhone notch / home indicator */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface rounded-xl border border-surface-border;
+  }
+
+  .badge-position {
+    @apply text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wide;
+  }
+
+  .badge-gk {
+    @apply badge-position bg-yellow-500/20 text-yellow-400;
+  }
+
+  .badge-def {
+    @apply badge-position bg-blue-500/20 text-blue-400;
+  }
+
+  .badge-mid {
+    @apply badge-position bg-green-500/20 text-green-400;
+  }
+
+  .badge-fwd {
+    @apply badge-position bg-red-500/20 text-red-400;
+  }
+}
