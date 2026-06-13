@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// In dev, requests go through the Vite proxy (bypasses CORS on localhost).
-// In production, the real domain is already whitelisted on the API server.
 const BASE_URL = import.meta.env.DEV
   ? "/fantasy-api"
   : "https://apifantasy.footballplus.tv/api";
@@ -14,7 +12,7 @@ export const apiClient = axios.create({
   },
 });
 
-// Attach token from localStorage on every request
+// Attach token on every request
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("fantasy_token");
   if (token) {
@@ -22,3 +20,16 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Auto-logout on 401
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("fantasy_token");
+      localStorage.removeItem("fantasy_user");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);

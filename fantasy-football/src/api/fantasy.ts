@@ -58,4 +58,19 @@ export const fantasyApi = {
     const { data } = await apiClient.get("/v1/fantasy/dashboard");
     return data.data;
   },
+
+  createTeam: async (payload: {
+    season_id: number;
+    name: string;
+    players: Array<{
+      player_id: number;
+      is_starting: boolean;
+      is_captain: boolean;
+      is_vice_captain: boolean;
+      bench_order?: number;
+    }>;
+  }) => {
+    const { data } = await apiClient.post("/v1/fantasy/team", payload);
+    return data.data;
+  },
 };

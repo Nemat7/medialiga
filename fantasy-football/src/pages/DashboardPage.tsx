@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
 import { useDashboard, useSeason } from "@/hooks/useFantasy";
@@ -8,72 +8,12 @@ import {
   Star,
   ArrowLeftRight,
   Clock,
-  KeyRound,
   LogOut,
   Users,
   TrendingUp,
   AlertCircle,
 } from "lucide-react";
 import { clsx } from "clsx";
-
-// ─── Token setup screen ────────────────────────────────────────────────────────
-function TokenSetup() {
-  const { t } = useTranslation();
-  const { setToken } = useAuth();
-  const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
-
-  const handleSave = () => {
-    const trimmed = value.trim();
-    if (!trimmed) {
-      setError(true);
-      return;
-    }
-    setToken(trimmed);
-  };
-
-  return (
-    <div className="min-h-[70vh] flex items-center justify-center">
-      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-5 sm:p-8 space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mx-auto">
-            <KeyRound size={28} className="text-green-400" />
-          </div>
-          <h2 className="text-xl font-bold text-white">{t("dashboard.title")}</h2>
-          <p className="text-gray-500 text-sm">{t("dashboard.noToken")}</p>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-            {t("dashboard.tokenLabel")}
-          </label>
-          <textarea
-            rows={4}
-            value={value}
-            onChange={(e) => { setValue(e.target.value); setError(false); }}
-            placeholder={t("dashboard.tokenPlaceholder")}
-            className={clsx(
-              "w-full bg-gray-800 border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors resize-none font-mono",
-              error ? "border-red-500" : "border-gray-700 focus:border-green-600"
-            )}
-          />
-          {error && (
-            <p className="text-red-400 text-xs flex items-center gap-1">
-              <AlertCircle size={12} /> Token cannot be empty
-            </p>
-          )}
-        </div>
-
-        <button
-          onClick={handleSave}
-          className="w-full bg-green-500 hover:bg-green-400 text-white font-semibold py-3 rounded-xl transition-colors"
-        >
-          {t("dashboard.tokenSave")}
-        </button>
-      </div>
-    </div>
-  );
-}
 
 // ─── Stat card ─────────────────────────────────────────────────────────────────
 function StatCard({
@@ -145,7 +85,8 @@ function fmt(dateStr: string) {
 // ─── Main dashboard ────────────────────────────────────────────────────────────
 function DashboardContent() {
   const { t } = useTranslation();
-  const { clearToken } = useAuth();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const { data, isLoading, error } = useDashboard();
   const { data: season } = useSeason();
 
@@ -157,7 +98,7 @@ function DashboardContent() {
         <AlertCircle size={40} className="text-red-400 mx-auto" />
         <p className="text-gray-400">Failed to load dashboard. Your token may be invalid.</p>
         <button
-          onClick={clearToken}
+          onClick={logout}
           className="text-sm text-red-400 hover:text-red-300 underline"
         >
           {t("dashboard.logout")}
@@ -166,19 +107,17 @@ function DashboardContent() {
     );
   }
 
-  const currentRound = season?.rounds.find((r) => r.status === "live")
-    ?? season?.rounds.find((r) => r.status === "upcoming")
-    ?? season?.rounds[season.rounds.length - 1];
-
-  // Dashboard data shape is flexible since we don't have the real response yet
+  // Real API shape: { has_team, team: { id, name, total_points, rank }, participants_count, next_round, ... }
+  const hasTeam = data?.has_team ?? !!data?.team;
   const team = data?.team ?? null;
-  const totalPoints = data?.total_points ?? data?.team?.total_points ?? "—";
-  const globalRank = data?.rank ?? data?.team?.rank ?? "—";
-  const roundPoints = data?.round_points ?? "—";
-  const transfersLeft = data?.transfers_remaining ?? data?.free_transfers ?? "—";
-  const userName = data?.user?.name ?? data?.name ?? "";
-  const captain = data?.captain ?? data?.team?.captain ?? null;
-  const viceCaptain = data?.vice_captain ?? data?.team?.vice_captain ?? null;
+  const totalPoints = team?.total_points ?? "—";
+  const globalRank = team?.rank ?? "—";
+  const nextRound = data?.next_round ?? null;
+  const currentRound =
+    nextRound ??
+    season?.rounds.find((r) => r.status === "live") ??
+    season?.rounds.find((r) => r.status === "upcoming") ??
+    season?.rounds[season.rounds.length - 1];
 
   return (
     <div className="space-y-8 animate-slide-up">
@@ -186,17 +125,13 @@ function DashboardContent() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <p className="text-gray-500 text-sm">{t("dashboard.welcome")}</p>
-          <h1 className="text-2xl font-bold text-white">
-            {userName || t("dashboard.title")}
-          </h1>
+          <h1 className="text-2xl font-bold text-white">{t("dashboard.title")}</h1>
           {team && (
-            <p className="text-green-400 text-sm font-medium mt-0.5">
-              {team.name ?? data?.team_name}
-            </p>
+            <p className="text-green-400 text-sm font-medium mt-0.5">{team.name}</p>
           )}
         </div>
         <button
-          onClick={clearToken}
+          onClick={logout}
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-400 transition-colors px-3 py-2 rounded-lg hover:bg-gray-900"
         >
           <LogOut size={14} />
@@ -220,13 +155,13 @@ function DashboardContent() {
         />
         <StatCard
           label={t("dashboard.roundPoints")}
-          value={roundPoints}
+          value="—"
           sub={currentRound?.name}
           icon={Star}
         />
         <StatCard
           label={t("dashboard.transfersLeft")}
-          value={transfersLeft}
+          value="—"
           sub={t("dashboard.free")}
           icon={ArrowLeftRight}
         />
@@ -240,12 +175,14 @@ function DashboardContent() {
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
                 <p className="font-semibold text-white text-lg">{currentRound.name}</p>
-                <p className="text-gray-500 text-sm flex items-center gap-1.5 mt-1">
-                  <Clock size={13} />
-                  {t("dashboard.deadline")}: {fmt(currentRound.deadline_at)}
-                </p>
+                {currentRound.deadline_at && (
+                  <p className="text-gray-500 text-sm flex items-center gap-1.5 mt-1">
+                    <Clock size={13} />
+                    {t("dashboard.deadline")}: {fmt(currentRound.deadline_at)}
+                  </p>
+                )}
               </div>
-              <RoundBadge status={currentRound.status} />
+              {currentRound.status && <RoundBadge status={currentRound.status} />}
             </div>
           </div>
         </div>
@@ -255,55 +192,42 @@ function DashboardContent() {
       <div>
         <h2 className="text-lg font-bold text-white mb-3">{t("dashboard.myTeam")}</h2>
 
-        {!team ? (
+        {!hasTeam ? (
           <div className="bg-gray-900 border border-gray-800 border-dashed rounded-xl p-10 text-center space-y-3">
             <Users size={36} className="text-gray-700 mx-auto" />
             <p className="text-white font-semibold">{t("dashboard.noTeam")}</p>
             <p className="text-gray-600 text-sm">{t("dashboard.noTeamSub")}</p>
-            <button className="mt-2 bg-green-500 hover:bg-green-400 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors">
+            <button
+              onClick={() => navigate("/team/create")}
+              className="mt-2 bg-green-500 hover:bg-green-400 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors"
+            >
               {t("dashboard.createTeam")}
             </button>
           </div>
         ) : (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 space-y-4">
-            {/* Captain / Vice-captain */}
-            {(captain || viceCaptain) && (
-              <div className="grid grid-cols-2 gap-3">
-                {captain && (
-                  <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-3 text-center">
-                    <p className="text-yellow-400 text-xs font-semibold uppercase tracking-wide mb-1">
-                      {t("dashboard.captain")}
-                    </p>
-                    <p className="text-white font-semibold text-sm">
-                      {captain.display_name ?? captain.name ?? "—"}
-                    </p>
-                    <p className="text-gray-500 text-xs">
-                      {captain.club?.short_name ?? ""}
-                    </p>
-                  </div>
-                )}
-                {viceCaptain && (
-                  <div className="bg-gray-800 border border-gray-700 rounded-xl p-3 text-center">
-                    <p className="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">
-                      {t("dashboard.viceCaptain")}
-                    </p>
-                    <p className="text-white font-semibold text-sm">
-                      {viceCaptain.display_name ?? viceCaptain.name ?? "—"}
-                    </p>
-                    <p className="text-gray-500 text-xs">
-                      {viceCaptain.club?.short_name ?? ""}
-                    </p>
-                  </div>
-                )}
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <p className="text-white font-bold text-lg">{team?.name}</p>
+                <p className="text-gray-500 text-sm mt-0.5">
+                  {data?.participants_count
+                    ? `${data.participants_count} managers in league`
+                    : t("dashboard.myTeam")}
+                </p>
               </div>
-            )}
-
-            {/* Raw data fallback while we learn the API shape */}
-            {!captain && !viceCaptain && (
-              <pre className="text-xs text-gray-500 bg-gray-800 rounded-lg p-3 overflow-auto max-h-60">
-                {JSON.stringify(data, null, 2)}
-              </pre>
-            )}
+              <div className="flex gap-6">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-green-400">{totalPoints}</p>
+                  <p className="text-gray-500 text-xs">{t("dashboard.pts")}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-white">
+                    {globalRank === "—" ? "—" : `#${globalRank}`}
+                  </p>
+                  <p className="text-gray-500 text-xs">{t("dashboard.globalRank")}</p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -311,8 +235,6 @@ function DashboardContent() {
   );
 }
 
-// ─── Page entry ────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
-  const { isLoggedIn } = useAuth();
-  return isLoggedIn ? <DashboardContent /> : <TokenSetup />;
+  return <DashboardContent />;
 }

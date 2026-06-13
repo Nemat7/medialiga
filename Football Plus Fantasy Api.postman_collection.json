@@ -1,0 +1,1002 @@
+{
+  "info": {
+    "_postman_id": "302f886a-c9ee-4ca4-988e-0b80853f2a87",
+    "name": "Football Plus Fantasy Api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4725850",
+    "_collection_link": "https://go.postman.co/collection/4725850-302f886a-c9ee-4ca4-988e-0b80853f2a87?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Admins Api",
+      "item": [
+        {
+          "name": "fixtures",
+          "item": [
+            {
+              "name": "store-fixture-stats",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"home_score\": 2,\r\n  \"away_score\": 1,\r\n  \"players\": [\r\n    {\r\n      \"player_id\": 1,\r\n      \"minutes\": 90,\r\n      \"goals\": 0,\r\n      \"assists\": 0,\r\n      \"yellow_cards\": 0,\r\n      \"red_cards\": 0,\r\n      \"goals_conceded\": 1,\r\n      \"saves\": 4,\r\n      \"penalties_saved\": 0,\r\n      \"penalties_missed\": 0,\r\n      \"own_goals\": 0,\r\n      \"clean_sheet\": false,\r\n      \"player_of_match\": false\r\n    },\r\n    {\r\n      \"player_id\": 12,\r\n      \"minutes\": 90,\r\n      \"goals\": 2,\r\n      \"assists\": 0,\r\n      \"yellow_cards\": 0,\r\n      \"red_cards\": 0,\r\n      \"goals_conceded\": 0,\r\n      \"saves\": 0,\r\n      \"penalties_saved\": 0,\r\n      \"penalties_missed\": 0,\r\n      \"own_goals\": 0,\r\n      \"clean_sheet\": false,\r\n      \"player_of_match\": true\r\n    },\r\n    {\r\n      \"player_id\": 15,\r\n      \"minutes\": 90,\r\n      \"goals\": 1,\r\n      \"assists\": 0,\r\n      \"yellow_cards\": 1,\r\n      \"red_cards\": 0,\r\n      \"goals_conceded\": 2,\r\n      \"saves\": 0,\r\n      \"penalties_saved\": 0,\r\n      \"penalties_missed\": 0,\r\n      \"own_goals\": 0,\r\n      \"clean_sheet\": false,\r\n      \"player_of_match\": false\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/admin/fantasy/fixtures/1/stats",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "admin",
+                    "fantasy",
+                    "fixtures",
+                    "1",
+                    "stats"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "points",
+          "item": [
+            {
+              "name": "calculate-match-players",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/admin/fantasy/fixtures/1/calculate-points",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "admin",
+                    "fantasy",
+                    "fixtures",
+                    "1",
+                    "calculate-points"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "calculate-users-team-players",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/admin/fantasy/rounds/1/calculate-team-points",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "admin",
+                    "fantasy",
+                    "rounds",
+                    "1",
+                    "calculate-team-points"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Public Api",
+      "item": [
+        {
+          "name": "seasons",
+          "item": [
+            {
+              "name": "check_season_status",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/seasons/active",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "seasons",
+                    "active"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "clubs",
+          "item": [
+            {
+              "name": "clubs-list",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/clubs",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "clubs"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "players",
+          "item": [
+            {
+              "name": "players-list",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/players",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "players"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "players-position",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/players?position=GK",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "players"
+                  ],
+                  "query": [
+                    {
+                      "key": "position",
+                      "value": "GK"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "players-club",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/players?club_id=1",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "players"
+                  ],
+                  "query": [
+                    {
+                      "key": "club_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "players-search",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/players?search=MED Player 10",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "players"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "MED Player 10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "leaderboard",
+          "item": [
+            {
+              "name": "list",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/leaderboard",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "leaderboard"
+                  ],
+                  "query": [
+                    {
+                      "key": "season_id",
+                      "value": "1",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "dashboard",
+          "item": [
+            {
+              "name": "list",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/dashboard",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "dashboard"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users Api",
+      "item": [
+        {
+          "name": "team",
+          "item": [
+            {
+              "name": "create-team-by-user",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"season_id\": 1,\r\n  \"name\": \"Hala Madrid\",\r\n  \"players\": [\r\n    { \"player_id\": 1, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 15, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 1 },\r\n\r\n    { \"player_id\": 3, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 17, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 31, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 45, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n\r\n    { \"player_id\": 7, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 35, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": true },\r\n    { \"player_id\": 49, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 2 },\r\n    { \"player_id\": 63, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 64, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 3 },\r\n\r\n    { \"player_id\": 26, \"is_starting\": true, \"is_captain\": true, \"is_vice_captain\": false },\r\n    { \"player_id\": 40, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 54, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 4 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "users-team",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update-lineup-by-user",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"players\": [\r\n    { \"player_id\": 1, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 15, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 1 },\r\n\r\n    { \"player_id\": 3, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 17, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 31, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 45, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n\r\n    { \"player_id\": 7, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 2 },\r\n    { \"player_id\": 35, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": true },\r\n    { \"player_id\": 49, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 63, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 64, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 3 },\r\n\r\n    { \"player_id\": 26, \"is_starting\": true, \"is_captain\": false, \"is_vice_captain\": false },\r\n    { \"player_id\": 40, \"is_starting\": true, \"is_captain\": true, \"is_vice_captain\": false },\r\n    { \"player_id\": 54, \"is_starting\": false, \"is_captain\": false, \"is_vice_captain\": false, \"bench_order\": 4 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me/lineup",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me",
+                    "lineup"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-points",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me/points/1",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me",
+                    "points",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-history",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me/history",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "show-other-user-points",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/teams/1",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "teams",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-make-transfers",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"player_out_id\": 3,\r\n  \"player_in_id\": 59\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me/transfers",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me",
+                    "transfers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get-user-transfer-history",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/team/me/transfers",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "team",
+                    "me",
+                    "transfers"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "leagues",
+          "item": [
+            {
+              "name": "create-league",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"season_id\": 1,\r\n  \"name\": \"Private Legends League\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/leagues",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "leagues"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-leagues",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/leagues/me",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "leagues",
+                    "me"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "join-to-user-league",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"code\": \"ATAIUURN\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/leagues/join",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "leagues",
+                    "join"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "user-league-leaderboard",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{host}}/v1/fantasy/leagues/1/leaderboard",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "fantasy",
+                    "leagues",
+                    "1",
+                    "leaderboard"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "check-me-information",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{host}}/v1/fantasy/me",
+          "host": [
+            "{{host}}"
+          ],
+          "path": [
+            "v1",
+            "fantasy",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
