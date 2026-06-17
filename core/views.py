@@ -56,15 +56,23 @@ def index(request):
         total=ExpressionWrapper(F('goals') + F('assists'), output_field=IntegerField())
     ).order_by('-total')[:3]
 
-    # Получаем последнее видео и спонсоров
-    latest_video = VideoReview.objects.latest('date')
-    sponsors = Sponsor.objects.all()
     slider_images = SliderImage.objects.filter(is_active=True).order_by('order')[:3]
 
     upcoming_matches = Match.objects.filter(
         is_active=True,
         date__gte=timezone.now().date()
     ).order_by('date', 'time')[:6]
+
+    # Video highlights — up to 4 active videos for the section
+    video_highlights = VideoReview.objects.filter(is_active=True).order_by('order', '-date')[:4]
+
+    # Sponsors split by type
+    general_partner = Sponsor.objects.filter(
+        sponsor_type=Sponsor.TYPE_GENERAL, is_active=True
+    ).order_by('order').first()
+    official_sponsors = Sponsor.objects.filter(
+        sponsor_type=Sponsor.TYPE_OFFICIAL, is_active=True
+    ).order_by('order')
 
     # Создаём единый контекст
     context = {
@@ -73,8 +81,9 @@ def index(request):
         'top_scorers': Player.objects.order_by('-goals')[:5],
         'top_assists': top_assists,
         'top_combined': top_combined,
-        'latest_video': latest_video,
-        'sponsors': sponsors,
+        'video_highlights': video_highlights,
+        'general_partner': general_partner,
+        'official_sponsors': official_sponsors,
         'slider_images': slider_images,
         'upcoming_matches': upcoming_matches,
     }

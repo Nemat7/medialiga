@@ -3,117 +3,275 @@
 
 {% block extra_css %}
 <style>
-    /* === HERO SLIDER ТОЧНАЯ КОПИЯ ИЗ HeroSlider.tsx === */
-    .hero-slider-lovable {
+    /* ── Compact Static Hero ── */
+    .hero-static {
         position: relative;
-        height: 100vh;
-        min-height: 600px;
+        height: 46vh;
+        min-height: 300px;
+        max-height: 520px;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
-    .hero-slide-lovable {
-        position: absolute;
-        inset: 0;
-        transition: all 0.7s ease-out;
-        opacity: 0;
-        transform: scale(1.05);
-    }
-
-    .hero-slide-lovable.active {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    .hero-slide-bg {
+    .hero-static-bg {
         position: absolute;
         inset: 0;
         background-size: cover;
-        background-position: center;
+        background-position: center 30%;
     }
 
-    .hero-slide-overlay {
+    .hero-static-overlay {
         position: absolute;
         inset: 0;
-        <!--background: linear-gradient(to right, hsl(var(&#45;&#45;background)) 0%, transparent 100%),
-                    linear-gradient(to top, hsl(var(&#45;&#45;background)) 0%, transparent 100%);-->
+        background:
+            linear-gradient(to bottom, rgba(14,5,8,0.25) 0%, rgba(14,5,8,0.72) 70%, rgba(14,5,8,0.97) 100%),
+            linear-gradient(to right, rgba(14,5,8,0.35) 0%, transparent 60%);
     }
 
-    .hero-content-lovable {
+    .hero-static-inner {
         position: relative;
         z-index: 2;
-        max-width: 42rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding-top: 68px;
+        gap: 0.5rem;
+        padding-bottom: 1.5rem;
     }
 
-    .hero-title-lovable {
+    .hero-static-season {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+    }
+
+    .hero-static-season::before,
+    .hero-static-season::after {
+        content: '';
+        display: block;
+        width: 22px;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.55;
+    }
+
+    .hero-static-logo {
+        height: 70px;
+        width: 70px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 16px rgba(0,0,0,0.55));
+        margin: 0.25rem 0;
+    }
+
+    .hero-static-title {
         font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        color: #fff;
         line-height: 1;
+        text-shadow: 0 2px 24px rgba(0,0,0,0.55);
+        margin: 0;
     }
 
-    @media (min-width: 768px) {
-        .hero-title-lovable {
-            font-size: 5rem;
-        }
+    .hero-static-title span { color: var(--gold); }
+
+    .hero-static-tagline {
+        font-size: 0.75rem;
+        font-weight: 300;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(232,221,213,0.55);
+        margin: 0;
     }
 
-    @media (min-width: 1024px) {
-        .hero-title-lovable {
-            font-size: 6rem;
-        }
+    /* ── Next Match Strip ── */
+    .next-match-strip {
+        background: hsl(var(--background));
+        padding: 0 30px 0;
     }
 
-    .hero-subtitle-badge {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        background: hsl(var(--primary) / 0.2);
-        border: 1px solid hsl(var(--primary) / 0.3);
-        border-radius: 9999px;
-        color: hsl(var(--primary));
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin-bottom: 1.5rem;
+    .next-match-card {
+        position: relative;
+        background: hsl(var(--card));
+        border: 1px solid rgba(201,168,76,0.18);
+        border-radius: 1rem;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        max-width: 900px;
+        margin: 0 auto;
+        transform: translateY(-36px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.06);
     }
 
-    /* Navigation Arrows */
-    .slider-arrow {
+    .next-match-card::before {
+        content: '';
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 48px;
-        height: 48px;
-        background: hsl(var(--secondary) / 0.5);
-        border: none;
+        left: 0; top: 14px; bottom: 14px;
+        width: 3px;
+        background: var(--gold);
+        border-radius: 0 2px 2px 0;
+    }
+
+    .nm-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        min-width: 58px;
+        flex-shrink: 0;
+    }
+
+    .nm-pulse {
+        width: 7px;
+        height: 7px;
+        background: var(--gold);
         border-radius: 50%;
+        animation: nm-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes nm-pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.45; transform: scale(0.75); }
+    }
+
+    .nm-label-text {
+        font-size: 0.52rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gold);
+        text-align: center;
+        line-height: 1.4;
+    }
+
+    .nm-divider {
+        width: 1px;
+        height: 44px;
+        background: hsl(var(--border));
+        flex-shrink: 0;
+    }
+
+    .nm-teams {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        flex: 1;
+    }
+
+    .nm-team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        flex: 1;
+    }
+
+    .nm-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: hsl(var(--primary));
+        border: 1.5px solid rgba(201,168,76,0.22);
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gold);
+        overflow: hidden;
+    }
+
+    .nm-avatar img {
+        width: 100%; height: 100%;
+        object-fit: contain;
+        padding: 4px;
+    }
+
+    .nm-team-name {
+        font-size: 0.72rem;
+        font-weight: 600;
         color: hsl(var(--foreground));
-        transition: all 0.3s ease;
-        backdrop-filter: blur(4px);
-        z-index: 10;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 88px;
     }
 
-    .slider-arrow:hover {
-        background: hsl(var(--primary));
-        color: hsl(var(--background));
-        transform: translateY(-50%) scale(1.1);
+    .nm-vs {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        color: hsl(var(--muted));
+        flex-shrink: 0;
     }
 
-    .slider-arrow.prev {
-        left: 1rem;
-    }
-
-    .slider-arrow.next {
-        right: 1rem;
-    }
-
-    /* Slide Indicators */
-    .slider-indicators {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
+    .nm-info {
         display: flex;
-        gap: 0.5rem;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex-shrink: 0;
+    }
+
+    .nm-info-row {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.72rem;
+        color: hsl(var(--muted));
+        white-space: nowrap;
+    }
+
+    .nm-info-row i {
+        color: var(--gold);
+        font-size: 0.62rem;
+        width: 11px;
+        text-align: center;
+    }
+
+    .nm-cta {
+        flex-shrink: 0;
+        padding: 0.5rem 1rem;
+        background: rgba(87,18,45,0.4);
+        border: 1px solid rgba(201,168,76,0.28);
+        border-radius: 0.5rem;
+        color: var(--gold);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-decoration: none;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transition: background 0.2s, border-color 0.2s;
+        font-family: 'FIFA Sans', sans-serif;
+    }
+
+    .nm-cta:hover {
+        background: #57122D;
+        border-color: var(--gold);
+        color: var(--gold);
+    }
+
+    .nm-empty {
+        flex: 1;
+        font-size: 0.82rem;
+        color: hsl(var(--muted));
+    }
+
+    /* Slide Indicators — placeholder so old selector refs don't break */
+    .slider-indicators {
+        display: none;
         z-index: 10;
     }
 
@@ -121,7 +279,7 @@
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 50%;
-        background: hsl(var(--muted));
+        background: rgba(201, 168, 76, 0.25);
         border: none;
         padding: 0;
         transition: all 0.3s ease;
@@ -131,24 +289,160 @@
     .slider-indicator.active {
         width: 2.5rem;
         border-radius: 0.25rem;
-        background: hsl(var(--primary));
+        background: var(--gold);
     }
 
-    /* === VIDEO HIGHLIGHTS (ТОЧНАЯ КОПИЯ) === */
+    /* === VIDEO HIGHLIGHTS === */
     .video-highlights-section {
         padding: 5rem 0;
         background: hsl(var(--background));
     }
 
-    .video-card-lovable {
+    /* Featured large video */
+    .video-featured {
+        position: relative;
+        border-radius: 1rem;
+        overflow: hidden;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        min-height: 320px;
     }
 
-    .video-card-lovable:hover {
-        transform: translateY(-5px);
+    .video-featured img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
     }
 
+    .video-featured:hover img {
+        transform: scale(1.04);
+    }
+
+    .video-featured-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(14,5,8,0.85) 0%, rgba(14,5,8,0.15) 60%, transparent 100%);
+    }
+
+    .video-featured-content {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        padding: 1.75rem;
+    }
+
+    /* Small video cards stacked on right */
+    .video-card-small {
+        display: flex;
+        gap: 1rem;
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 0.75rem;
+        padding: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .video-card-small:hover {
+        border-color: rgba(201, 168, 76, 0.25);
+        background: hsl(var(--secondary));
+        transform: translateX(4px);
+    }
+
+    .video-card-small-thumb {
+        position: relative;
+        width: 120px;
+        min-width: 120px;
+        height: 72px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .video-card-small-thumb img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .video-card-small:hover .video-card-small-thumb img {
+        transform: scale(1.08);
+    }
+
+    .video-thumb-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(14,5,8,0.35);
+        transition: background 0.3s ease;
+    }
+
+    .video-card-small:hover .video-thumb-overlay {
+        background: rgba(14,5,8,0.15);
+    }
+
+    .play-icon-sm {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .play-icon-sm span {
+        width: 30px;
+        height: 30px;
+        background: rgba(87,18,45,0.9);
+        border: 1px solid rgba(201,168,76,0.4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Common video styles */
+    .play-icon-lovable {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .play-icon-lovable span {
+        width: 60px;
+        height: 60px;
+        background: rgba(87,18,45,0.9);
+        border: 2px solid rgba(201,168,76,0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        transition: all 0.3s ease;
+    }
+
+    .video-featured:hover .play-icon-lovable span {
+        transform: scale(1.1);
+        box-shadow: var(--shadow-glow);
+        border-color: var(--gold);
+    }
+
+    .duration-badge-lovable {
+        position: absolute;
+        bottom: 0.625rem;
+        right: 0.625rem;
+        padding: 0.2rem 0.5rem;
+        background: rgba(14,5,8,0.85);
+        border-radius: 0.25rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: hsl(var(--foreground));
+        backdrop-filter: blur(4px);
+    }
+
+    /* Keep old classes for backward compat */
+    .video-card-lovable { cursor: pointer; }
     .video-thumbnail-lovable {
         position: relative;
         aspect-ratio: 16/9;
@@ -157,70 +451,10 @@
         margin-bottom: 1rem;
     }
 
-    .video-thumbnail-lovable img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .video-card-lovable:hover .video-thumbnail-lovable img {
-        transform: scale(1.1);
-    }
-
-    .video-thumbnail-overlay {
-        position: absolute;
-        inset: 0;
-        background: hsla(var(--background) / 0.4);
-        transition: background 0.3s ease;
-    }
-
-    .video-card-lovable:hover .video-thumbnail-overlay {
-        background: hsla(var(--background) / 0.2);
-    }
-
-    .play-button-lovable {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .play-icon-lovable {
-        width: 56px;
-        height: 56px;
-        background: hsla(var(--primary) / 0.9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: hsl(var(--background));
-        transition: all 0.3s ease;
-    }
-
-    .video-card-lovable:hover .play-icon-lovable {
-        transform: scale(1.1);
-        box-shadow: 0 0 30px hsla(var(--primary) / 0.5);
-    }
-
-    .duration-badge-lovable {
-        position: absolute;
-        bottom: 0.75rem;
-        right: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        background: hsla(var(--background) / 0.8);
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: hsl(var(--foreground));
-        backdrop-filter: blur(4px);
-    }
-
-    /* === UPCOMING MATCHES (ТОЧНАЯ КОПИЯ) === */
+    /* === UPCOMING MATCHES === */
     .matches-section-lovable {
         padding: 5rem 0;
-        background: hsl(var(--secondary) / 0.3);
+        background: hsl(var(--secondary));
     }
 
     .match-card-lovable {
@@ -233,6 +467,7 @@
 
     .match-card-lovable:hover {
         transform: translateY(-5px);
+        border-color: rgba(201, 168, 76, 0.3);
         box-shadow: var(--shadow-card);
     }
 
@@ -240,31 +475,35 @@
         width: 64px;
         height: 64px;
         background: hsl(var(--secondary));
+        border: 1px solid hsl(var(--border));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: 'Bebas Neue';
-        font-size: 1.5rem;
-        color: hsl(var(--primary));
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--gold);
         margin: 0 auto 0.75rem;
     }
 
     .vs-badge-lovable {
         width: 56px;
         height: 56px;
-        background: hsl(var(--primary) / 0.1);
-        border: 1px solid hsl(var(--primary) / 0.3);
+        background: rgba(87, 18, 45, 0.4);
+        border: 1px solid rgba(201, 168, 76, 0.3);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: 'Bebas Neue';
-        font-size: 1.25rem;
-        color: hsl(var(--primary));
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        color: var(--gold);
     }
 
-    /* === TOURNAMENT TABLES (ТОЧНАЯ КОПИЯ) === */
+    /* === TOURNAMENT TABLES === */
     .table-card-lovable {
         background: hsl(var(--card));
         border: 1px solid hsl(var(--border));
@@ -274,15 +513,30 @@
     }
 
     .table-header-lovable {
-        background: hsl(var(--primary));
+        background: linear-gradient(135deg, #57122D 0%, #8B1A3F 100%);
         padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .table-header-lovable::before {
+        content: '';
+        display: block;
+        width: 3px;
+        height: 1.5rem;
+        background: var(--gold);
+        border-radius: 2px;
+        flex-shrink: 0;
     }
 
     .table-header-lovable h3 {
-        font-family: 'Bebas Neue';
-        font-size: 1.5rem;
-        color: hsl(var(--background));
-        letter-spacing: 0.1em;
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
         margin: 0;
     }
 
@@ -294,39 +548,43 @@
     .standings-table-lovable th {
         padding: 0.75rem 1rem;
         text-align: left;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 600;
         color: hsl(var(--muted));
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        border-bottom: 2px solid hsl(var(--border));
-        background: hsl(var(--secondary) / 0.5);
+        letter-spacing: 0.08em;
+        border-bottom: 1px solid hsl(var(--border));
+        background: hsl(var(--secondary));
     }
 
     .standings-table-lovable td {
-        padding: 1rem;
-        border-bottom: 1px solid hsl(var(--border) / 0.5);
-        transition: background 0.3s ease;
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid rgba(60, 14, 35, 0.5);
+        transition: background 0.2s ease;
+        color: hsl(var(--foreground));
+        font-size: 0.9rem;
     }
 
     .standings-table-lovable tr:hover td {
-        background: hsl(var(--secondary) / 0.3);
+        background: rgba(87, 18, 45, 0.2);
     }
 
     .position-badge-lovable {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: 'Bebas Neue';
-        font-size: 1.125rem;
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
     }
 
     .position-badge-lovable.top-2 {
-        background: hsl(var(--primary));
-        color: hsl(var(--background));
+        background: #57122D;
+        border: 1px solid var(--gold);
+        color: var(--gold);
     }
 
     .position-badge-lovable.other {
@@ -334,7 +592,7 @@
         color: hsl(var(--muted));
     }
 
-    /* === TOP SCORERS (ТОЧНАЯ КОПИЯ) === */
+    /* === TOP SCORERS === */
     .scorer-card-lovable {
         background: hsl(var(--card));
         border: 1px solid hsl(var(--border));
@@ -342,10 +600,12 @@
         padding: 1.5rem;
         position: relative;
         transition: all 0.3s ease;
+        text-align: center;
     }
 
     .scorer-card-lovable:hover {
         transform: translateY(-5px);
+        border-color: rgba(201, 168, 76, 0.3);
         box-shadow: var(--shadow-card);
     }
 
@@ -353,33 +613,37 @@
         position: absolute;
         top: -0.75rem;
         right: -0.75rem;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: 'Bebas Neue';
-        font-size: 1.125rem;
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
     }
 
-    .rank-1 { background: hsl(var(--primary)); color: hsl(var(--background)); }
-    .rank-2 { background: hsl(var(--muted)); color: hsl(var(--foreground)); }
-    .rank-3 { background: hsl(25, 85%, 45%); color: hsl(var(--background)); }
+    .rank-1 { background: var(--gold); color: #0E0508; box-shadow: var(--shadow-gold); }
+    .rank-2 { background: #8a8a8a; color: #0E0508; }
+    .rank-3 { background: #cd7f32; color: #0E0508; }
     .rank-other { background: hsl(var(--secondary)); color: hsl(var(--muted)); }
 
     .scorer-avatar-lovable {
         width: 80px;
         height: 80px;
         background: hsl(var(--secondary));
+        border: 2px solid hsl(var(--border));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 1rem;
-        font-family: 'Bebas Neue';
-        font-size: 1.5rem;
-        color: hsl(var(--primary));
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--gold);
+        overflow: hidden;
     }
 
     .stats-container-lovable {
@@ -389,122 +653,146 @@
     }
 
     .stat-number-lovable {
-        font-family: 'Bebas Neue';
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
         font-size: 2rem;
-        color: hsl(var(--primary));
+        color: var(--gold);
+        line-height: 1;
     }
 
     .stat-label-lovable {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         color: hsl(var(--muted));
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.1em;
+        margin-top: 0.25rem;
     }
 
-    /* === PARTNERS SECTION ТОЧНАЯ КОПИЯ ИЗ Partners.tsx === */
+    /* === PARTNERS / SPONSORS === */
     .general-partner-section {
-        padding: 4rem 0;
-        background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--secondary) / 0.3));
+        padding: 5rem 0;
+        background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
     }
 
     .other-partners-section {
-        padding: 4rem 0;
-        background: hsl(var(--secondary) / 0.3);
+        padding: 4rem 0 5rem;
+        background: hsl(var(--secondary));
+        overflow: hidden;
     }
 
+    /* General partner card */
     .general-partner-card {
         position: relative;
         background: hsl(var(--card));
-        border: 2px solid hsl(var(--primary) / 0.3);
-        border-radius: 1rem;
-        padding: 3rem;
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        border-radius: 1.25rem;
+        padding: 3.5rem;
         text-align: center;
-        max-width: 42rem;
+        max-width: 44rem;
         margin: 0 auto;
-        box-shadow: var(--shadow-glow);
+        box-shadow: var(--shadow-gold), var(--shadow-card);
+        overflow: hidden;
     }
 
-    .partner-star-decoration {
+    .general-partner-card::before {
+        content: '';
         position: absolute;
-        color: hsl(var(--primary) / 0.3);
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
     .partner-logo-placeholder-large {
-        width: 128px;
-        height: 128px;
+        width: 120px;
+        height: 120px;
         background: hsl(var(--secondary));
         border-radius: 1rem;
-        border: 1px solid hsl(var(--border));
+        border: 1px solid rgba(201, 168, 76, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 1.5rem;
-        font-family: 'Bebas Neue';
-        font-size: 2.5rem;
-        color: hsl(var(--primary));
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 2rem;
+        color: var(--gold);
     }
 
     .partner-badge-lovable {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: hsl(var(--primary) / 0.1);
-        border: 1px solid hsl(var(--primary) / 0.3);
+        padding: 0.5rem 1.25rem;
+        background: var(--gold-dim);
+        border: 1px solid rgba(201, 168, 76, 0.35);
         border-radius: 9999px;
-        margin-top: 1rem;
+        margin-top: 1.25rem;
     }
 
-    .partner-badge-lovable i {
-        color: hsl(var(--primary));
+    .partner-badge-lovable i { color: var(--gold); }
+    .partner-badge-lovable span { color: var(--gold); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.05em; }
+
+    /* Scrolling marquee for other sponsors */
+    .sponsors-marquee-wrapper {
+        position: relative;
+        overflow: hidden;
+        mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
     }
 
-    .partner-badge-lovable span {
-        color: hsl(var(--primary));
-        font-weight: 500;
+    .sponsors-marquee-track {
+        display: flex;
+        gap: 1.5rem;
+        animation: sponsors-scroll 35s linear infinite;
+        width: max-content;
     }
 
-    .partner-grid-item {
+    .sponsors-marquee-track:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes sponsors-scroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    .sponsor-logo-card {
+        flex-shrink: 0;
+        width: 160px;
+        height: 90px;
         background: hsl(var(--card));
         border: 1px solid hsl(var(--border));
         border-radius: 0.75rem;
-        padding: 1.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        height: 160px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 0.5rem;
+        transition: border-color 0.3s ease;
+        padding: 1rem;
+        cursor: default;
     }
 
-    .partner-grid-item:hover {
-        border-color: hsl(var(--primary) / 0.5);
-        background: hsl(var(--card) / 0.8);
-        transform: translateY(-2px);
+    .sponsor-logo-card:hover {
+        border-color: rgba(201, 168, 76, 0.35);
     }
 
-    .partner-logo-small {
-        width: 64px;
-        height: 64px;
-        background: hsl(var(--secondary));
-        border-radius: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-        font-family: 'Bebas Neue';
-        font-size: 1.125rem;
+    .sponsor-logo-initials {
+        font-family: 'FIFA Sans', sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--gold);
+    }
+
+    .sponsor-logo-name {
+        font-size: 0.7rem;
+        font-weight: 500;
         color: hsl(var(--muted));
-        transition: all 0.3s ease;
+        letter-spacing: 0.05em;
+        text-align: center;
     }
 
-    .partner-grid-item:hover .partner-logo-small {
-        background: hsl(var(--primary) / 0.1);
-        color: hsl(var(--primary));
-    }
-
-    .tier-platinum { color: hsl(var(--primary)); }
+    .tier-platinum { color: var(--gold); }
     .tier-gold { color: #D4AF37; }
     .tier-silver { color: hsl(var(--muted)); }
 
@@ -542,74 +830,513 @@
         grid-template-columns: repeat(3, 1fr);
     }
 
+    /* ═══════════════════════════════════════
+       MOBILE RESPONSIVENESS  (≤ 767px)
+    ═══════════════════════════════════════ */
+    @media (max-width: 767px) {
+
+        /* Sections — less vertical breathing room */
+        .matches-section-lovable,
+        .video-highlights-section,
+        .general-partner-section,
+        .other-partners-section {
+            padding: 2.5rem 0;
+        }
+
+        /* Hero — compact on mobile */
+        .hero-static {
+            height: 36vh;
+            min-height: 240px;
+        }
+
+        .hero-static-logo { height: 52px; width: 52px; }
+        .hero-static-title { font-size: 2.35rem; }
+
+        .next-match-strip { padding: 0 1rem; }
+
+        .next-match-card {
+            flex-wrap: wrap;
+            gap: 0.625rem;
+            padding: 0.875rem 1rem 0.875rem 1.25rem;
+            transform: translateY(-22px);
+        }
+
+        .nm-divider { display: none; }
+
+        .nm-label { flex-direction: row; min-width: auto; gap: 0.5rem; }
+
+        .nm-avatar { width: 30px; height: 30px; font-size: 0.8rem; }
+        .nm-team-name { font-size: 0.66rem; max-width: 68px; }
+        .nm-teams { gap: 0.5rem; }
+
+        .nm-info { flex-direction: row; flex-wrap: wrap; gap: 0.4rem 0.875rem; }
+
+        .nm-cta { font-size: 0.65rem; padding: 0.4rem 0.75rem; }
+
+        /* Section section-badge + title tight spacing */
+        .section-badge {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Match cards — remove tall padding on mobile */
+        .match-card-lovable {
+            padding: 1rem;
+        }
+
+        .team-avatar-lovable {
+            width: 48px;
+            height: 48px;
+            font-size: 1rem;
+        }
+
+        .vs-badge-lovable {
+            width: 40px;
+            height: 40px;
+            font-size: 0.875rem;
+        }
+
+        /* Tables — shrink cell padding */
+        .standings-table-lovable td,
+        .standings-table-lovable th {
+            padding: 0.625rem 0.625rem;
+            font-size: 0.8rem;
+        }
+
+        .position-badge-lovable {
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+        }
+
+        /* Top scorers — 2 per row on mobile */
+        .scorer-card-lovable {
+            padding: 1.25rem 1rem;
+        }
+
+        .scorer-avatar-lovable {
+            width: 64px;
+            height: 64px;
+            font-size: 1rem;
+        }
+
+        .stat-number-lovable {
+            font-size: 1.5rem;
+        }
+
+        /* Video highlights — featured shrinks */
+        .video-featured {
+            height: 220px !important;
+            min-height: 220px;
+        }
+
+        .video-featured-content {
+            padding: 1rem;
+        }
+
+        .video-featured-content h3 {
+            font-size: 1.1rem !important;
+        }
+
+        /* Small video cards — tighten thumb on tiny screens */
+        .video-card-small {
+            padding: 0.75rem;
+        }
+
+        .video-card-small-thumb {
+            width: 96px;
+            min-width: 96px;
+            height: 62px;
+        }
+
+        /* General partner card */
+        .general-partner-card {
+            padding: 2rem 1.25rem;
+        }
+
+        .partner-logo-placeholder-large {
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+        }
+
+        .general-partner-card h3 {
+            font-size: 1.5rem !important;
+        }
+
+        /* Sponsors section title inline override */
+        .general-partner-section .section-title,
+        .other-partners-section .section-title {
+            font-size: 2rem !important;
+        }
+
+        /* Sponsor marquee — smaller cards on mobile */
+        .sponsor-logo-card {
+            width: 130px;
+            height: 76px;
+        }
+    }
+
+    /* ═══════════════════════════════════════
+       SMALL PHONES  (≤ 480px)
+    ═══════════════════════════════════════ */
+    @media (max-width: 480px) {
+
+        .hero-static {
+            height: 30vh;
+            min-height: 210px;
+        }
+
+        .hero-static-logo { height: 40px; width: 40px; }
+        .hero-static-title { font-size: 1.85rem; }
+
+        /* Tighter container padding */
+        .container-lovable {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Section title can't go below 1.75rem */
+        .section-title {
+            font-size: 1.85rem !important;
+        }
+
+        /* Scorers — stack to 1 per row naturally (col-md-6 → full width) */
+        .stat-number-lovable {
+            font-size: 1.35rem;
+        }
+
+        /* Match card team name truncation */
+        .match-card-lovable h4 {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90px;
+        }
+
+        /* Featured video even smaller */
+        .video-featured {
+            height: 190px !important;
+            min-height: 190px;
+        }
+
+        /* Table — tighter names */
+        .standings-table-lovable td:nth-child(2),
+        .standings-table-lovable th:nth-child(2) {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    /* ── Fantasy Promo Section ── */
+    .fantasy-promo {
+        position: relative;
+        overflow: hidden;
+        padding: 5rem 0;
+        background: hsl(var(--secondary));
+    }
+
+    .fantasy-promo::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+
+    .fantasy-promo::after {
+        content: '';
+        position: absolute;
+        top: -80px; right: -80px;
+        width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .fantasy-promo-blob {
+        position: absolute;
+        bottom: -60px; left: -60px;
+        width: 320px; height: 320px;
+        background: radial-gradient(circle, rgba(87,18,45,0.45) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .fantasy-promo-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .fantasy-promo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.875rem;
+        background: rgba(201,168,76,0.1);
+        border: 1px solid rgba(201,168,76,0.3);
+        border-radius: 9999px;
+        color: var(--gold);
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+    }
+
+    .fantasy-promo-title {
+        font-size: 3.25rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.03em;
+        color: #fff;
+        margin-bottom: 1rem;
+    }
+
+    .fantasy-promo-title span { color: var(--gold); }
+
+    .fantasy-promo-desc {
+        color: rgba(232,221,213,0.6);
+        font-size: 0.95rem;
+        font-weight: 300;
+        line-height: 1.65;
+        margin-bottom: 2rem;
+        max-width: 400px;
+    }
+
+    .fantasy-promo-stats {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2.25rem;
+    }
+
+    .fantasy-stat-num {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+        display: block;
+    }
+
+    .fantasy-stat-label {
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: hsl(var(--muted));
+    }
+
+    .fantasy-cta-row {
+        display: flex;
+        gap: 0.875rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-fantasy {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        background: var(--gold);
+        color: hsl(var(--background));
+        font-family: 'FIFA Sans', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    }
+
+    .btn-fantasy:hover {
+        background: #e0bc5a;
+        color: hsl(var(--background));
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(201,168,76,0.42);
+    }
+
+    .btn-fantasy-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: transparent;
+        color: hsl(var(--foreground));
+        font-family: 'FIFA Sans', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        border: 1px solid hsl(var(--border));
+        transition: all 0.25s ease;
+    }
+
+    .btn-fantasy-outline:hover {
+        border-color: rgba(201,168,76,0.4);
+        color: var(--gold);
+    }
+
+    /* Right side mock cards */
+    .fantasy-promo-visual {
+        display: flex;
+        flex-direction: column;
+        gap: 0.875rem;
+    }
+
+    .fantasy-card-preview {
+        background: hsl(var(--card));
+        border: 1px solid hsl(var(--border));
+        border-radius: 1rem;
+        padding: 1.125rem 1.375rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .fantasy-card-preview.featured {
+        border-color: rgba(201,168,76,0.28);
+        box-shadow: 0 0 0 1px rgba(201,168,76,0.06), 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    .fantasy-player-avatar {
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        border: 1.5px solid rgba(201,168,76,0.28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: var(--gold);
+        flex-shrink: 0;
+    }
+
+    .fantasy-player-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: hsl(var(--foreground));
+    }
+
+    .fantasy-player-pos {
+        font-size: 0.6rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: hsl(var(--muted));
+        margin-top: 0.15rem;
+    }
+
+    .fantasy-player-pts {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+        text-align: right;
+    }
+
+    .fantasy-player-pts-label {
+        font-size: 0.52rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: hsl(var(--muted));
+        text-align: right;
+    }
+
+    @media (max-width: 767px) {
+        .fantasy-promo { padding: 3.5rem 0; }
+        .fantasy-promo-inner { grid-template-columns: 1fr; gap: 2rem; }
+        .fantasy-promo-title { font-size: 2.25rem; }
+        .fantasy-promo-stats { gap: 1.5rem; }
+        .fantasy-stat-num { font-size: 1.4rem; }
+        .fantasy-promo-visual { display: none; }
+    }
+
+    @media (max-width: 480px) {
+        .fantasy-promo-title { font-size: 1.85rem; }
+    }
+
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- === HERO SLIDER ТОЧНАЯ КОПИЯ ИЗ LOVABLE.DEV === -->
-<section id="home" class="hero-slider-lovable">
-    <!-- Slide 1 -->
-    <div class="hero-slide-lovable active" id="slide1">
-        <div class="hero-slide-bg" style="background-image: url('{% static 'images/slider1.jpg' %}');"></div>
-        <div class="hero-slide-overlay"></div>
-        <div class="container-lovable h-100 d-flex align-items-center">
-            <div class="hero-content-lovable">
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Slide 2 -->
-    <div class="hero-slide-lovable" id="slide2">
-        <div class="hero-slide-bg" style="background-image: url('{% static 'images/hero-celebration.jpg' %}');"></div>
-        <div class="hero-slide-overlay"></div>
-        <div class="container-lovable h-100 d-flex align-items-center">
-
-        </div>
-    </div>
-
-
-<!-- Slide 3 -->
-<div class="hero-slide-lovable" id="slide3">
-
-        <div class="hero-slide-bg" style="background-image: url('{% static 'images/furik.jpg' %}');"></div>
-        <div class="hero-slide-overlay"></div>
-        <div class="container-lovable h-100 d-flex align-items-center"></div>
-
-</div>
-
-<!-- Slide 4 -->
-<div class="hero-slide-lovable" id="slide4">
-        <div class="hero-slide-bg" style="background-image: url('{% static 'images/fshfsh.png' %}');"></div>
-        <div class="hero-slide-overlay"></div>
-        <div class="container-lovable h-100 d-flex align-items-center">
-
-        </div>
-    </div>
-
-
-
-    <!-- Navigation Arrows -->
-    <button class="slider-arrow prev" onclick="prevSlide()">
-        <i data-lucide="chevron-left" width="24" height="24"></i>
-    </button>
-    <button class="slider-arrow next" onclick="nextSlide()">
-        <i data-lucide="chevron-right" width="24" height="24"></i>
-    </button>
-
-    <!-- Indicators -->
-    <div class="slider-indicators">
-        <button class="slider-indicator active" onclick="goToSlide(0)"></button>
-        <button class="slider-indicator" onclick="goToSlide(1)"></button>
-        <button class="slider-indicator" onclick="goToSlide(2)"></button>
-        <button class="slider-indicator" onclick="goToSlide(3)"></button>
+<!-- ── Compact Static Hero ── -->
+<section id="home" class="hero-static">
+    <div class="hero-static-bg" style="background-image: url('{% static 'images/hero-stadium.jpg' %}');"></div>
+    <div class="hero-static-overlay"></div>
+    <div class="hero-static-inner">
+        <span class="hero-static-season">Сезон 2026</span>
+        <img src="{% static 'images/league-logo.png' %}" alt="Медиа Лига" class="hero-static-logo">
+        <h1 class="hero-static-title">МЕДИА <span>ЛИГА</span></h1>
+        <p class="hero-static-tagline">Главный футбольный турнир</p>
     </div>
 </section>
+
+<!-- ── Next Match Card — floats between hero and content ── -->
+<div class="next-match-strip">
+    <div class="next-match-card">
+        <!-- Animated label -->
+        <div class="nm-label">
+            <div class="nm-pulse"></div>
+            <span class="nm-label-text">СЛЕДУЮЩИЙ<br>МАТЧ</span>
+        </div>
+
+        <div class="nm-divider"></div>
+
+        {% if upcoming_matches %}
+        {% with match=upcoming_matches.0 %}
+        <!-- Teams -->
+        <div class="nm-teams">
+            <div class="nm-team">
+                <div class="nm-avatar">
+                    {% if match.team_a_logo %}
+                    <img src="{{ match.team_a_logo.url }}" alt="{{ match.team_a }}">
+                    {% else %}{{ match.team_a|make_list|first|upper }}{% endif %}
+                </div>
+                <span class="nm-team-name">{{ match.team_a }}</span>
+            </div>
+            <span class="nm-vs">VS</span>
+            <div class="nm-team">
+                <div class="nm-avatar">
+                    {% if match.team_b_logo %}
+                    <img src="{{ match.team_b_logo.url }}" alt="{{ match.team_b }}">
+                    {% else %}{{ match.team_b|make_list|first|upper }}{% endif %}
+                </div>
+                <span class="nm-team-name">{{ match.team_b }}</span>
+            </div>
+        </div>
+
+        <div class="nm-divider"></div>
+
+        <!-- Date & time -->
+        <div class="nm-info">
+            <span class="nm-info-row"><i class="fas fa-calendar-alt"></i>{{ match.get_short_date }}</span>
+            <span class="nm-info-row"><i class="fas fa-clock"></i>{{ match.time|time:"H:i" }}</span>
+        </div>
+        {% endwith %}
+        {% else %}
+        <span class="nm-empty">Расписание скоро будет обновлено</span>
+        {% endif %}
+
+        <a href="#matches" class="nm-cta">Все матчи &rarr;</a>
+    </div>
+</div>
 
 <!-- === UPCOMING MATCHES (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
 <section id="matches" class="matches-section-lovable">
     <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
-        <div class="text-center mb-12">
+        <div class="text-center mb-4 mb-md-5">
             <span class="section-badge">Match Schedule</span>
             <h2 class="section-title">UPCOMING <span>MATCHES</span></h2>
             <p class="section-description">
@@ -624,11 +1351,11 @@
                 <div class="match-card-lovable h-100">
                     <div class="d-flex justify-content-between mb-4">
                         <div class="d-flex align-items-center gap-2" style="color: hsl(var(--muted));">
-                            <i class="far fa-calendar" style="color: hsl(var(--primary));"></i>
+                            <i class="far fa-calendar" style="color: var(--gold);"></i>
                             <span>{{ match.get_short_date }}</span>
                         </div>
                         <div class="d-flex align-items-center gap-2" style="color: hsl(var(--muted));">
-                            <i class="far fa-clock" style="color: hsl(var(--primary));"></i>
+                            <i class="far fa-clock" style="color: var(--gold);"></i>
                             <span>{{ match.time|time:"H:i" }}</span>
                         </div>
                     </div>
@@ -663,7 +1390,7 @@
 
                     <div class="pt-3 border-top" style="border-color: hsl(var(--border));">
                         <div class="d-flex align-items-center justify-content-center gap-2" style="color: hsl(var(--muted));">
-                            <i class="fas fa-map-marker-alt" style="color: hsl(var(--primary));"></i>
+                            <i class="fas fa-map-marker-alt" style="color: var(--gold);"></i>
                             <span>{{ match.venue }}</span>
                         </div>
                     </div>
@@ -677,7 +1404,7 @@
 <!-- === TOURNAMENT TABLES (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
 <section id="tables" class="section-padding">
     <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
-        <div class="text-center mb-12">
+        <div class="text-center mb-4 mb-md-5">
             <span class="section-badge">League Standings</span>
             <h2 class="section-title">TOURNAMENT <span>TABLES</span></h2>
             <p class="section-description">
@@ -688,7 +1415,7 @@
         <!-- Исправленная сетка: 2 таблицы в ряд на десктопе -->
         <div class="row">
             <!-- Group A Table -->
-            <div class="col-lg-6 mb-4">
+            <div class="col-12 col-lg-6 mb-4">
                 <div class="table-card-lovable">
                     <div class="table-header-lovable">
                         <h3>GROUP A</h3>
@@ -705,7 +1432,7 @@
                                     <th class="text-center d-none d-sm-table-cell">L</th>
                                     <th class="text-center d-none d-md-table-cell">GF</th>
                                     <th class="text-center d-none d-md-table-cell">GA</th>
-                                    <th class="text-center" style="color: hsl(var(--primary));">PTS</th>
+                                    <th class="text-center" style="color: var(--gold);">PTS</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -727,7 +1454,7 @@
                                     <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.losses }}</td>
                                     <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_for }}</td>
                                     <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_against }}</td>
-                                    <td class="text-center"><span class="fw-bold" style="color: hsl(var(--primary)); font-size: 1.25rem;">{{ team.points }}</span></td>
+                                    <td class="text-center"><span class="fw-bold" style="color: var(--gold); font-size: 1.25rem;">{{ team.points }}</span></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -737,7 +1464,7 @@
             </div>
 
             <!-- Group B Table -->
-            <div class="col-lg-6 mb-4">
+            <div class="col-12 col-lg-6 mb-4">
                 <div class="table-card-lovable">
                     <div class="table-header-lovable">
                         <h3>GROUP B</h3>
@@ -754,7 +1481,7 @@
                                     <th class="text-center d-none d-sm-table-cell">L</th>
                                     <th class="text-center d-none d-md-table-cell">GF</th>
                                     <th class="text-center d-none d-md-table-cell">GA</th>
-                                    <th class="text-center" style="color: hsl(var(--primary));">PTS</th>
+                                    <th class="text-center" style="color: var(--gold);">PTS</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -776,7 +1503,7 @@
                                     <td class="text-center d-none d-sm-table-cell" style="color: hsl(var(--muted));">{{ team.losses }}</td>
                                     <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_for }}</td>
                                     <td class="text-center d-none d-md-table-cell" style="color: hsl(var(--muted));">{{ team.goals_against }}</td>
-                                    <td class="text-center"><span class="fw-bold" style="color: hsl(var(--primary)); font-size: 1.25rem;">{{ team.points }}</span></td>
+                                    <td class="text-center"><span class="fw-bold" style="color: var(--gold); font-size: 1.25rem;">{{ team.points }}</span></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -789,9 +1516,9 @@
 </section>
 
 <!-- === TOP SCORERS (С ИНТЕГРИРОВАННЫМИ DJANGO ПЕРЕМЕННЫМИ) === -->
-<section id="scorers" class="section-padding" style="background: hsl(var(--secondary) / 0.3);">
+<section id="scorers" class="section-padding" style="background: hsl(var(--secondary));">
     <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
-        <div class="text-center mb-12">
+        <div class="text-center mb-4 mb-md-5">
             <span class="section-badge">Golden Boot Race</span>
             <h2 class="section-title">TOP <span>SCORERS</span></h2>
             <p class="section-description">
@@ -802,7 +1529,7 @@
         <!-- Исправленная сетка: 3 бомбардира в ряд на десктопе -->
         <div class="row">
             {% for player in top_scorers %}
-            <div class="col-md-6 col-lg-4 mb-4">
+            <div class="col-6 col-md-6 col-lg-4 mb-4">
                 <div class="scorer-card-lovable card-hover {% if forloop.counter == 1 %}border-color: hsl(var(--primary) / 0.5); background: linear-gradient(135deg, hsl(var(--primary) / 0.1), transparent);{% endif %}">
                     <div class="scorer-rank-lovable rank-{% if forloop.counter == 1 %}1{% elif forloop.counter == 2 %}2{% elif forloop.counter == 3 %}3{% else %}other{% endif %}">
                         {{ forloop.counter }}
@@ -840,226 +1567,253 @@
     </div>
 </section>
 
-<!-- === VIDEO HIGHLIGHTS ТОЧНАЯ КОПИЯ ИЗ LOVABLE.DEV === -->
+<!-- ── Fantasy Football Promo ── -->
+<!-- TODO: replace all href="http://localhost:3001" with your production URL -->
+<section class="fantasy-promo">
+    <div class="fantasy-promo-blob"></div>
+    <div class="container-lovable" style="padding-left:30px;padding-right:30px;">
+        <div class="fantasy-promo-inner">
+
+            <!-- Left — text -->
+            <div class="fantasy-promo-text">
+                <span class="fantasy-promo-badge">
+                    <i class="fas fa-shield-halved"></i> Медиа Фэнтези
+                </span>
+                <h2 class="fantasy-promo-title">СОБЕРИ<br>КОМАНДУ<br><span>МЕЧТЫ</span></h2>
+                <p class="fantasy-promo-desc">
+                    Выбирай игроков из реальной Медиа Лиги, набирай очки за их результаты и соревнуйся с другими менеджерами в общей таблице.
+                </p>
+
+                <div class="fantasy-promo-stats">
+                    <div>
+                        <span class="fantasy-stat-num">16</span>
+                        <span class="fantasy-stat-label">Команд</span>
+                    </div>
+                    <div>
+                        <span class="fantasy-stat-num">100+</span>
+                        <span class="fantasy-stat-label">Игроков</span>
+                    </div>
+                    <div>
+                        <span class="fantasy-stat-num">Бесплатно</span>
+                        <span class="fantasy-stat-label">Участие</span>
+                    </div>
+                </div>
+
+                <div class="fantasy-cta-row">
+                    <a href="http://localhost:3001" target="_blank" class="btn-fantasy">
+                        <i class="fas fa-play" style="font-size:0.65rem;"></i>
+                        Играть бесплатно
+                    </a>
+                    <a href="http://localhost:3001/players" target="_blank" class="btn-fantasy-outline">
+                        Все игроки
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right — mock leaderboard cards -->
+            <div class="fantasy-promo-visual">
+                <div class="fantasy-card-preview featured">
+                    <div style="display:flex;align-items:center;gap:0.875rem;">
+                        <div class="fantasy-player-avatar">⚽</div>
+                        <div>
+                            <div class="fantasy-player-name">Менеджер #1</div>
+                            <div class="fantasy-player-pos">Лидер лиги</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="fantasy-player-pts">248</div>
+                        <div class="fantasy-player-pts-label">очков</div>
+                    </div>
+                </div>
+
+                <div class="fantasy-card-preview">
+                    <div style="display:flex;align-items:center;gap:0.875rem;">
+                        <div class="fantasy-player-avatar" style="font-size:0.85rem;">🥈</div>
+                        <div>
+                            <div class="fantasy-player-name">Менеджер #2</div>
+                            <div class="fantasy-player-pos">2-е место</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="fantasy-player-pts" style="font-size:1.25rem;color:hsl(var(--foreground));">231</div>
+                        <div class="fantasy-player-pts-label">очков</div>
+                    </div>
+                </div>
+
+                <div class="fantasy-card-preview">
+                    <div style="display:flex;align-items:center;gap:0.875rem;">
+                        <div class="fantasy-player-avatar" style="font-size:0.85rem;">🥉</div>
+                        <div>
+                            <div class="fantasy-player-name">Менеджер #3</div>
+                            <div class="fantasy-player-pos">3-е место</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="fantasy-player-pts" style="font-size:1.25rem;color:hsl(var(--foreground));">219</div>
+                        <div class="fantasy-player-pts-label">очков</div>
+                    </div>
+                </div>
+
+                <p style="font-size:0.65rem;color:hsl(var(--muted));text-align:center;margin-top:0.25rem;letter-spacing:0.06em;">
+                    РЕАЛЬНЫЕ ДАННЫЕ ЗАГРУЖАЮТСЯ ИЗ ЛИГИ
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- === VIDEO HIGHLIGHTS === -->
 <section id="highlights" class="video-highlights-section">
     <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
-        <div class="text-center mb-12">
+        <div class="text-center mb-5">
             <span class="section-badge">Media Center</span>
             <h2 class="section-title">VIDEO <span>HIGHLIGHTS</span></h2>
-            <p class="section-description">
-                Relive the best moments from the tournament with our exclusive video content.
-            </p>
+            <p class="section-description">Relive the best moments from the tournament with our exclusive video content.</p>
         </div>
 
-        <!-- Исправленная сетка: 4 видео в ряд на десктопе -->
-        <div class="row">
-            <!-- Video 1 -->
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="video-card-lovable">
-                    <div class="video-thumbnail-lovable">
-                        <img src="{% static 'images/hero-stadium.jpg' %}" alt="Media United vs Press FC">
-                        <div class="video-thumbnail-overlay"></div>
-                        <div class="play-button-lovable">
-                            <div class="play-icon-lovable">
-                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
-                            </div>
-                        </div>
-                        <div class="duration-badge-lovable">4:32</div>
-                    </div>
-                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Media United vs Press FC - Match Highlights</h4>
-                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
-                        <span>12.5K views</span>
-                        <span>•</span>
-                        <span>Jan 10, 2026</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 2 -->
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="video-card-lovable">
-                    <div class="video-thumbnail-lovable">
-                        <img src="{% static 'images/hero-celebration.jpg' %}" alt="Goal of the Week">
-                        <div class="video-thumbnail-overlay"></div>
-                        <div class="play-button-lovable">
-                            <div class="play-icon-lovable">
-                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
-                            </div>
-                        </div>
-                        <div class="duration-badge-lovable">1:15</div>
-                    </div>
-                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Goal of the Week - Alex Johnson's Screamer</h4>
-                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
-                        <span>8.2K views</span>
-                        <span>•</span>
-                        <span>Jan 9, 2026</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 3 -->
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="video-card-lovable">
-                    <div class="video-thumbnail-lovable">
-                        <img src="{% static 'images/hero-stadium.jpg' %}" alt="News Network's Unbeaten Run">
-                        <div class="video-thumbnail-overlay"></div>
-                        <div class="play-button-lovable">
-                            <div class="play-icon-lovable">
-                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
-                            </div>
-                        </div>
-                        <div class="duration-badge-lovable">5:48</div>
-                    </div>
-                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">News Network's Unbeaten Run Continues</h4>
-                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
-                        <span>6.8K views</span>
-                        <span>•</span>
-                        <span>Jan 8, 2026</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video 4 -->
-            <div class="col-sm-6 col-lg-3 mb-4">
-                <div class="video-card-lovable">
-                    <div class="video-thumbnail-lovable">
-                        <img src="{% static 'images/hero-celebration.jpg' %}" alt="Best Saves">
-                        <div class="video-thumbnail-overlay"></div>
-                        <div class="play-button-lovable">
-                            <div class="play-icon-lovable">
-                                <i data-lucide="play" width="24" height="24" fill="currentColor"></i>
-                            </div>
-                        </div>
-                        <div class="duration-badge-lovable">3:21</div>
-                    </div>
-                    <h4 class="fw-medium mb-2" style="font-size: 1rem;">Best Saves - Matchweek 5</h4>
-                    <div class="d-flex gap-3" style="color: hsl(var(--muted)); font-size: 0.875rem;">
-                        <span>5.1K views</span>
-                        <span>•</span>
-                        <span>Jan 7, 2026</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- View All Button -->
-        <div class="text-center mt-10">
-            <button class="btn-outline-lovable px-8 py-3">View All Highlights</button>
-        </div>
-    </div>
-</section>
-
-<!-- === PARTNERS SECTION ТОЧНАЯ КОПИЯ ИЗ Partners.tsx === -->
-<!-- General Partner Section -->
-<section class="general-partner-section">
-    <div class="container-lovable">
-        <div class="text-center mb-8">
-            <span class="section-badge">Title Sponsor</span>
-            <h2 class="section-title" style="font-size: 3.5rem;">GENERAL <span>PARTNER</span></h2>
-        </div>
-
-        <!-- General Partner Card -->
-        <div class="max-w-2xl mx-auto">
-            <div class="general-partner-card">
-                <!-- Star Decorations -->
-                <i class="partner-star-decoration" style="top: 1rem; left: 1rem; font-size: 1.5rem;">★</i>
-                <i class="partner-star-decoration" style="top: 1rem; right: 1rem; font-size: 1.5rem;">★</i>
-                <i class="partner-star-decoration" style="bottom: 1rem; left: 1rem; font-size: 1.5rem;">★</i>
-                <i class="partner-star-decoration" style="bottom: 1rem; right: 1rem; font-size: 1.5rem;">★</i>
-
-                <!-- Partner Logo Placeholder -->
-                <div class="partner-logo-placeholder-large">MC</div>
-
-                <h3 class="mb-3" style="font-family: 'Bebas Neue'; font-size: 2.5rem;">MediaCorp International</h3>
-                <p class="mb-4" style="color: hsl(var(--muted)); font-size: 1.125rem;">Official Title Sponsor of the Media League</p>
-
-                <!-- Badge -->
-                <div class="partner-badge-lovable">
-                    <i class="fas fa-star"></i>
-                    <span>Premium Partner</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Other Partners Section -->
-<section class="other-partners-section">
-    <div class="container-lovable"  style="padding-left: 30px; padding-right: 30px;">
-        <div class="text-center mb-12">
-            <span class="section-badge">Our Sponsors</span>
-            <h2 class="section-title" style="font-size: 3.5rem;">OFFICIAL <span>PARTNERS</span></h2>
-        </div>
-
-        <!-- Исправленная сетка: 6 партнеров в ряд на десктопе -->
-        <div class="row">
-            {% if sponsors %}
-                {% for sponsor in sponsors %}
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item"
-                         style="border-color: {% if sponsor.tier == 'platinum' %}hsl(var(--primary) / 0.3){% elif sponsor.tier == 'gold' %}rgba(212, 175, 55, 0.3){% else %}hsl(var(--border)){% endif %};">
-                        <div class="partner-logo-small">
-                            {% if sponsor.logo %}
-                                <img src="{{ sponsor.logo.url }}"
-                                     alt="{{ sponsor.name }}"
-                                     style="width: 100%; height: 100%; object-fit: contain; border-radius: 0.5rem;">
-                            {% else %}
-                                {{ sponsor.name|make_list|slice:":2"|join:""|upper }}
-                            {% endif %}
-                        </div>
-                        <h4 class="text-sm font-medium mb-1">{{ sponsor.name }}</h4>
-                        <span class="tier-{{ sponsor.tier }} text-xs uppercase tracking-wider">
-                            {{ sponsor.tier }}
+        {% if video_highlights %}
+        <!-- Featured (large) + up to 3 stacked small videos -->
+        <div class="row g-3 mb-4">
+            <!-- Featured video — left col -->
+            <div class="col-12 col-lg-7">
+                {% with video=video_highlights.0 %}
+                <a href="{{ video.get_embed_url }}" target="_blank" class="video-featured" style="height: 360px; display: block;">
+                    <img src="{{ video.get_thumbnail_url }}" alt="{{ video.title }}">
+                    <div class="video-featured-overlay"></div>
+                    <div class="play-icon-lovable">
+                        <span>
+                            <i data-lucide="play" width="22" height="22" fill="currentColor" style="color: var(--gold); margin-left: 3px;"></i>
                         </span>
                     </div>
+                    <div class="video-featured-content">
+                        <span style="font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; display: block;">{{ video.get_category_display }}</span>
+                        <h3 style="font-size: 1.4rem; color: hsl(var(--foreground)); margin-bottom: 0.5rem; line-height: 1.2;">{{ video.title }}</h3>
+                        {% if video.description %}
+                        <p style="color: hsl(var(--muted)); font-size: 0.82rem; margin-bottom: 0.5rem;">{{ video.description }}</p>
+                        {% endif %}
+                        <div style="color: hsl(var(--muted)); font-size: 0.8rem;">
+                            <span>{{ video.date|date:"d M Y" }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endwith %}
+            </div>
+
+            <!-- Small videos stacked — right col -->
+            <div class="col-12 col-lg-5 d-flex flex-column gap-3">
+                {% for video in video_highlights %}
+                {% if forloop.counter > 1 %}
+                <a href="{{ video.get_embed_url }}" target="_blank" class="video-card-small">
+                    <div class="video-card-small-thumb">
+                        <img src="{{ video.get_thumbnail_url }}" alt="{{ video.title }}">
+                        <div class="video-thumb-overlay"></div>
+                        <div class="play-icon-sm">
+                            <span><i data-lucide="play" width="12" height="12" fill="currentColor" style="color: var(--gold); margin-left: 2px;"></i></span>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <span style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold);">{{ video.get_category_display }}</span>
+                        <h4 style="font-size: 0.9rem; font-weight: 600; color: hsl(var(--foreground)); margin: 0.25rem 0; line-height: 1.3;">{{ video.title }}</h4>
+                        <span style="font-size: 0.75rem; color: hsl(var(--muted));">{{ video.date|date:"d M Y" }}</span>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p style="text-align:center;color:hsl(var(--muted));padding:3rem 0;">Видеообзоры скоро появятся</p>
+        {% endif %}
+
+        <!-- View All Button -->
+        <div class="text-center" style="padding-top: 1rem;">
+            <button class="btn-outline-lovable">View All Highlights</button>
+        </div>
+    </div>
+</section>
+
+<!-- === GENERAL PARTNER === -->
+{% if general_partner %}
+<section class="general-partner-section">
+    <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
+        <div class="text-center mb-5">
+            <span class="section-badge">Title Sponsor</span>
+            <h2 class="section-title" style="font-size: 3rem;">GENERAL <span>PARTNER</span></h2>
+        </div>
+
+        <div class="general-partner-card">
+            {% if general_partner.logo %}
+            <img src="{{ general_partner.logo.url }}" alt="{{ general_partner.name }}"
+                 style="max-height: 100px; max-width: 240px; object-fit: contain; margin-bottom: 1.5rem; filter: brightness(1.1);">
+            {% else %}
+            <div class="partner-logo-placeholder-large">{{ general_partner.name|make_list|slice:":2"|join:""|upper }}</div>
+            {% endif %}
+            <h3 style="font-size: 2rem; letter-spacing: 0.08em; text-transform: uppercase; color: hsl(var(--foreground)); margin-bottom: 0.5rem;">{{ general_partner.name }}</h3>
+            <p style="color: hsl(var(--muted)); font-size: 1rem; font-weight: 300;">Official Title Sponsor of the Media League</p>
+            <div class="partner-badge-lovable">
+                <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                <span>Premium Partner</span>
+            </div>
+            {% if general_partner.url %}
+            <a href="{{ general_partner.url }}" target="_blank" class="btn-hero" style="margin-top: 1.5rem; display: inline-block;">Visit Website</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- === OFFICIAL PARTNERS (scrolling marquee) === -->
+<section class="other-partners-section">
+    <div class="text-center mb-5" style="padding: 0 30px;">
+        <span class="section-badge">Our Sponsors</span>
+        <h2 class="section-title" style="font-size: 3rem;">OFFICIAL <span>PARTNERS</span></h2>
+    </div>
+
+    <div class="sponsors-marquee-wrapper">
+        <div class="sponsors-marquee-track">
+            {% if official_sponsors %}
+                {% for sponsor in official_sponsors %}
+                <div class="sponsor-logo-card">
+                    {% if sponsor.logo %}
+                        <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" style="max-width: 100%; max-height: 50px; object-fit: contain; filter: brightness(0.9) saturate(0.8);">
+                    {% else %}
+                        <div class="sponsor-logo-initials">{{ sponsor.name|make_list|slice:":2"|join:""|upper }}</div>
+                    {% endif %}
+                    <span class="sponsor-logo-name">{{ sponsor.name }}</span>
+                </div>
+                {% endfor %}
+                <!-- Duplicate for seamless infinite loop -->
+                {% for sponsor in official_sponsors %}
+                <div class="sponsor-logo-card">
+                    {% if sponsor.logo %}
+                        <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" style="max-width: 100%; max-height: 50px; object-fit: contain; filter: brightness(0.9) saturate(0.8);">
+                    {% else %}
+                        <div class="sponsor-logo-initials">{{ sponsor.name|make_list|slice:":2"|join:""|upper }}</div>
+                    {% endif %}
+                    <span class="sponsor-logo-name">{{ sponsor.name }}</span>
                 </div>
                 {% endfor %}
             {% else %}
-                <!-- Platinum -->
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item" style="border-color: hsl(var(--primary) / 0.3);">
-                        <div class="partner-logo-small">BP</div>
-                        <h4 class="text-sm font-medium mb-1">BroadcastPro</h4>
-                        <span class="tier-platinum text-xs uppercase tracking-wider">platinum</span>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item" style="border-color: hsl(var(--primary) / 0.3);">
-                        <div class="partner-logo-small">ND</div>
-                        <h4 class="text-sm font-medium mb-1">NewsDigital</h4>
-                        <span class="tier-platinum text-xs uppercase tracking-wider">platinum</span>
-                    </div>
-                </div>
-                <!-- Gold -->
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item" style="border-color: rgba(212, 175, 55, 0.3);">
-                        <div class="partner-logo-small">SC</div>
-                        <h4 class="text-sm font-medium mb-1">SportsCast</h4>
-                        <span class="tier-gold text-xs uppercase tracking-wider">gold</span>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item" style="border-color: rgba(212, 175, 55, 0.3);">
-                        <div class="partner-logo-small">MT</div>
-                        <h4 class="text-sm font-medium mb-1">MediaTech</h4>
-                        <span class="tier-gold text-xs uppercase tracking-wider">gold</span>
-                    </div>
-                </div>
-                <!-- Silver -->
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item">
-                        <div class="partner-logo-small">SM</div>
-                        <h4 class="text-sm font-medium mb-1">StreamMax</h4>
-                        <span class="tier-silver text-xs uppercase tracking-wider">silver</span>
-                    </div>
-                </div>
-                <div class="col-4 col-md-2 mb-4">
-                    <div class="partner-grid-item">
-                        <div class="partner-logo-small">PW</div>
-                        <h4 class="text-sm font-medium mb-1">PrintWorld</h4>
-                        <span class="tier-silver text-xs uppercase tracking-wider">silver</span>
-                    </div>
-                </div>
+                <!-- Placeholder sponsors × 2 for infinite scroll -->
+                {% for item in "BPNDSCMTSMPWRQTV"|make_list %}{% endfor %}
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">BP</div><span class="sponsor-logo-name">BroadcastPro</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">ND</div><span class="sponsor-logo-name">NewsDigital</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">SC</div><span class="sponsor-logo-name">SportsCast</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">MT</div><span class="sponsor-logo-name">MediaTech</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">SM</div><span class="sponsor-logo-name">StreamMax</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">PW</div><span class="sponsor-logo-name">PrintWorld</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">RQ</div><span class="sponsor-logo-name">RadioQuest</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">TV</div><span class="sponsor-logo-name">TeleVision+</span></div>
+                <!-- Duplicate -->
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">BP</div><span class="sponsor-logo-name">BroadcastPro</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">ND</div><span class="sponsor-logo-name">NewsDigital</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">SC</div><span class="sponsor-logo-name">SportsCast</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">MT</div><span class="sponsor-logo-name">MediaTech</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">SM</div><span class="sponsor-logo-name">StreamMax</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">PW</div><span class="sponsor-logo-name">PrintWorld</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">RQ</div><span class="sponsor-logo-name">RadioQuest</span></div>
+                <div class="sponsor-logo-card"><div class="sponsor-logo-initials">TV</div><span class="sponsor-logo-name">TeleVision+</span></div>
             {% endif %}
         </div>
     </div>
@@ -1068,54 +1822,8 @@
 
 {% block extra_js %}
 <script>
-    // Hero Slider Functionality
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.hero-slide-lovable');
-    const indicators = document.querySelectorAll('.slider-indicator');
-    const totalSlides = slides.length;
-
-    function showSlide(index) {
-        // Hide all slides
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
-
-        // Remove active class from all indicators
-        indicators.forEach(indicator => {
-            indicator.classList.remove('active');
-        });
-
-        // Show current slide
-        slides[index].classList.add('active');
-        indicators[index].classList.add('active');
-        currentSlide = index;
-    }
-
-    function nextSlide() {
-        let next = currentSlide + 1;
-        if (next >= totalSlides) next = 0;
-        showSlide(next);
-    }
-
-    function prevSlide() {
-        let prev = currentSlide - 1;
-        if (prev < 0) prev = totalSlides - 1;
-        showSlide(prev);
-    }
-
-    function goToSlide(index) {
-        showSlide(index);
-    }
-
-    // Auto slide every 6 seconds
-    setInterval(nextSlide, 6000);
-
-    // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-        showSlide(0);
         lucide.createIcons();
     });
-
-
 </script>
 {% endblock %}

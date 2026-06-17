@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Match, Team, Player, VideoReview, Sponsor, SliderImage, MvpPlayers, VoteRecord, PageVisit, EMatch, TournamentStanding, LiveMatch
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
@@ -11,16 +12,16 @@ class TeamAdmin(admin.ModelAdmin):
 
     def logo_preview(self, obj):
         if obj.logo:
-            return f'<img src="{obj.logo.url}" style="max-height: 50px; max-width: 50px;" />'
+            return format_html('<img src="{}" style="max-height:50px;max-width:50px;" />', obj.logo.url)
         return "Нет логотипа"
 
     logo_preview.short_description = 'Логотип'
-    logo_preview.allow_tags = True
 
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('team_a', 'team_b', 'date', 'time', 'venue')
-    list_filter = ('is_active', 'matchday')
-    search_fields = ('team_a', 'team_b', 'venue')
+    list_display = ('team_a', 'team_b', 'matchday', 'date', 'time', 'venue', 'is_active')
+    list_filter = ('is_active',)
+    list_editable = ('is_active',)
+    search_fields = ('team_a', 'team_b', 'venue', 'matchday')
     fieldsets = (
         (None, {
             'fields': ('matchday', 'date', 'time', 'venue', 'is_active')
@@ -44,30 +45,65 @@ class PlayerAdmin(admin.ModelAdmin):
 
     def photo_preview(self, obj):
         if obj.photo:
-            return f'<img src="{obj.photo.url}" style="max-height: 50px; max-width: 50px;" />'
+            return format_html('<img src="{}" style="max-height:50px;max-width:50px;" />', obj.photo.url)
         return "Нет фото"
 
     photo_preview.short_description = 'Фото'
-    photo_preview.allow_tags = True
 
 
 @admin.register(VideoReview)
 class VideoReviewAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date')
+    list_display = ('title', 'category', 'date', 'order', 'is_active', 'thumbnail_preview')
+    list_filter = ('is_active', 'category')
+    list_editable = ('order', 'is_active')
+    search_fields = ('title', 'description')
+    readonly_fields = ('thumbnail_preview',)
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'description', 'category', 'date')
+        }),
+        ('YouTube', {
+            'fields': ('youtube_id', 'thumbnail_preview'),
+            'description': 'Вставьте только ID видео (часть после v= в ссылке YouTube)',
+        }),
+        ('Настройки', {
+            'fields': ('order', 'is_active'),
+        }),
+    )
+
+    def thumbnail_preview(self, obj):
+        if obj.youtube_id:
+            url = obj.get_thumbnail_url()
+            return format_html(
+                '<img src="{}" style="max-height:80px;border-radius:6px;" />'
+                '<br><small style="color:#888">{}</small>',
+                url, obj.get_embed_url()
+            )
+        return "Нет видео"
+    thumbnail_preview.short_description = 'Превью'
 
 
 @admin.register(Sponsor)
 class SponsorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url', 'logo_preview')
+    list_display = ('name', 'sponsor_type', 'url', 'order', 'is_active', 'logo_preview')
+    list_filter = ('sponsor_type', 'is_active')
+    list_editable = ('sponsor_type', 'order', 'is_active')
+    search_fields = ('name',)
     readonly_fields = ('logo_preview',)
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'logo', 'logo_preview', 'url')
+        }),
+        ('Настройки', {
+            'fields': ('sponsor_type', 'order', 'is_active'),
+        }),
+    )
 
     def logo_preview(self, obj):
         if obj.logo:
-            return f'<img src="{obj.logo.url}" style="max-height: 50px; max-width: 50px;" />'
+            return format_html('<img src="{}" style="max-height:50px;max-width:120px;object-fit:contain;" />', obj.logo.url)
         return "Нет логотипа"
-
     logo_preview.short_description = 'Логотип'
-    logo_preview.allow_tags = True
 
 @admin.register(SliderImage)
 class SliderImageAdmin(admin.ModelAdmin):
@@ -259,7 +295,7 @@ class TournamentStandingAdmin(admin.ModelAdmin):
                 color, text
             ))
 
-        return format_html(''.join(form_html))
+        return mark_safe(''.join(form_html))
 
     form_display.short_description = "Форма"
 

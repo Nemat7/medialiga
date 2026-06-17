@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -18,12 +19,13 @@ class SliderImage(models.Model):
 
 
 class Match(models.Model):
-    MATCHDAY_CHOICES = [
-        ('MD1', 'Matchday 1'),
-        ('MD2', 'Matchday 2'),
-    ]
-
-    matchday = models.CharField(max_length=3, choices=MATCHDAY_CHOICES, default='MD1')
+    matchday = models.CharField(
+        max_length=50,
+        verbose_name="Тур",
+        default='Тур 1',
+        blank=True,
+        help_text="Например: Тур 1, Групповой этап, 1/4 финала",
+    )
     date = models.DateField()
     time = models.TimeField(
         verbose_name="Время матча",
@@ -102,21 +104,68 @@ class Player(models.Model):
 
 
 class VideoReview(models.Model):
-    title = models.CharField(max_length=200)
-    youtube_id = models.CharField(max_length=20)  # Например: "dQw4w9WgXcQ"
-    date = models.DateField(auto_now_add=True)
+    CATEGORY_CHOICES = [
+        ('highlights', 'Match Highlights'),
+        ('goal', 'Goal of the Week'),
+        ('feature', 'Team Feature'),
+        ('saves', 'Best Saves'),
+        ('interview', 'Interview'),
+        ('other', 'Other'),
+    ]
+
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    description = models.CharField(max_length=300, blank=True, verbose_name="Описание")
+    youtube_id = models.CharField(max_length=20, verbose_name="YouTube ID", help_text="Только ID видео, например: dQw4w9WgXcQ")
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='highlights', verbose_name="Категория")
+    date = models.DateField(default=timezone.now, verbose_name="Дата публикации")
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок (меньше = выше)")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
 
     def get_embed_url(self):
         return f"https://www.youtube.com/embed/{self.youtube_id}"
 
+    def get_thumbnail_url(self):
+        return f"https://img.youtube.com/vi/{self.youtube_id}/hqdefault.jpg"
 
-class Sponsor(models.Model):
-    name = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to="sponsors/")
-    url = models.URLField(blank=True)
+    def get_category_display_label(self):
+        return dict(self.CATEGORY_CHOICES).get(self.category, self.category)
+
+    class Meta:
+        verbose_name = "Видеообзор"
+        verbose_name_plural = "Видеообзоры"
+        ordering = ['order', '-date']
 
     def __str__(self):
-        return self.name
+        return self.title
+
+
+class Sponsor(models.Model):
+    TYPE_GENERAL = 'general'
+    TYPE_OFFICIAL = 'official'
+    TYPE_CHOICES = [
+        (TYPE_GENERAL, 'Генеральный партнёр'),
+        (TYPE_OFFICIAL, 'Официальный партнёр'),
+    ]
+
+    name = models.CharField(max_length=100, verbose_name="Название")
+    logo = models.ImageField(upload_to="sponsors/", verbose_name="Логотип")
+    url = models.URLField(blank=True, verbose_name="Ссылка на сайт")
+    sponsor_type = models.CharField(
+        max_length=10,
+        choices=TYPE_CHOICES,
+        default=TYPE_OFFICIAL,
+        verbose_name="Тип партнёра",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
+
+    class Meta:
+        verbose_name = "Партнёр"
+        verbose_name_plural = "Партнёры"
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return f"{self.name} ({self.get_sponsor_type_display()})"
 
 class PageVisit(models.Model):
     ip = models.CharField(max_length=50)

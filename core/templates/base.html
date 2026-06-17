@@ -7,11 +7,6 @@
     <title>Media League 2026 - Premier Football Competition</title>
     <meta name="description" content="The premier football competition uniting media professionals across the nation.">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,23 +15,56 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <style>
-        /* === ТОЧНЫЕ СТИЛИ ИЗ LOVABLE.DEV === */
+        /* ── FIFA Sans ── */
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-Light.otf" %}') format('opentype');
+            font-weight: 300; font-display: swap;
+        }
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-Regular.otf" %}') format('opentype');
+            font-weight: 400; font-display: swap;
+        }
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-Medium.otf" %}') format('opentype');
+            font-weight: 500; font-display: swap;
+        }
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-Bold.otf" %}') format('opentype');
+            font-weight: 700; font-display: swap;
+        }
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-Italic.otf" %}') format('opentype');
+            font-weight: 400; font-style: italic; font-display: swap;
+        }
+        @font-face {
+            font-family: 'FIFA Sans';
+            src: url('{% static "fonts/FIFASans-BoldItalic.otf" %}') format('opentype');
+            font-weight: 700; font-style: italic; font-display: swap;
+        }
+
+        /* ── Color System (built around #57122D) ── */
         :root {
-            --background: 337 100% 92%; /* #FFBAD5 - Точный розовый */
-            --foreground: 0 0% 0%; /* #000000 */
-            --card: 337 100% 95%; /* #FFE4F0 */
-            --primary: 0 0% 0%; /* #000000 */
-            --secondary: 337 100% 88%; /* #FFA1C9 */
-            --muted: 0 0% 0%; /* hsl(0, 0%, 0%) = #000000 */
-            --border: 337 60% 80%; /* #FF8AB8 */
+            --background: 336 22% 6%;       /* #0E0508 near-black maroon */
+            --foreground: 30 18% 87%;        /* #E8DDD5 warm off-white */
+            --card: 336 26% 9%;             /* #180B13 dark card */
+            --primary: 336 66% 21%;         /* #57122D maroon */
+            --primary-light: 336 62% 32%;   /* #842042 hover maroon */
+            --secondary: 336 32% 13%;       /* #270E1A secondary surface */
+            --muted: 336 14% 50%;           /* #977082 muted text */
+            --border: 336 48% 16%;          /* #3C0E23 border */
             --radius: 0.5rem;
-            --gradient-primary: linear-gradient(135deg, hsl(337, 100%, 85%), hsl(337, 80%, 75%));
-            --gradient-dark: linear-gradient(180deg, hsl(337, 100%, 90%), hsl(337, 100%, 85%));
-            --gradient-card: linear-gradient(145deg, hsl(337, 100%, 95%), hsl(337, 100%, 90%));
-            --shadow-glow: 0 0 30px hsl(0 0% 0% / 0.2);
-            --shadow-card: 0 10px 40px hsl(0 0% 0% / 0.15);
-            /* Добавляем переменную для фонового изображения */
-            --background-image: url('{% static "images/background.jpg" %}');
+            --gold: #C9A84C;
+            --gold-rgb: 201, 168, 76;
+            --gold-dim: rgba(201, 168, 76, 0.15);
+            --shadow-glow: 0 0 40px rgba(87, 18, 45, 0.45);
+            --shadow-gold: 0 0 35px rgba(201, 168, 76, 0.25);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --gradient-primary: linear-gradient(135deg, #57122D 0%, #8B1A3F 100%);
         }
 
         * {
@@ -46,23 +74,18 @@
         }
 
         body {
-            <!--font-family: 'Inter', sans-serif;
-            background-color: hsl(var(&#45;&#45;background));
-            color: hsl(var(&#45;&#45;foreground));
-            line-height: 1.6;
-
-            font-family: 'Inter', sans-serif;
-            background: var(--background-image) center/cover no-repeat fixed;
+            font-family: 'FIFA Sans', 'Inter', sans-serif;
+            background-color: hsl(var(--background));
             color: hsl(var(--foreground));
             line-height: 1.6;
             padding-top: 0;
             min-height: 100vh;
-            margin: 0;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Bebas Neue', sans-serif;
-            letter-spacing: 0.05em;
+            font-family: 'FIFA Sans', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.03em;
         }
 
         /* === КОНТЕЙНЕРЫ КАК В LOVABLE.DEV === */
@@ -84,90 +107,158 @@
             }
         }
 
-        /* === NAVBAR ТОЧНАЯ КОПИЯ ИЗ Navbar.tsx === */
+        /* ── Navbar ── */
         .navbar-lovable {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-            transition: all 0.5s;
+            transition: background 0.4s, box-shadow 0.4s;
             background: transparent;
-            padding: 1rem 0;
+            padding: 0;
         }
 
         .navbar-lovable.scrolled {
-            background: hsla(var(--background) / 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(14, 5, 8, 0.97);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 1px 0 hsl(var(--border));
         }
 
         .nav-link-lovable {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: hsl(var(--foreground) / 0.8);
+            letter-spacing: 0.04em;
+            color: rgba(232, 221, 213, 0.65);
             text-decoration: none;
             position: relative;
-            transition: color 0.3s ease;
+            transition: color 0.25s ease;
         }
 
-        .nav-link-lovable:hover {
-            color: hsl(var(--primary));
-        }
+        .nav-link-lovable:hover { color: var(--gold); }
 
         .nav-link-lovable::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 50%;
+            bottom: -2px; left: 50%;
             transform: translateX(-50%);
-            width: 0;
+            width: 0; height: 2px;
+            background: var(--gold);
+            transition: width 0.25s ease;
+        }
+
+        .nav-link-lovable:hover::after { width: 55%; }
+
+        /* ── Bottom Tab Bar (mobile only) ── */
+        .mobile-tab-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 1100;
+            height: 60px;
+            background: rgba(14, 5, 8, 0.97);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid hsl(var(--border));
+            display: flex;
+            align-items: stretch;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            height: calc(60px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            text-decoration: none;
+            color: hsl(var(--muted));
+            transition: color 0.2s ease;
+            padding: 6px 4px;
+            position: relative;
+        }
+
+        .tab-item.active { color: var(--gold); }
+
+        .tab-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 20%; right: 20%;
             height: 2px;
-            background: hsl(var(--primary));
-            transition: width 0.3s ease;
+            background: var(--gold);
+            border-radius: 0 0 2px 2px;
         }
 
-        .nav-link-lovable:hover::after {
-            width: 100%;
+        .tab-item.tab-vote {
+            color: var(--gold);
         }
 
-        /* === КНОПКИ КАК В LOVABLE.DEV === */
-        .btn-hero {
-            background: hsl(var(--primary));
-            color: hsl(var(--background));
-            border: none;
-            padding: 0.625rem 1.5rem;
-            border-radius: var(--radius);
+        .tab-item.tab-vote .tab-icon-wrap {
+            background: rgba(201, 168, 76, 0.12);
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            border-radius: 12px;
+            padding: 3px 10px;
+            margin-bottom: 1px;
+        }
+
+        .tab-icon {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .tab-label {
+            font-family: 'FIFA Sans', sans-serif;
+            font-size: 0.55rem;
             font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* ── Buttons ── */
+        .btn-hero {
+            background: #57122D;
+            color: var(--gold);
+            border: 1px solid rgba(201, 168, 76, 0.35);
+            padding: 0.625rem 1.75rem;
+            border-radius: var(--radius);
+            font-family: 'FIFA Sans', sans-serif;
+            font-weight: 700;
             font-size: 0.875rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .btn-hero:hover {
+            background: #8B1A3F;
+            border-color: rgba(201, 168, 76, 0.6);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-glow);
         }
 
         .btn-outline-lovable {
-            border: 2px solid hsl(var(--primary));
-            color: hsl(var(--primary));
+            border: 2px solid rgba(201, 168, 76, 0.5);
+            color: var(--gold);
             background: transparent;
-            padding: 0.625rem 1.5rem;
+            padding: 0.625rem 1.75rem;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-family: 'FIFA Sans', sans-serif;
+            font-weight: 700;
             font-size: 0.875rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .btn-outline-lovable:hover {
-            background: hsl(var(--primary));
-            color: hsl(var(--background));
+            background: var(--gold-dim);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-gold);
         }
 
-        /* Mobile menu */
+        /* ── Mobile Menu ── */
         .mobile-menu {
             max-height: 0;
             overflow: hidden;
@@ -175,45 +266,103 @@
         }
 
         .mobile-menu.open {
-            max-height: 400px;
+            max-height: 500px;
+            background: rgba(14, 5, 8, 0.98);
+            backdrop-filter: blur(16px);
+            border-radius: 0 0 1rem 1rem;
         }
 
-        /* === COMMON STYLES === */
+        /* ── Responsive Navbar ── */
+        @media (max-width: 991px) {
+            /* On mobile the top bar is just the logo — always dark */
+            .navbar-lovable {
+                background: rgba(14, 5, 8, 0.94);
+                backdrop-filter: blur(14px);
+                border-bottom: 1px solid hsl(var(--border));
+            }
+
+            .navbar-logo {
+                height: 52px !important;
+                width: 52px !important;
+            }
+
+            /* Hide hamburger — bottom tab bar replaces it */
+            #mobileMenuButton,
+            #mobileMenu {
+                display: none !important;
+            }
+
+            /* Body needs room for the tab bar */
+            body {
+                padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+            }
+        }
+
+        /* Desktop: hide the tab bar */
+        @media (min-width: 992px) {
+            .mobile-tab-bar { display: none !important; }
+        }
+
+        /* Override the hardcoded 30px padding on mobile */
+        @media (max-width: 575px) {
+            [style*="padding-left: 30px"] {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+        }
+
+        /* ── Common Styles ── */
         .section-padding {
             padding: 5rem 0;
         }
 
+        @media (max-width: 767px) {
+            .section-padding { padding: 3rem 0; }
+        }
+
         .section-badge {
-            display: inline-block;
-            padding: 0.25rem 1rem;
-            background: hsl(var(--primary) / 0.1);
-            border: 1px solid hsl(var(--primary) / 0.2);
-            border-radius: 9999px;
-            color: hsl(var(--primary));
-            font-size: 0.875rem;
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--gold);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
             margin-bottom: 1rem;
+        }
+
+        .section-badge::before,
+        .section-badge::after {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.55;
         }
 
         .section-title {
-            font-size: 3rem;
+            font-size: 2.25rem;
             margin-bottom: 1rem;
+            color: hsl(var(--foreground));
+            line-height: 1.05;
+        }
+
+        @media (min-width: 576px) {
+            .section-title { font-size: 2.75rem; }
         }
 
         @media (min-width: 768px) {
-            .section-title {
-                font-size: 4rem;
-            }
+            .section-title { font-size: 3.5rem; }
         }
 
         @media (min-width: 1024px) {
-            .section-title {
-                font-size: 5rem;
-            }
+            .section-title { font-size: 4.5rem; }
         }
 
         .section-title span {
-            color: hsl(var(--primary));
+            color: var(--gold);
         }
 
         .section-description {
@@ -247,7 +396,7 @@
             animation: slideUp 0.6s ease-out forwards;
         }
 
-        /* === ФУТЕР ТОЧНАЯ КОПИЯ ИЗ Footer.tsx === */
+        /* ── Footer ── */
         .footer-lovable {
             background: hsl(var(--card));
             border-top: 1px solid hsl(var(--border));
@@ -255,10 +404,13 @@
         }
 
         .footer-lovable h4 {
-            font-family: 'Bebas Neue';
-            font-size: 1.25rem;
+            font-family: 'FIFA Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
             margin-bottom: 1.5rem;
-            letter-spacing: 0.1em;
         }
 
         .footer-social-icon {
@@ -266,6 +418,7 @@
             height: 40px;
             border-radius: 50%;
             background: hsl(var(--secondary));
+            border: 1px solid hsl(var(--border));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -275,9 +428,11 @@
         }
 
         .footer-social-icon:hover {
-            background: hsl(var(--primary));
-            color: hsl(var(--background));
+            background: #57122D;
+            border-color: var(--gold);
+            color: var(--gold);
             transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
         }
 
         .footer-contact-item {
@@ -286,11 +441,13 @@
             gap: 0.75rem;
             color: hsl(var(--muted));
             margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .footer-contact-item i {
-            color: hsl(var(--primary));
+            color: var(--gold);
             margin-top: 0.25rem;
+            opacity: 0.8;
         }
 
         .footer-contact-item a {
@@ -300,7 +457,7 @@
         }
 
         .footer-contact-item a:hover {
-            color: hsl(var(--primary));
+            color: var(--gold);
         }
 
         .footer-links-list {
@@ -315,11 +472,12 @@
         .footer-links-list a {
             color: hsl(var(--muted));
             text-decoration: none;
+            font-size: 0.9rem;
             transition: color 0.3s ease;
         }
 
         .footer-links-list a:hover {
-            color: hsl(var(--primary));
+            color: var(--gold);
         }
 
         .footer-bottom-lovable {
@@ -335,7 +493,7 @@
         }
 
         .footer-bottom-lovable a:hover {
-            color: hsl(var(--primary));
+            color: var(--gold);
         }
     </style>
 
@@ -346,13 +504,13 @@
     <nav class="navbar-lovable" id="navbar">
         <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
 
-            <div class="d-flex justify-content-between align-items-center" style="height: 80px;">
+            <div class="d-flex justify-content-between align-items-center" style="height: 68px;">
                 <!-- Logo -->
                 <a href="#home" class="d-flex align-items-center gap-3 text-decoration-none">
                     <img src="{% static 'images/league-logo.png' %}"
                          alt="Media League Logo"
-                         class="transition-transform"
-                         style="height: 98px; width: 98px; object-fit: contain;">
+                         class="navbar-logo"
+                         style="height: 98px; width: 98px; object-fit: contain; transition: all 0.3s ease;">
                     <!--<span class="font-display" style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 0.1em;">
                         MEDIA LEAGUE
                     </span>-->
@@ -366,6 +524,10 @@
                     <a href="#scorers" class="nav-link-lovable">Бомбордиры</a>
                     <a href="#highlights" class="nav-link-lovable">Обзор матчей</a>
                     <a href="https://www.mfltj.com/efootball/" class="nav-link-lovable">E - FOOTBALL</a>
+                    <!-- TODO: replace href with production fantasy URL -->
+                    <a href="http://localhost:3001" target="_blank" class="nav-link-lovable nav-fantasy-link">
+                        <i class="fas fa-shield-halved" style="font-size:0.75rem; margin-right:0.3rem;"></i>Фэнтези
+                    </a>
                     <button class="btn-hero ms-4">Vote Now</button>
                 </div>
 
@@ -400,14 +562,14 @@
     <!-- === ФУТЕР ТОЧНАЯ КОПИЯ ИЗ Footer.tsx === -->
     <footer class="footer-lovable">
         <div class="container-lovable" style="padding-left: 30px; padding-right: 30px;">
-            <div class="row g-8">
+            <div class="row g-4">
                 <!-- Brand Column -->
-                <div class="col-lg-6">
-                    <div class="d-flex align-items-center gap-3 mb-6">
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="d-flex align-items-center gap-3 mb-4">
                         <img src="{% static 'images/league-logo.png' %}" alt="Media League" style="height: 56px; width: 56px; object-fit: contain;">
-                        <span style="font-family: 'Bebas Neue'; font-size: 1.5rem; letter-spacing: 0.1em;">MEDIA LEAGUE</span>
+                        <span style="font-family: 'FIFA Sans'; font-weight: 700; font-size: 1.25rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);">MEDIA LEAGUE</span>
                     </div>
-                    <p style="color: hsl(0, 0%, 0%); margin-bottom: 1.5rem; max-width: 28rem;">
+                    <p style="color: hsl(var(--muted)); margin-bottom: 1.5rem; max-width: 28rem;">
                         The premier football competition bringing together media professionals from across the nation.
                         Where passion meets journalism, and competition creates community.
                     </p>
@@ -429,7 +591,7 @@
                 </div>
 
                 <!-- Quick Links -->
-                <div class="col-lg-3">
+                <div class="col-6 col-md-3 col-lg-3">
                     <h4>QUICK LINKS</h4>
                     <ul class="footer-links-list">
                         <li><a href="#home">Home</a></li>
@@ -442,7 +604,7 @@
                 </div>
 
                 <!-- Contact Info -->
-                <div class="col-lg-3">
+                <div class="col-6 col-md-3 col-lg-3">
                     <h4>CONTACT</h4>
                     <div class="footer-contact-item">
                         <i class="fas fa-map-marker-alt"></i>
@@ -465,7 +627,7 @@
                     <p style="color: hsl(var(--muted)); font-size: 0.875rem; margin-bottom: 1rem;">
                         © {% now "Y" %} Media League. All rights reserved.
                     </p>
-                    <div class="d-flex gap-6" style="font-size: 0.875rem;">
+                    <div class="d-flex gap-3" style="font-size: 0.875rem;">
                         <a href="#">Privacy Policy</a>
                         <a href="#">Terms of Service</a>
                         <a href="#">Cookie Policy</a>
@@ -474,6 +636,35 @@
             </div>
         </div>
     </footer>
+
+    <!-- ── Mobile Bottom Tab Bar ── -->
+    <nav class="mobile-tab-bar" id="mobileTabBar">
+        <a href="#home" class="tab-item active" data-section="home">
+            <i class="fas fa-house tab-icon"></i>
+            <span class="tab-label">Home</span>
+        </a>
+        <!-- TODO: replace href with production fantasy URL -->
+        <a href="http://localhost:3001" target="_blank" class="tab-item tab-vote">
+            <div class="tab-icon-wrap">
+                <i class="fas fa-shield-halved tab-icon"></i>
+            </div>
+            <span class="tab-label">Фэнтези</span>
+        </a>
+        <a href="#tables" class="tab-item" data-section="tables">
+            <i class="fas fa-list-ol tab-icon"></i>
+            <span class="tab-label">Таблица</span>
+        </a>
+        <a href="#scorers" class="tab-item" data-section="scorers">
+            <i class="fas fa-medal tab-icon"></i>
+            <span class="tab-label">Голы</span>
+        </a>
+        <a href="/vote/" class="tab-item tab-vote" data-section="vote">
+            <div class="tab-icon-wrap">
+                <i class="fas fa-star tab-icon"></i>
+            </div>
+            <span class="tab-label">Голосовать</span>
+        </a>
+    </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -503,16 +694,41 @@
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const target = document.querySelector(href);
                 if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+                    window.scrollTo({ top: target.offsetTop - 68, behavior: 'smooth' });
                 }
             });
         });
+
+        // Bottom tab bar — active state via IntersectionObserver
+        (function() {
+            const tabItems = document.querySelectorAll('.tab-item[data-section]');
+            const sectionIds = ['home', 'matches', 'tables', 'scorers', 'highlights'];
+
+            function setActiveTab(id) {
+                tabItems.forEach(t => {
+                    const isActive = t.dataset.section === id;
+                    t.classList.toggle('active', isActive && t.dataset.section !== 'vote');
+                });
+            }
+
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) setActiveTab(entry.target.id);
+                    });
+                }, { threshold: 0.35 });
+
+                sectionIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) observer.observe(el);
+                });
+            }
+        })();
     </script>
 
     {% block extra_js %}{% endblock %}
