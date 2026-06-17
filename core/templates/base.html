@@ -153,18 +153,19 @@
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 1100;
-            height: 60px;
             background: rgba(14, 5, 8, 0.97);
             backdrop-filter: blur(16px);
             border-top: 1px solid hsl(var(--border));
             display: flex;
             align-items: stretch;
+            overflow: hidden;
             padding-bottom: env(safe-area-inset-bottom, 0px);
             height: calc(60px + env(safe-area-inset-bottom, 0px));
         }
 
         .tab-item {
-            flex: 1;
+            flex: 1 1 0;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -173,7 +174,7 @@
             text-decoration: none;
             color: hsl(var(--muted));
             transition: color 0.2s ease;
-            padding: 6px 4px;
+            padding: 6px 2px;
             position: relative;
         }
 
@@ -207,11 +208,15 @@
 
         .tab-label {
             font-family: 'FIFA Sans', sans-serif;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 600;
-            letter-spacing: 0.06em;
+            letter-spacing: 0;
             text-transform: uppercase;
             line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         /* ── Buttons ── */
