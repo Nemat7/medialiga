@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Trophy, Users, Shield, LayoutDashboard, UserCircle } from "lucide-react";
+import { Trophy, Users, Shield, LayoutDashboard, UserCircle, ArrowLeftRight } from "lucide-react";
 import { clsx } from "clsx";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
@@ -8,13 +8,21 @@ export default function BottomNav() {
   const { t } = useTranslation();
   const { isLoggedIn } = useAuth();
 
-  const links = [
-    { to: "/", label: t("nav.season"), icon: LayoutDashboard },
-    { to: "/players", label: t("nav.players"), icon: Users },
-    { to: "/clubs", label: t("nav.clubs"), icon: Shield },
-    { to: "/leaderboard", label: t("nav.leaderboard"), icon: Trophy },
-    { to: "/dashboard", label: t("nav.dashboard"), icon: UserCircle, dot: isLoggedIn },
-  ];
+  const links = isLoggedIn
+    ? [
+        { to: "/", label: t("nav.season"), icon: LayoutDashboard },
+        { to: "/players", label: t("nav.players"), icon: Users },
+        { to: "/transfers", label: t("nav.transfers"), icon: ArrowLeftRight },
+        { to: "/leaderboard", label: t("nav.leaderboard"), icon: Trophy },
+        { to: "/dashboard", label: t("nav.dashboard"), icon: UserCircle, dot: true },
+      ]
+    : [
+        { to: "/", label: t("nav.season"), icon: LayoutDashboard },
+        { to: "/players", label: t("nav.players"), icon: Users },
+        { to: "/clubs", label: t("nav.clubs"), icon: Shield },
+        { to: "/leaderboard", label: t("nav.leaderboard"), icon: Trophy },
+        { to: "/dashboard", label: t("nav.dashboard"), icon: UserCircle },
+      ];
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur border-t border-gray-800">

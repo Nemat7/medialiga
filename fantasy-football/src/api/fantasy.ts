@@ -73,4 +73,17 @@ export const fantasyApi = {
     const { data } = await apiClient.post("/v1/fantasy/team", payload);
     return data.data;
   },
+
+  makeTransfer: async (playerOutId: number, playerInId: number) => {
+    const { data } = await apiClient.post("/v1/fantasy/team/me/transfers", {
+      player_out_id: playerOutId,
+      player_in_id: playerInId,
+    });
+    return data.data;
+  },
+
+  getTransferHistory: async () => {
+    const { data } = await apiClient.get("/v1/fantasy/team/me/transfers");
+    return data.data;
+  },
 };

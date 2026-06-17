@@ -205,7 +205,10 @@ function DashboardContent() {
             </button>
           </div>
         ) : (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+          <button
+            onClick={() => navigate("/transfers")}
+            className="w-full bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-5 transition-colors text-left"
+          >
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <p className="text-white font-bold text-lg">{team?.name}</p>
@@ -228,7 +231,7 @@ function DashboardContent() {
                 </div>
               </div>
             </div>
-          </div>
+          </button>
         )}
       </div>
     </div>

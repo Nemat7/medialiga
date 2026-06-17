@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fantasyApi } from "@/api/fantasy";
 import { useAuth } from "@/context/AuthContext";
 import type { Position } from "@/types";
@@ -63,5 +63,17 @@ export const useDashboard = () => {
     enabled: isLoggedIn,
     retry: false,
     staleTime: 60 * 1000,
+  });
+};
+
+export const useMakeTransfer = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ playerOutId, playerInId }: { playerOutId: number; playerInId: number }) =>
+      fantasyApi.makeTransfer(playerOutId, playerInId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-team"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
   });
 };

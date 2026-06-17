@@ -13,6 +13,7 @@ import VerifyPage from "@/pages/VerifyPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import TeamBuilderPage from "@/pages/TeamBuilderPage";
+import TransfersPage from "@/pages/TransfersPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <TeamBuilderPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="transfers"
+                element={
+                  <ProtectedRoute>
+                    <TransfersPage />
                   </ProtectedRoute>
                 }
               />

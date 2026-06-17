@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Trophy, Users, Shield, LayoutDashboard, UserCircle } from "lucide-react";
+import { Trophy, Users, Shield, LayoutDashboard, UserCircle, ArrowLeftRight } from "lucide-react";
 import { clsx } from "clsx";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
@@ -13,6 +13,9 @@ export default function Navbar() {
     { to: "/players", label: t("nav.players"), icon: Users },
     { to: "/clubs", label: t("nav.clubs"), icon: Shield },
     { to: "/leaderboard", label: t("nav.leaderboard"), icon: Trophy },
+    ...(isLoggedIn
+      ? [{ to: "/transfers", label: t("nav.transfers"), icon: ArrowLeftRight }]
+      : []),
   ];
 
   const toggleLang = () => {
