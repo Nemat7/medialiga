@@ -161,6 +161,7 @@ def efootball_app(request):
 
 def fantasy_app(request, path=''):
     import os
+    from django.conf import settings
     from django.http import FileResponse, Http404
     index_path = os.path.join(settings.BASE_DIR, 'fantasy-football', 'dist', 'index.html')
     try:
