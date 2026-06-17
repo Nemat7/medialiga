@@ -18,6 +18,8 @@ staticfiles/
 # Node
 node_modules/
 dist/
+!fantasy-football/dist/
+!fantasy-football/dist/**
 .env
 .env.local
 .env.production

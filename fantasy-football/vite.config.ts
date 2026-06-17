@@ -4,6 +4,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/fantasy/",
   server: {
     port: 3001,
     host: true,

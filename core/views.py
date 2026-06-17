@@ -159,6 +159,16 @@ def efootball_app(request):
     return render(request, 'efootball/index.html')
 
 
+def fantasy_app(request, path=''):
+    import os
+    from django.http import FileResponse, Http404
+    index_path = os.path.join(settings.BASE_DIR, 'fantasy-football', 'dist', 'index.html')
+    try:
+        return FileResponse(open(index_path, 'rb'), content_type='text/html')
+    except FileNotFoundError:
+        raise Http404
+
+
 
 def test_simple(request):
     return render(request, 'efootball/test.html')

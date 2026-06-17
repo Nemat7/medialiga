@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem("fantasy_token");
       localStorage.removeItem("fantasy_user");
-      window.location.href = "/login";
+      window.location.href = "/fantasy/login";
     }
     return Promise.reject(error);
   }
