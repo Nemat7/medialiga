@@ -37,7 +37,6 @@ function PlayerRow({
   onAdd: () => void;
   onRemove: () => void;
 }) {
-  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-800 last:border-0">
       <div className="flex items-center gap-3 min-w-0">
