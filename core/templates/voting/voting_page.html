@@ -1,132 +1,390 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+    .voting-page {
+        min-height: 100vh;
+        background: hsl(var(--background));
+        padding-top: 68px;
+    }
+
+    .voting-hero {
+        padding: 4rem 0 3rem;
+        text-align: center;
+    }
+
+    .voting-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 1.25rem;
+        border-radius: 2rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        margin-bottom: 1.25rem;
+    }
+
+    .voting-status-pill.open {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #10b981;
+    }
+
+    .voting-status-pill.open .status-dot {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: status-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes status-pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.45; transform: scale(0.7); }
+    }
+
+    .voting-status-pill.closed {
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid rgba(201, 168, 76, 0.28);
+        color: var(--gold);
+    }
+
+    .voted-banner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid rgba(201, 168, 76, 0.28);
+        color: var(--gold);
+        border-radius: 2rem;
+        padding: 0.45rem 1.25rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    /* ── Cards grid ── */
+    .voting-grid { padding: 0 0 6rem; }
+
+    /* Fixed-size portrait card — same height for every card */
+    .vote-card {
+        position: relative;
+        height: 420px;
+        border-radius: 1rem;
+        overflow: hidden;
+        border: 1px solid hsl(var(--border));
+        background: hsl(var(--card));
+        transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vote-card:hover {
+        border-color: rgba(201, 168, 76, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+    }
+
+    .vote-card.is-voted {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.15), 0 16px 48px rgba(0, 0, 0, 0.55);
+    }
+
+    /* "Your vote" badge */
+    .vote-badge {
+        position: absolute;
+        top: 12px; right: 12px;
+        z-index: 10;
+        background: var(--gold);
+        color: #1a0a10;
+        font-size: 0.5rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 9px;
+        border-radius: 20px;
+    }
+
+    /* Photo fills the top 55% of the card */
+    .vote-photo-area {
+        flex: 0 0 58%;
+        position: relative;
+        overflow: hidden;
+        background: hsl(var(--secondary));
+    }
+
+    .vote-photo-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top center;
+        display: block;
+    }
+
+    /* gradient overlay at bottom of photo so text is readable */
+    .vote-photo-area::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom,
+            transparent 40%,
+            rgba(14, 5, 8, 0.55) 100%);
+    }
+
+    .vote-photo-placeholder {
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 4rem; color: var(--gold); opacity: 0.2;
+    }
+
+    /* Info section — bottom 42% */
+    .vote-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0.9rem 1rem 1rem;
+        gap: 0.35rem;
+    }
+
+    .vote-player-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: hsl(var(--foreground));
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vote-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+    }
+
+    .vote-position {
+        display: inline-block;
+        background: rgba(201, 168, 76, 0.1);
+        border: 1px solid rgba(201, 168, 76, 0.25);
+        color: var(--gold);
+        font-size: 0.55rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 20px;
+        flex-shrink: 0;
+    }
+
+    .vote-team {
+        font-size: 0.72rem;
+        color: hsl(var(--muted));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vote-bar-track {
+        height: 3px;
+        background: hsl(var(--border));
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: auto;
+    }
+
+    .vote-bar-fill {
+        height: 100%;
+        background: var(--gold);
+        border-radius: 2px;
+    }
+
+    .vote-bar-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.65rem;
+        color: hsl(var(--muted));
+        margin-bottom: 0.6rem;
+    }
+
+    /* Buttons */
+    .btn-vote {
+        width: 100%;
+        padding: 0.55rem 1rem;
+        border-radius: 0.5rem;
+        font-family: 'FIFA Sans', sans-serif;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: 1px solid;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-vote-active {
+        background: #57122D;
+        color: var(--gold);
+        border-color: rgba(201, 168, 76, 0.35);
+    }
+
+    .btn-vote-active:hover {
+        background: #7a1a3d;
+        border-color: var(--gold);
+    }
+
+    .btn-vote-mine {
+        background: rgba(201, 168, 76, 0.1);
+        color: var(--gold);
+        border-color: rgba(201, 168, 76, 0.4);
+        cursor: not-allowed;
+    }
+
+    .btn-vote-disabled {
+        background: transparent;
+        color: hsl(var(--muted));
+        border-color: hsl(var(--border));
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    @media (max-width: 575px) {
+        .vote-card { height: 380px; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container my-5">
-    <div class="text-center mb-5">
-        <h1 class="display-4">ИГРОК НЕДЕЛИ</h1>
-        <p class="lead">Голосуйте за лучшего игрока недели</p>
-        <div class="header-divider"></div>
+<div class="voting-page">
+
+    <!-- Hero -->
+    <div class="voting-hero">
+        <div class="container-lovable">
+
+            {% if voting_open %}
+            <div class="voting-status-pill open">
+                <span class="status-dot"></span>
+                Голосование открыто
+            </div>
+            {% else %}
+            <div class="voting-status-pill closed">
+                <i class="fas fa-lock" style="font-size:0.65rem;"></i>
+                Голосование закрыто
+            </div>
+            {% endif %}
+
+            <span class="section-badge" style="display:block; margin-bottom: 0.75rem;">Еженедельная награда</span>
+            <h1 class="section-title" style="font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 0.75rem;">
+                ИГРОК <span>НЕДЕЛИ</span>
+            </h1>
+            <p style="color: hsl(var(--muted)); max-width: 440px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">
+                {% if voting_open %}
+                    Выберите лучшего игрока этой недели. Один голос.
+                {% else %}
+                    Голосование завершено. Победитель будет объявлен перед матчами.
+                {% endif %}
+            </p>
+
+            {% if has_voted %}
+            <div class="voted-banner">
+                <i class="fas fa-check-circle"></i>
+                Вы уже проголосовали на этой неделе
+            </div>
+            {% endif %}
+
+        </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for player in players %}
-        <div class="col">
-            <div class="card player-card h-100">
-                <div class="card-header bg-primary text-white text-center">
-                    <h5 class="mb-0">{{ player.name }}</h5>
-                </div>
-                <div class="card-body text-center">
-                    {% if player.photo %}
-                    <img src="{{ player.photo.url }}" alt="{{ player.name }}" 
-                         class="img-fluid rounded-circle mb-3 player-photo">
-                    {% else %}
-                    <div class="no-photo rounded-circle mb-3">
-                        <i class="fas fa-user fa-5x"></i>
+    <!-- Player cards -->
+    <div class="voting-grid">
+        <div class="container-lovable">
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+
+                {% for player in players %}
+                <div class="col">
+                    <div class="vote-card {% if voted_player_id == player.id %}is-voted{% endif %}">
+
+                        {% if voted_player_id == player.id %}
+                        <div class="vote-badge">✓ Ваш голос</div>
+                        {% endif %}
+
+                        <!-- Photo -->
+                        <div class="vote-photo-area">
+                            {% if player.photo %}
+                            <img src="{{ player.photo.url }}" alt="{{ player.name }}">
+                            {% else %}
+                            <div class="vote-photo-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Info -->
+                        <div class="vote-info">
+                            <div class="vote-player-name">{{ player.name }}</div>
+
+                            <div class="vote-meta">
+                                {% if player.position %}
+                                <span class="vote-position">{{ player.position }}</span>
+                                {% endif %}
+                                {% if player.team %}
+                                <span class="vote-team">{{ player.team.name }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="vote-bar-stats">
+                                <span>{{ player.votes }} голос{{ player.votes|pluralize:",а,ов" }}</span>
+                                <span>{% if total_votes > 0 %}{% widthratio player.votes total_votes 100 %}{% else %}0{% endif %}%</span>
+                            </div>
+                            <div class="vote-bar-track">
+                                <div class="vote-bar-fill" style="width: {% if total_votes > 0 %}{% widthratio player.votes total_votes 100 %}{% else %}0{% endif %}%;"></div>
+                            </div>
+
+                            <!-- Button -->
+                            {% if not voting_open %}
+                                <button class="btn-vote btn-vote-disabled" disabled style="margin-top: 0.6rem;">
+                                    <i class="fas fa-lock me-1"></i>Закрыто
+                                </button>
+                            {% elif has_voted %}
+                                {% if voted_player_id == player.id %}
+                                <button class="btn-vote btn-vote-mine" disabled style="margin-top: 0.6rem;">
+                                    <i class="fas fa-check me-1"></i>Ваш голос
+                                </button>
+                                {% else %}
+                                <button class="btn-vote btn-vote-disabled" disabled style="margin-top: 0.6rem;">Голосовать</button>
+                                {% endif %}
+                            {% else %}
+                            <button class="btn-vote btn-vote-active vote-btn" data-player-id="{{ player.id }}" style="margin-top: 0.6rem;">
+                                <i class="fas fa-star me-1"></i>Голосовать
+                            </button>
+                            {% endif %}
+                        </div>
+
                     </div>
-                    {% endif %}
-                    
-                    <p class="text-muted mb-1">
-                        <i class="fas fa-tshirt me-2"></i>{{ player.position }}
-                    </p>
-                    <p class="text-muted">
-                        <i class="fas fa-users me-2"></i>{{ player.team.name }}
-                    </p>
                 </div>
-                <div class="card-footer bg-transparent text-center">
-                    <button class="btn btn-success vote-btn" data-player-id="{{ player.id }}">
-                        <i class="fas fa-vote-yea me-2"></i>Голосовать
-                    </button>
-                    <div class="votes-count mt-2">
-                        <span class="badge bg-secondary">{{ player.votes }}</span>
-                        голосов
-                    </div>
+                {% empty %}
+                <div class="col-12 text-center" style="padding: 5rem 0; color: hsl(var(--muted));">
+                    <i class="fas fa-users fa-3x mb-4" style="opacity: 0.2; display: block;"></i>
+                    Кандидаты ещё не добавлены
                 </div>
+                {% endfor %}
+
             </div>
         </div>
-        {% endfor %}
     </div>
 
-    <div class="results-table mt-5">
-        <h3 class="text-center mb-4">Текущие результаты</h3>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Игрок</th>
-                        <th>Команда</th>
-                        <th>Голоса</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for player in players|dictsortreversed:"votes" %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ player.name }}</td>
-                        <td>{{ player.team.name }}</td>
-                        <td>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" 
-                                     role="progressbar" 
-                                     style="width: {% widthratio player.votes players.0.votes 100 %}%">
-                                    {{ player.votes }}
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!--<script>-->
-<!--document.querySelectorAll('.vote-btn').forEach(btn => {-->
-<!--    btn.addEventListener('click', function() {-->
-<!--        const playerId = this.dataset.playerId;-->
-<!--        fetch(`/vote/${playerId}/`, {-->
-<!--            method: 'POST',-->
-<!--            headers: {-->
-<!--                'X-CSRFToken': '{{ csrf_token }}',-->
-<!--                'Content-Type': 'application/json'-->
-<!--            }-->
-<!--        })-->
-<!--        .then(response => response.json())-->
-<!--        .then(data => {-->
-<!--            if (data.success) {-->
-<!--                Swal.fire({-->
-<!--                    icon: 'success',-->
-<!--                    title: 'Спасибо!',-->
-<!--                    text: data.message,-->
-<!--                    timer: 2000-->
-<!--                }).then(() => location.reload());-->
-<!--            } else {-->
-<!--                Swal.fire({-->
-<!--                    icon: 'error',-->
-<!--                    title: 'Ошибка',-->
-<!--                    text: data.message-->
-<!--                });-->
-<!--            }-->
-<!--        })-->
-<!--        .catch(error => {-->
-<!--            console.error('Error:', error);-->
-<!--            Swal.fire({-->
-<!--                icon: 'error',-->
-<!--                title: 'Ошибка',-->
-<!--                text: 'Произошла ошибка при отправке голоса'-->
-<!--            });-->
-<!--        });-->
-<!--    });-->
-<!--});-->
-<!--</script>-->
 <script>
 document.querySelectorAll('.vote-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function () {
         const playerId = this.dataset.playerId;
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Отправка...';
 
         fetch(`/vote/${playerId}/`, {
             method: 'POST',
@@ -136,40 +394,41 @@ document.querySelectorAll('.vote-btn').forEach(btn => {
             },
             credentials: 'same-origin'
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(r => r.json())
         .then(data => {
-            console.log('Response data:', data); // Для отладки
-
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Спасибо!',
                     text: data.message,
                     timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    location.reload();
-                });
+                    showConfirmButton: false,
+                    background: '#180B13',
+                    color: '#E8DDD5',
+                    iconColor: '#C9A84C',
+                }).then(() => location.reload());
             } else {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-star me-1"></i>Голосовать';
                 Swal.fire({
                     icon: 'error',
                     title: 'Ошибка',
                     text: data.message,
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
+                    background: '#180B13',
+                    color: '#E8DDD5',
                 });
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
+        .catch(() => {
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-star me-1"></i>Голосовать';
             Swal.fire({
                 icon: 'error',
                 title: 'Ошибка сети',
-                text: 'Произошла ошибка при отправке голоса. Проверьте соединение.'
+                text: 'Попробуйте ещё раз',
+                background: '#180B13',
+                color: '#E8DDD5',
             });
         });
     });

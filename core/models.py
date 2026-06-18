@@ -208,6 +208,19 @@ class VoteRecord(models.Model):
         return f"{self.timestamp} ({self.user_agent}) -> {self.player.name}"
 
 
+class VotingSession(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Название", help_text="Например: Тур 6")
+    is_open = models.BooleanField(default=False, verbose_name="Голосование открыто")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Сессия голосования"
+        verbose_name_plural = "Сессии голосования"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        status = "Открыто" if self.is_open else "Закрыто"
+        return f"{self.title} — {status}"
 
 
 # ================================= E - FOOTBALL MODELS ================================================

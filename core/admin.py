@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Match, Team, Player, VideoReview, Sponsor, SliderImage, MvpPlayers, VoteRecord, PageVisit, EMatch, TournamentStanding, LiveMatch
+from .models import Match, Team, Player, VideoReview, Sponsor, SliderImage, MvpPlayers, VoteRecord, PageVisit, EMatch, TournamentStanding, LiveMatch, VotingSession
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
@@ -115,11 +115,17 @@ class SliderImageAdmin(admin.ModelAdmin):
 
 @admin.register(MvpPlayers)
 class MvpPlayersAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team', 'votes', 'position')
+    list_display = ('name', 'team', 'position', 'votes', 'photo_preview')
     list_filter = ('team', 'position')
     search_fields = ('name', 'team__name')
-    list_editable = ('votes',)
-    readonly_fields = ('votes',)
+    readonly_fields = ('photo_preview',)
+
+    def photo_preview(self, obj):
+        if obj.photo:
+            return format_html('<img src="{}" style="max-height:50px;max-width:50px;border-radius:50%;" />', obj.photo.url)
+        return "Нет фото"
+    photo_preview.short_description = 'Фото'
+
 
 @admin.register(VoteRecord)
 class VoteRecordAdmin(admin.ModelAdmin):
@@ -127,6 +133,19 @@ class VoteRecordAdmin(admin.ModelAdmin):
     list_filter = ('timestamp', 'player')
     search_fields = ('ip_address', 'player__name')
     date_hierarchy = 'timestamp'
+
+
+@admin.register(VotingSession)
+class VotingSessionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_open', 'created_at')
+    list_editable = ('is_open',)
+    actions = ['reset_votes_for_new_round']
+
+    def reset_votes_for_new_round(self, request, queryset):
+        MvpPlayers.objects.all().update(votes=0)
+        VoteRecord.objects.all().delete()
+        self.message_user(request, "Все голоса сброшены — новый тур готов.")
+    reset_votes_for_new_round.short_description = "Сбросить все голоса (новый тур)"
 
 
 @admin.register(PageVisit)

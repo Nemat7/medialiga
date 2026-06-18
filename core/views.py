@@ -3,7 +3,7 @@ from django.db.models import ExpressionWrapper, F, IntegerField, Count
 from django.shortcuts import render
 
 from . import models
-from .models import Match, Team, Player, VideoReview, Sponsor, PageVisit, SliderImage, MvpPlayers, VoteRecord
+from .models import Match, Team, Player, VideoReview, Sponsor, PageVisit, SliderImage, MvpPlayers, VoteRecord, VotingSession
 from django.db.models.functions import TruncDay
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
@@ -100,9 +100,29 @@ def get_client_ip(request):
     return ip
 
 def voting_page(request):
-    players = MvpPlayers.objects.all().select_related('team')
+    players = MvpPlayers.objects.all().select_related('team').order_by('-votes')
     csrf_token = get_token(request)
-    return render(request, 'voting/voting_page.html', {'players': players, 'csrf_token': csrf_token})
+
+    voting_open = VotingSession.objects.filter(is_open=True).exists()
+
+    ip_address = get_client_ip(request)
+    today = now()
+    start_of_week = today - timedelta(days=today.weekday())
+    last_vote = VoteRecord.objects.filter(
+        ip_address=ip_address,
+        timestamp__gte=start_of_week
+    ).first()
+
+    total_votes = sum(p.votes for p in players)
+
+    return render(request, 'voting/voting_page.html', {
+        'players': players,
+        'csrf_token': csrf_token,
+        'voting_open': voting_open,
+        'has_voted': last_vote is not None,
+        'voted_player_id': last_vote.player_id if last_vote else None,
+        'total_votes': total_votes,
+    })
 
 
 def vote_player(request, player_id):
