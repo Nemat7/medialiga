@@ -99,19 +99,28 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def _get_active_session():
+    return VotingSession.objects.filter(is_open=True).first()
+
+
+def _voted_in_session(ip_address, session):
+    if session is None:
+        return None
+    return VoteRecord.objects.filter(
+        ip_address=ip_address,
+        timestamp__gte=session.created_at.date()
+    ).select_related('player').first()
+
+
 def voting_page(request):
     players = MvpPlayers.objects.all().select_related('team').order_by('-votes')
     csrf_token = get_token(request)
 
-    voting_open = VotingSession.objects.filter(is_open=True).exists()
+    session = _get_active_session()
+    voting_open = session is not None
 
     ip_address = get_client_ip(request)
-    today = now()
-    start_of_week = today - timedelta(days=today.weekday())
-    last_vote = VoteRecord.objects.filter(
-        ip_address=ip_address,
-        timestamp__gte=start_of_week
-    ).first()
+    last_vote = _voted_in_session(ip_address, session)
 
     total_votes = sum(p.votes for p in players)
 
@@ -130,32 +139,16 @@ def vote_player(request, player_id):
         ip_address = get_client_ip(request)
         user_agent = request.META.get('HTTP_USER_AGENT', '')[:500]
 
-        # Начало текущей недели (понедельник)
-        today = now()
-        start_of_week = today - timedelta(days=today.weekday())
+        session = _get_active_session()
+        if not session:
+            return JsonResponse({"success": False, "message": "Голосование закрыто"})
 
-        last_vote = VoteRecord.objects.filter(
-            ip_address=ip_address,
-            timestamp__gte=start_of_week
-        ).first()
-
+        last_vote = _voted_in_session(ip_address, session)
         if last_vote:
             return JsonResponse({
                 "success": False,
-                "message": f"Вы уже голосовали на этой неделе {last_vote.timestamp.strftime('%d.%m.%Y')} за {last_vote.player.name}"
+                "message": f"Вы уже голосовали за {last_vote.player.name}"
             })
-
-        # # Проверка последнего голоса
-        # last_vote = VoteRecord.objects.filter(
-        #     ip_address=ip_address,
-        #     timestamp__gte=now() - timedelta(days=7)
-        # ).first()
-        #
-        # if last_vote:
-        #     return JsonResponse({
-        #         "success": False,
-        #         "message": f"Вы уже голосовали {last_vote.timestamp.strftime('%d.%m.%Y')} за {last_vote.player.name}"
-        #     })
 
         player = get_object_or_404(MvpPlayers, id=player_id)
         player.votes += 1
