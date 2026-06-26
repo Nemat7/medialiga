@@ -6,43 +6,10 @@ from . import models
 from .models import Match, Team, Player, VideoReview, Sponsor, PageVisit, SliderImage, MvpPlayers, VoteRecord, VotingSession
 from django.db.models.functions import TruncDay
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.utils.timezone import now, timedelta
 from django.views.generic import ListView
-from django.views.decorators.csrf import csrf_exempt
-import urllib.request
-import urllib.error
-import urllib.parse
-
-_FANTASY_API = "https://apifantasy.footballplus.tv/api"
-_SKIP_HEADERS = {'host', 'content-length', 'transfer-encoding', 'connection', 'x-forwarded-for'}
-
-@csrf_exempt
-def fantasy_api_proxy(request, path):
-    url = f"{_FANTASY_API}/{path}"
-    if request.GET:
-        url += '?' + urllib.parse.urlencode(request.GET)
-
-    headers = {k: v for k, v in request.headers.items() if k.lower() not in _SKIP_HEADERS}
-    body = request.body if request.body else None
-
-    req = urllib.request.Request(url, data=body, headers=headers, method=request.method)
-    try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return HttpResponse(
-                content=resp.read(),
-                status=resp.status,
-                content_type=resp.headers.get('Content-Type', 'application/json'),
-            )
-    except urllib.error.HTTPError as e:
-        return HttpResponse(
-            content=e.read(),
-            status=e.code,
-            content_type=e.headers.get('Content-Type', 'application/json'),
-        )
-    except urllib.error.URLError as e:
-        return JsonResponse({'message': str(e.reason)}, status=502)
 
 
 def stats(request):
