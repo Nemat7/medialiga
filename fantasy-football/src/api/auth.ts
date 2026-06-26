@@ -4,6 +4,7 @@ export interface AuthUser {
   id: number;
   phone: string;
   name: string;
+  is_admin?: boolean;
 }
 
 export interface AuthSuccessData {

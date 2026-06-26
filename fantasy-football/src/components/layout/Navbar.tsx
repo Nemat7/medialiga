@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { Trophy, Users, Shield, LayoutDashboard, UserCircle, ArrowLeftRight } from "lucide-react";
+import { Trophy, Users, Shield, LayoutDashboard, UserCircle, ArrowLeftRight, Settings } from "lucide-react";
 import { clsx } from "clsx";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const links = [
     { to: "/", label: t("nav.season"), icon: LayoutDashboard },
@@ -15,6 +15,9 @@ export default function Navbar() {
     { to: "/leaderboard", label: t("nav.leaderboard"), icon: Trophy },
     ...(isLoggedIn
       ? [{ to: "/transfers", label: t("nav.transfers"), icon: ArrowLeftRight }]
+      : []),
+    ...(user?.is_admin
+      ? [{ to: "/admin", label: "Admin", icon: Settings }]
       : []),
   ];
 
