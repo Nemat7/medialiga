@@ -6,10 +6,36 @@ from . import models
 from .models import Match, Team, Player, VideoReview, Sponsor, PageVisit, SliderImage, MvpPlayers, VoteRecord, VotingSession
 from django.db.models.functions import TruncDay
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.middleware.csrf import get_token
 from django.utils.timezone import now, timedelta
 from django.views.generic import ListView
+from django.views.decorators.csrf import csrf_exempt
+import requests as http_requests
+
+_FANTASY_API = "https://apifantasy.footballplus.tv"
+_SKIP_HEADERS = {'host', 'content-length', 'transfer-encoding', 'connection', 'x-forwarded-for'}
+
+@csrf_exempt
+def fantasy_api_proxy(request, path):
+    url = f"{_FANTASY_API}/{path}"
+    headers = {k: v for k, v in request.headers.items() if k.lower() not in _SKIP_HEADERS}
+    try:
+        resp = http_requests.request(
+            method=request.method,
+            url=url,
+            headers=headers,
+            data=request.body,
+            params=dict(request.GET),
+            timeout=30,
+        )
+        return HttpResponse(
+            content=resp.content,
+            status=resp.status_code,
+            content_type=resp.headers.get('Content-Type', 'application/json'),
+        )
+    except http_requests.RequestException as e:
+        return JsonResponse({'message': str(e)}, status=502)
 
 
 def stats(request):
