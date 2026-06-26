@@ -15,7 +15,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 
-_FANTASY_API = "https://apifantasy.footballplus.tv"
+_FANTASY_API = "https://apifantasy.footballplus.tv/api"
 _SKIP_HEADERS = {'host', 'content-length', 'transfer-encoding', 'connection', 'x-forwarded-for'}
 
 @csrf_exempt
