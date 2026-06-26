@@ -10,7 +10,7 @@ export default defineConfig({
     host: true,
     proxy: {
       "/fantasy-api": {
-        target: "https://apifantasy.footballplus.tv/api",
+        target: "https://apifantasy.footballplus.tv",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/fantasy-api/, ""),
         secure: true,

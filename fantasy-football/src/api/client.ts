@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.DEV
   ? "/fantasy-api"
-  : "https://apifantasy.footballplus.tv/api";
+  : "https://apifantasy.footballplus.tv";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
