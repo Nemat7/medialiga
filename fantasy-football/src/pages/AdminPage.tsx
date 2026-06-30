@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Shield, Users, Activity, Plus, Edit2, Upload, Trash2, Search, Zap, Trophy, X, Check, ToggleLeft, ToggleRight } from "lucide-react";
 import { clsx } from "clsx";
-import { adminApi, type AdminClub, type AdminPlayer, type PlayerMatchStat } from "@/api/admin";
+import { adminApi, resolveMediaUrl, type AdminClub, type AdminPlayer, type PlayerMatchStat } from "@/api/admin";
 import { fantasyApi } from "@/api/fantasy";
 import { extractApiError } from "@/api/auth";
 
@@ -104,7 +104,7 @@ function ClubModal({
             <p className="text-xs text-gray-400 mb-2">Club Logo</p>
             <div className="flex items-center gap-3">
               {club.logo && (
-                <img src={club.logo} alt="logo" className="w-12 h-12 rounded-lg object-contain bg-gray-800 p-1" />
+                <img src={resolveMediaUrl(club.logo)!} alt="logo" className="w-12 h-12 rounded-lg object-contain bg-gray-800 p-1" />
               )}
               <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
                 if (e.target.files?.[0]) logoMutation.mutate(e.target.files[0]);
@@ -237,7 +237,7 @@ function PlayerModal({
             <p className="text-xs text-gray-400 mb-2">Player Photo</p>
             <div className="flex items-center gap-3">
               {player.photo && (
-                <img src={player.photo} alt="photo" className="w-12 h-12 rounded-lg object-cover bg-gray-800" />
+                <img src={resolveMediaUrl(player.photo)!} alt="photo" className="w-12 h-12 rounded-lg object-cover bg-gray-800" />
               )}
               <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
                 if (e.target.files?.[0]) photoMutation.mutate(e.target.files[0]);
@@ -319,7 +319,7 @@ function ClubsTab({ seasonId }: { seasonId: number }) {
             <div key={club.id} className="flex items-center gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
               <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {club.logo
-                  ? <img src={club.logo} alt={club.short_name} className="w-full h-full object-contain p-1" />
+                  ? <img src={resolveMediaUrl(club.logo)!} alt={club.short_name} className="w-full h-full object-contain p-1" />
                   : <Shield size={16} className="text-gray-600" />
                 }
               </div>
@@ -445,7 +445,7 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
             <div key={player.id} className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
               <div className="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 overflow-hidden">
                 {player.photo
-                  ? <img src={player.photo} alt={player.display_name} className="w-full h-full object-cover" />
+                  ? <img src={resolveMediaUrl(player.photo)!} alt={player.display_name} className="w-full h-full object-cover" />
                   : <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-bold">{player.display_name.slice(0, 2).toUpperCase()}</div>
                 }
               </div>
