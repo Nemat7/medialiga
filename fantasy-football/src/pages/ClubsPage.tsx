@@ -2,6 +2,7 @@ import { useClubs } from "@/hooks/useFantasy";
 import Spinner from "@/components/Spinner";
 import { Shield, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { resolveMediaUrl } from "@/api/admin";
 
 export default function ClubsPage() {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ export default function ClubsPage() {
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {club.logo ? (
-                  <img src={club.logo} alt={club.name} className="w-full h-full object-cover" />
+                  <img src={resolveMediaUrl(club.logo)!} alt={club.name} className="w-full h-full object-cover" />
                 ) : (
                   <Shield size={24} className="text-gray-600" />
                 )}

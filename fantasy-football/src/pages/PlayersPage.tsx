@@ -6,6 +6,7 @@ import type { Position } from "@/types";
 import { Search, User } from "lucide-react";
 import { clsx } from "clsx";
 import { useTranslation } from "react-i18next";
+import { resolveMediaUrl } from "@/api/admin";
 
 const POSITIONS: { labelKey: string; value: Position | "" }[] = [
   { labelKey: "players.allPositions", value: "" },
@@ -105,7 +106,7 @@ export default function PlayersPage() {
             >
               <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {player.photo ? (
-                  <img src={player.photo} alt={player.display_name} className="w-full h-full object-cover" />
+                  <img src={resolveMediaUrl(player.photo)!} alt={player.display_name} className="w-full h-full object-cover" />
                 ) : (
                   <User size={20} className="text-gray-600" />
                 )}

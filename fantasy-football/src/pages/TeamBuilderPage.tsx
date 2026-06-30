@@ -8,6 +8,7 @@ import { extractApiError } from "@/api/auth";
 import Spinner from "@/components/Spinner";
 import type { Player, Position } from "@/types";
 import { Search, ArrowLeft, Plus, Minus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { resolveMediaUrl } from "@/api/admin";
 import { clsx } from "clsx";
 
 const POSITIONS: Position[] = ["GK", "DEF", "MID", "FWD"];
@@ -42,7 +43,7 @@ function PlayerRow({
       <div className="flex items-center gap-3 min-w-0">
         <div className="w-8 h-8 rounded-full bg-gray-800 flex-shrink-0 overflow-hidden flex items-center justify-center text-xs text-gray-500 font-bold">
           {player.photo ? (
-            <img src={player.photo} alt="" className="w-full h-full object-cover" />
+            <img src={resolveMediaUrl(player.photo)!} alt="" className="w-full h-full object-cover" />
           ) : (
             player.position
           )}
