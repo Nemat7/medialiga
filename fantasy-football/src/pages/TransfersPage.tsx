@@ -463,20 +463,26 @@ export default function TransfersPage() {
             ))}
           </div>
         </>
-      ) : (
-        /* Debug fallback — shows raw API so we can fix parsing */
-        <div className="space-y-3">
-          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl px-4 py-3">
-            <p className="text-yellow-400 text-sm font-medium">
-              Could not parse squad. Raw API response from /v1/fantasy/team/me:
-            </p>
+      ) : teamData != null ? (
+        /* Team exists but no players selected yet */
+        <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center text-3xl">
+            ⚽
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
-            <pre className="text-xs text-gray-300 overflow-auto max-h-96 whitespace-pre-wrap break-all">
-              {teamData != null
-                ? JSON.stringify(teamData, null, 2)
-                : "No data returned — check token or API"}
-            </pre>
+          <div>
+            <p className="text-white font-semibold text-lg">{t("transfers.emptySquadTitle")}</p>
+            <p className="text-gray-500 text-sm mt-1">{t("transfers.emptySquadSubtitle")}</p>
+          </div>
+        </div>
+      ) : (
+        /* No team at all */
+        <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center text-3xl">
+            🏟️
+          </div>
+          <div>
+            <p className="text-white font-semibold text-lg">{t("transfers.noTeamTitle")}</p>
+            <p className="text-gray-500 text-sm mt-1">{t("transfers.noTeamSubtitle")}</p>
           </div>
         </div>
       )}

@@ -124,6 +124,10 @@ export default {
     coins: "coins",
     starting: "Starting",
     bench: "Bench",
+    emptySquadTitle: "Your squad is empty",
+    emptySquadSubtitle: "Go to Team Builder to pick your players",
+    noTeamTitle: "No team yet",
+    noTeamSubtitle: "Create a team to get started",
   },
   leaderboard: {
     title: "Leaderboard",

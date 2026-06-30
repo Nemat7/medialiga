@@ -124,6 +124,10 @@ export default {
     coins: "монет",
     starting: "Основа",
     bench: "Скамейка",
+    emptySquadTitle: "Ваша команда пуста",
+    emptySquadSubtitle: "Перейдите в Конструктор команды, чтобы выбрать игроков",
+    noTeamTitle: "Команда не создана",
+    noTeamSubtitle: "Создайте команду, чтобы начать",
   },
   leaderboard: {
     title: "Таблица лидеров",
