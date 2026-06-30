@@ -71,7 +71,9 @@ export const adminApi = {
   uploadClubLogo: async (clubId: number, file: File) => {
     const form = new FormData();
     form.append("logo", file);
-    const { data } = await apiClient.post(`/v1/admin/fantasy/clubs/${clubId}/logo`, form);
+    const { data } = await apiClient.post(`/v1/admin/fantasy/clubs/${clubId}/logo`, form, {
+      headers: { "Content-Type": undefined },
+    });
     return data;
   },
 
@@ -121,7 +123,9 @@ export const adminApi = {
   uploadPlayerPhoto: async (playerId: number, file: File) => {
     const form = new FormData();
     form.append("photo", file);
-    const { data } = await apiClient.post(`/v1/admin/fantasy/players/${playerId}/photo`, form);
+    const { data } = await apiClient.post(`/v1/admin/fantasy/players/${playerId}/photo`, form, {
+      headers: { "Content-Type": undefined },
+    });
     return data;
   },
 
