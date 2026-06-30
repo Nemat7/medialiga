@@ -1,12 +1,14 @@
 import { apiClient } from "./client";
 
-const API_BASE = "https://apifantasy.footballplus.tv/api";
+const STORAGE_BASE = "https://apifantasy.footballplus.tv/storage";
 
-/** Turns a relative path returned by the API into an absolute URL. */
+/** Turns a relative path returned by the API into an absolute URL.
+ *  Laravel stores uploads under /storage/ (symlinked from public/storage). */
 export function resolveMediaUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
+  const path = url.startsWith("/") ? url : `/${url}`;
+  return `${STORAGE_BASE}${path}`;
 }
 
 export interface AdminClub {
