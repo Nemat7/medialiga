@@ -37,11 +37,20 @@ export interface PlayerMatchStat {
   player_of_match: boolean;
 }
 
+// Extracts an array from either a plain `{ data: [] }` or paginated `{ data: { data: [] } }` response
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractList<T>(data: any): T[] {
+  if (Array.isArray(data?.data)) return data.data as T[];
+  if (Array.isArray(data?.data?.data)) return data.data.data as T[];
+  if (Array.isArray(data)) return data as T[];
+  return [];
+}
+
 export const adminApi = {
   // ── Clubs ──────────────────────────────────────────────────────────────────
   getClubs: async (): Promise<AdminClub[]> => {
     const { data } = await apiClient.get("/v1/fantasy/clubs");
-    return data.data;
+    return extractList<AdminClub>(data);
   },
 
   createClub: async (payload: {
@@ -74,7 +83,7 @@ export const adminApi = {
   // ── Players ────────────────────────────────────────────────────────────────
   getPlayers: async (params?: { season_id?: number; club_id?: number; position?: string; search?: string }): Promise<AdminPlayer[]> => {
     const { data } = await apiClient.get("/v1/admin/fantasy/players", { params });
-    return data.data;
+    return extractList<AdminPlayer>(data);
   },
 
   createPlayer: async (payload: {
