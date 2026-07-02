@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
-import { useDashboard, useSeason } from "@/hooks/useFantasy";
+import { useDashboard, useSeason, useMyTeam } from "@/hooks/useFantasy";
 import Spinner from "@/components/Spinner";
 import {
   Trophy,
@@ -89,6 +89,8 @@ function DashboardContent() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useDashboard();
   const { data: season } = useSeason();
+  const { data: myTeam } = useMyTeam();
+  const hasPlayers = Array.isArray(myTeam?.players) && myTeam.players.length > 0;
 
   if (isLoading) return <Spinner />;
 
@@ -206,14 +208,16 @@ function DashboardContent() {
           </div>
         ) : (
           <button
-            onClick={() => navigate("/transfers")}
+            onClick={() => navigate(hasPlayers ? "/transfers" : "/team/create")}
             className="w-full bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-5 transition-colors text-left"
           >
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <p className="text-white font-bold text-lg">{team?.name}</p>
                 <p className="text-gray-500 text-sm mt-0.5">
-                  {data?.participants_count
+                  {!hasPlayers
+                    ? t("transfers.emptySquadSubtitle")
+                    : data?.participants_count
                     ? `${data.participants_count} managers in league`
                     : t("dashboard.myTeam")}
                 </p>

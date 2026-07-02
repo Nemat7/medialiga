@@ -128,6 +128,7 @@ export default {
     emptySquadSubtitle: "Перейдите в Конструктор команды, чтобы выбрать игроков",
     noTeamTitle: "Команда не создана",
     noTeamSubtitle: "Создайте команду, чтобы начать",
+    buildTeam: "Собрать команду",
   },
   leaderboard: {
     title: "Таблица лидеров",

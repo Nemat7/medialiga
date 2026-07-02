@@ -128,6 +128,7 @@ export default {
     emptySquadSubtitle: "Go to Team Builder to pick your players",
     noTeamTitle: "No team yet",
     noTeamSubtitle: "Create a team to get started",
+    buildTeam: "Build Your Team",
   },
   leaderboard: {
     title: "Leaderboard",

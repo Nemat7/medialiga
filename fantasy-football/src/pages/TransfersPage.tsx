@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useMyTeam, usePlayers, useMakeTransfer } from "@/hooks/useFantasy";
 import { extractApiError } from "@/api/auth";
 import Spinner from "@/components/Spinner";
@@ -375,6 +376,7 @@ function ReplacementPanel({
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function TransfersPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: teamData, isLoading, error } = useMyTeam();
   const { mutateAsync: makeTransfer, isPending } = useMakeTransfer();
 
@@ -473,6 +475,12 @@ export default function TransfersPage() {
             <p className="text-white font-semibold text-lg">{t("transfers.emptySquadTitle")}</p>
             <p className="text-gray-500 text-sm mt-1">{t("transfers.emptySquadSubtitle")}</p>
           </div>
+          <button
+            onClick={() => navigate("/team/create")}
+            className="mt-2 bg-green-500 hover:bg-green-400 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors"
+          >
+            {t("transfers.buildTeam")}
+          </button>
         </div>
       ) : (
         /* No team at all */
@@ -484,6 +492,12 @@ export default function TransfersPage() {
             <p className="text-white font-semibold text-lg">{t("transfers.noTeamTitle")}</p>
             <p className="text-gray-500 text-sm mt-1">{t("transfers.noTeamSubtitle")}</p>
           </div>
+          <button
+            onClick={() => navigate("/team/create")}
+            className="mt-2 bg-green-500 hover:bg-green-400 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors"
+          >
+            {t("transfers.buildTeam")}
+          </button>
         </div>
       )}
 
