@@ -111,7 +111,7 @@ export const adminApi = {
     return data.data;
   },
 
-  updatePlayer: async (playerId: number, payload: { display_name: string; price: number; status: string }): Promise<AdminPlayer> => {
+  updatePlayer: async (playerId: number, payload: { display_name: string; position: string; price: number; status: string }): Promise<AdminPlayer> => {
     const { data } = await apiClient.put(`/v1/admin/fantasy/players/${playerId}`, payload);
     return data.data;
   },

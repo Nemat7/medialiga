@@ -172,7 +172,7 @@ function PlayerModal({
   const saveMutation = useMutation({
     mutationFn: () =>
       player
-        ? adminApi.updatePlayer(player.id, { display_name: displayName, price, status })
+        ? adminApi.updatePlayer(player.id, { display_name: displayName, position, price, status })
         : adminApi.createPlayer({ season_id: seasonId, club_id: clubId, display_name: displayName, position, price, status }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-players"] });
@@ -210,15 +210,13 @@ function PlayerModal({
           </FormField>
         )}
 
-        {!player && (
-          <FormField label="Position">
-            <select className={selectCls} value={position} onChange={(e) => setPosition(e.target.value as AdminPlayer["position"])}>
-              {["GK", "DEF", "MID", "FWD"].map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
-            </select>
-          </FormField>
-        )}
+        <FormField label="Position">
+          <select className={selectCls} value={position} onChange={(e) => setPosition(e.target.value as AdminPlayer["position"])}>
+            {["GK", "DEF", "MID", "FWD"].map((p) => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+        </FormField>
 
         <FormField label="Price (M)">
           <input type="number" className={inputCls} value={price} min={1} onChange={(e) => setPrice(Number(e.target.value))} />
