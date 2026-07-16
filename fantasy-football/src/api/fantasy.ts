@@ -5,6 +5,7 @@ import type {
   LeaderboardEntry,
   PaginatedResponse,
   Player,
+  PlayerCard,
   Position,
   Season,
 } from "@/types";
@@ -32,6 +33,13 @@ export const fantasyApi = {
     const { data } = await apiClient.get<ApiResponse<Player[]>>(
       "/v1/fantasy/players",
       { params }
+    );
+    return data.data;
+  },
+
+  getPlayerCard: async (playerId: number): Promise<PlayerCard> => {
+    const { data } = await apiClient.get<ApiResponse<PlayerCard>>(
+      `/v1/fantasy/players/${playerId}`
     );
     return data.data;
   },

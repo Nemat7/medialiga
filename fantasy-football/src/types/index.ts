@@ -23,6 +23,60 @@ export interface Player {
   club: Pick<Club, "id" | "name" | "short_name" | "logo">;
 }
 
+export interface PlayerCardMatch {
+  fixture_id: number;
+  round_id: number;
+  round_name: string;
+  home_club: string;
+  away_club: string;
+  points: number;
+  breakdown: Record<string, number>;
+  calculated_at: string;
+}
+
+export interface PlayerCard {
+  id: number;
+  display_name: string;
+  first_name: string | null;
+  last_name: string | null;
+  photo: string | null;
+  photo_url: string | null;
+  club: {
+    id: number;
+    name: string;
+    short_name: string;
+    logo: string | null;
+    logo_url: string | null;
+  };
+  season: { id: number; name: string };
+  position: Position;
+  price: number;
+  status: "active" | "injured" | "suspended";
+  statistics: {
+    matches: number;
+    minutes: number;
+    goals: number;
+    assists: number;
+    yellow_cards: number;
+    red_cards: number;
+    clean_sheets: number;
+    goals_conceded: number;
+    saves: number;
+    penalties_saved: number;
+    penalties_missed: number;
+    own_goals: number;
+    player_of_match_count: number;
+  };
+  fantasy: {
+    total_points: number;
+    average_points: number;
+    best_match_points: number;
+    selected_by_count: number;
+    ownership_percent: number;
+  };
+  last_5_matches: PlayerCardMatch[];
+}
+
 export interface Round {
   id: number;
   season_id: number;

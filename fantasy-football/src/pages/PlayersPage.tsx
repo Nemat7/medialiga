@@ -2,6 +2,7 @@ import { useState } from "react";
 import { usePlayers, useClubs } from "@/hooks/useFantasy";
 import Spinner from "@/components/Spinner";
 import PositionBadge from "@/components/PositionBadge";
+import PlayerCardModal from "@/components/PlayerCardModal";
 import type { Position } from "@/types";
 import { Search, User } from "lucide-react";
 import { clsx } from "clsx";
@@ -22,6 +23,7 @@ export default function PlayersPage() {
   const [clubId, setClubId] = useState<number | undefined>();
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [cardPlayerId, setCardPlayerId] = useState<number | null>(null);
 
   const { data: clubs } = useClubs();
   const { data: players, isLoading } = usePlayers({
@@ -100,9 +102,10 @@ export default function PlayersPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {players.map((player) => (
-            <div
+            <button
               key={player.id}
-              className="bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-4 flex items-center gap-4 transition-colors"
+              onClick={() => setCardPlayerId(player.id)}
+              className="bg-gray-900 border border-gray-800 hover:border-green-700/50 rounded-xl p-4 flex items-center gap-4 transition-colors text-left cursor-pointer"
             >
               <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {player.photo ? (
@@ -124,9 +127,13 @@ export default function PlayersPage() {
                 <p className="text-green-400 font-bold text-sm">{player.price}</p>
                 <p className="text-gray-600 text-xs">{t("players.coins")}</p>
               </div>
-            </div>
+            </button>
           ))}
         </div>
+      )}
+
+      {cardPlayerId != null && (
+        <PlayerCardModal playerId={cardPlayerId} onClose={() => setCardPlayerId(null)} />
       )}
     </div>
   );

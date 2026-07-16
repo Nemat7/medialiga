@@ -6,6 +6,7 @@ import { adminApi, resolveMediaUrl, type AdminClub, type AdminPlayer } from "@/a
 import { fantasyApi } from "@/api/fantasy";
 import { extractApiError } from "@/api/auth";
 import RoundsTab from "./AdminRoundsTab";
+import PlayerCardModal from "@/components/PlayerCardModal";
 
 // ─── Shared Modal ─────────────────────────────────────────────────────────────
 
@@ -374,6 +375,7 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
   const [filterClub, setFilterClub] = useState<number | undefined>();
   const [filterPos, setFilterPos] = useState<string>("All");
   const [modalPlayer, setModalPlayer] = useState<AdminPlayer | null | "new">(null);
+  const [cardPlayerId, setCardPlayerId] = useState<number | null>(null);
 
   const { data: players = [], isLoading } = useQuery({
     queryKey: ["admin-players", filterClub, filterPos, search],
@@ -449,16 +451,22 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
         <div className="space-y-2">
           {players.map((player) => (
             <div key={player.id} className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 overflow-hidden">
-                {player.photo
-                  ? <img src={resolveMediaUrl(player.photo)!} alt={player.display_name} className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-bold">{player.display_name.slice(0, 2).toUpperCase()}</div>
-                }
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-medium text-sm truncate">{player.display_name}</p>
-                <p className="text-gray-500 text-xs">{player.club?.short_name ?? `Club #${player.club_id}`} · {player.price}M</p>
-              </div>
+              <button
+                onClick={() => setCardPlayerId(player.id)}
+                className="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer"
+                title="Show player card"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 overflow-hidden">
+                  {player.photo
+                    ? <img src={resolveMediaUrl(player.photo)!} alt={player.display_name} className="w-full h-full object-cover" />
+                    : <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs font-bold">{player.display_name.slice(0, 2).toUpperCase()}</div>
+                  }
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium text-sm truncate hover:text-green-400 transition-colors">{player.display_name}</p>
+                  <p className="text-gray-500 text-xs">{player.club?.short_name ?? `Club #${player.club_id}`} · {player.price}M</p>
+                </div>
+              </button>
               <span className={clsx("px-2 py-0.5 rounded text-xs font-bold", posColor[player.position] ?? "text-gray-400")}>
                 {player.position}
               </span>
@@ -495,6 +503,10 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
           clubs={clubs}
           onClose={() => setModalPlayer(null)}
         />
+      )}
+
+      {cardPlayerId != null && (
+        <PlayerCardModal playerId={cardPlayerId} onClose={() => setCardPlayerId(null)} />
       )}
     </div>
   );
