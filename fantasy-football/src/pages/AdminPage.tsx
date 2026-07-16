@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Shield, Users, Activity, Plus, Edit2, Upload, Trash2, Search, Zap, Trophy, X, Check, ToggleLeft, ToggleRight } from "lucide-react";
+import { Shield, Users, Activity, Plus, Edit2, Upload, Trash2, Search, X, ToggleLeft, ToggleRight } from "lucide-react";
 import { clsx } from "clsx";
-import { adminApi, resolveMediaUrl, type AdminClub, type AdminPlayer, type PlayerMatchStat } from "@/api/admin";
+import { adminApi, resolveMediaUrl, type AdminClub, type AdminPlayer } from "@/api/admin";
 import { fantasyApi } from "@/api/fantasy";
 import { extractApiError } from "@/api/auth";
+import RoundsTab from "./AdminRoundsTab";
 
 // ─── Shared Modal ─────────────────────────────────────────────────────────────
 
@@ -172,7 +173,14 @@ function PlayerModal({
   const saveMutation = useMutation({
     mutationFn: () =>
       player
-        ? adminApi.updatePlayer(player.id, { display_name: displayName, position, price, status })
+        ? adminApi.updatePlayer(player.id, {
+            display_name: displayName,
+            price,
+            status,
+            // position changes are rejected by the API once a round has started —
+            // send it only when the admin actually changed it
+            ...(position !== player.position ? { position } : {}),
+          })
         : adminApi.createPlayer({ season_id: seasonId, club_id: clubId, display_name: displayName, position, price, status }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-players"] });
@@ -492,306 +500,15 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
   );
 }
 
-// ─── Match Stats Tab ──────────────────────────────────────────────────────────
-
-const defaultStat = (): PlayerMatchStat => ({
-  player_id: 0,
-  minutes: 90,
-  goals: 0,
-  assists: 0,
-  yellow_cards: 0,
-  red_cards: 0,
-  goals_conceded: 0,
-  saves: 0,
-  penalties_saved: 0,
-  penalties_missed: 0,
-  own_goals: 0,
-  clean_sheet: false,
-  player_of_match: false,
-});
-
-function StatRow({
-  stat,
-  players,
-  index,
-  onUpdate,
-  onRemove,
-}: {
-  stat: PlayerMatchStat;
-  players: AdminPlayer[];
-  index: number;
-  onUpdate: (i: number, field: keyof PlayerMatchStat, value: number | boolean) => void;
-  onRemove: (i: number) => void;
-}) {
-  const num = (field: keyof PlayerMatchStat, w = "w-14") => (
-    <input
-      type="number"
-      min={0}
-      value={stat[field] as number}
-      onChange={(e) => onUpdate(index, field, Number(e.target.value))}
-      className={`${w} bg-gray-800 border border-gray-700 rounded px-1.5 py-1 text-white text-xs text-center focus:outline-none focus:border-green-500`}
-    />
-  );
-
-  return (
-    <div className="bg-gray-800/40 rounded-xl p-4 border border-gray-700/50">
-      <div className="flex items-center gap-2 mb-3">
-        <select
-          value={stat.player_id}
-          onChange={(e) => onUpdate(index, "player_id", Number(e.target.value))}
-          className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-white text-sm focus:outline-none focus:border-green-500"
-        >
-          <option value={0}>Select player...</option>
-          {players.map((p) => (
-            <option key={p.id} value={p.id}>
-              [{p.position}] {p.display_name} – {p.club?.short_name ?? `#${p.club_id}`}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => onRemove(index)} className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg">
-          <Trash2 size={15} />
-        </button>
-      </div>
-      <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 items-end">
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">Min</p>
-          {num("minutes", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">Goals</p>
-          {num("goals", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">Ast</p>
-          {num("assists", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">YC</p>
-          {num("yellow_cards", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">RC</p>
-          {num("red_cards", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">GC</p>
-          {num("goals_conceded", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">Saves</p>
-          {num("saves", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">PS</p>
-          {num("penalties_saved", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">PM</p>
-          {num("penalties_missed", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">OG</p>
-          {num("own_goals", "w-full")}
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">CS</p>
-          <div className="flex justify-center">
-            <input
-              type="checkbox"
-              checked={stat.clean_sheet}
-              onChange={(e) => onUpdate(index, "clean_sheet", e.target.checked)}
-              className="w-4 h-4 accent-green-400 cursor-pointer"
-            />
-          </div>
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-500 mb-1">PoM</p>
-          <div className="flex justify-center">
-            <input
-              type="checkbox"
-              checked={stat.player_of_match}
-              onChange={(e) => onUpdate(index, "player_of_match", e.target.checked)}
-              className="w-4 h-4 accent-yellow-400 cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StatsTab({ season }: { season: { id: number; rounds: { id: number; name: string; status: string }[] } }) {
-  const [fixtureId, setFixtureId] = useState("");
-  const [homeScore, setHomeScore] = useState(0);
-  const [awayScore, setAwayScore] = useState(0);
-  const [playerStats, setPlayerStats] = useState<PlayerMatchStat[]>([defaultStat()]);
-  const [roundId, setRoundId] = useState("");
-  const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
-
-  const { data: allPlayers = [] } = useQuery({
-    queryKey: ["admin-players-all"],
-    queryFn: () => adminApi.getPlayers(),
-  });
-
-  const showToast = useCallback((msg: string, ok: boolean) => {
-    setToast({ msg, ok });
-    setTimeout(() => setToast(null), 3000);
-  }, []);
-
-  const statsMutation = useMutation({
-    mutationFn: () => adminApi.storeFixtureStats(Number(fixtureId), { home_score: homeScore, away_score: awayScore, players: playerStats }),
-    onSuccess: () => showToast("Match stats saved!", true),
-    onError: (e) => showToast(extractApiError(e, "Failed to save stats"), false),
-  });
-
-  const calcFixtureMutation = useMutation({
-    mutationFn: () => adminApi.calculateFixturePoints(Number(fixtureId)),
-    onSuccess: () => showToast("Player points calculated!", true),
-    onError: (e) => showToast(extractApiError(e, "Calculation failed"), false),
-  });
-
-  const calcRoundMutation = useMutation({
-    mutationFn: () => adminApi.calculateRoundTeamPoints(Number(roundId)),
-    onSuccess: () => showToast("Team points calculated!", true),
-    onError: (e) => showToast(extractApiError(e, "Calculation failed"), false),
-  });
-
-  const addRow = () => setPlayerStats((p) => [...p, defaultStat()]);
-  const removeRow = (i: number) => setPlayerStats((p) => p.filter((_, idx) => idx !== i));
-  const updateRow = (i: number, field: keyof PlayerMatchStat, value: number | boolean) =>
-    setPlayerStats((p) => p.map((s, idx) => (idx === i ? { ...s, [field]: value } : s)));
-
-  return (
-    <div className="space-y-6">
-      {/* Toast */}
-      {toast && (
-        <div className={clsx("flex items-center gap-2 p-3 rounded-xl text-sm font-medium", toast.ok ? "bg-green-500/15 text-green-400 border border-green-500/20" : "bg-red-500/15 text-red-400 border border-red-500/20")}>
-          {toast.ok ? <Check size={15} /> : <X size={15} />}
-          {toast.msg}
-        </div>
-      )}
-
-      {/* Fixture Info */}
-      <div className="bg-gray-900/50 rounded-xl border border-gray-800 p-5">
-        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <Activity size={16} className="text-green-400" />
-          Match Information
-        </h3>
-        <div className="grid grid-cols-3 gap-4">
-          <FormField label="Fixture ID">
-            <input type="number" className={inputCls} value={fixtureId} onChange={(e) => setFixtureId(e.target.value)} placeholder="1" />
-          </FormField>
-          <FormField label="Home Score">
-            <input type="number" min={0} className={inputCls} value={homeScore} onChange={(e) => setHomeScore(Number(e.target.value))} />
-          </FormField>
-          <FormField label="Away Score">
-            <input type="number" min={0} className={inputCls} value={awayScore} onChange={(e) => setAwayScore(Number(e.target.value))} />
-          </FormField>
-        </div>
-      </div>
-
-      {/* Player Stats */}
-      <div className="bg-gray-900/50 rounded-xl border border-gray-800 p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Player Stats</h3>
-          <button
-            onClick={addRow}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-green-400 rounded-lg text-sm"
-          >
-            <Plus size={14} />
-            Add Player
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          {playerStats.map((stat, i) => (
-            <StatRow key={i} stat={stat} players={allPlayers} index={i} onUpdate={updateRow} onRemove={removeRow} />
-          ))}
-        </div>
-
-        <div className="flex gap-3 mt-5">
-          <button
-            onClick={() => {
-              if (!fixtureId) return showToast("Enter fixture ID first", false);
-              const invalid = playerStats.some((s) => !s.player_id);
-              if (invalid) return showToast("Select a player for each row", false);
-              statsMutation.mutate();
-            }}
-            disabled={statsMutation.isPending}
-            className="flex-1 py-2.5 bg-green-600 hover:bg-green-500 disabled:opacity-50 text-white rounded-xl font-semibold text-sm"
-          >
-            {statsMutation.isPending ? "Saving..." : "Save Match Stats"}
-          </button>
-          <button
-            onClick={() => {
-              if (!fixtureId) return showToast("Enter fixture ID first", false);
-              calcFixtureMutation.mutate();
-            }}
-            disabled={calcFixtureMutation.isPending}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600/15 hover:bg-blue-600/25 border border-blue-500/25 text-blue-400 rounded-xl font-semibold text-sm disabled:opacity-50"
-          >
-            <Zap size={15} />
-            {calcFixtureMutation.isPending ? "..." : "Calc Points"}
-          </button>
-        </div>
-      </div>
-
-      {/* Round Points */}
-      <div className="bg-gray-900/50 rounded-xl border border-gray-800 p-5">
-        <h3 className="text-white font-semibold mb-1 flex items-center gap-2">
-          <Trophy size={16} className="text-yellow-400" />
-          Calculate Round Team Points
-        </h3>
-        <p className="text-gray-500 text-xs mb-4">Run after all fixtures in a round are processed.</p>
-
-        <div className="flex gap-3">
-          <div className="flex-1">
-            {season.rounds.length > 0 ? (
-              <select
-                className={selectCls}
-                value={roundId}
-                onChange={(e) => setRoundId(e.target.value)}
-              >
-                <option value="">Select round...</option>
-                {season.rounds.map((r) => (
-                  <option key={r.id} value={r.id}>{r.name} ({r.status})</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type="number"
-                className={inputCls}
-                value={roundId}
-                onChange={(e) => setRoundId(e.target.value)}
-                placeholder="Round ID"
-              />
-            )}
-          </div>
-          <button
-            onClick={() => {
-              if (!roundId) return showToast("Select a round first", false);
-              calcRoundMutation.mutate();
-            }}
-            disabled={calcRoundMutation.isPending || !roundId}
-            className="flex items-center gap-2 px-5 py-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20 text-yellow-400 rounded-xl font-semibold text-sm disabled:opacity-50"
-          >
-            <Trophy size={15} />
-            {calcRoundMutation.isPending ? "..." : "Calculate"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Main Admin Page ──────────────────────────────────────────────────────────
 
-type Tab = "clubs" | "players" | "stats";
+type Tab = "clubs" | "players" | "rounds";
 
 const TABS: { id: Tab; label: string; icon: typeof Shield }[] = [
   { id: "clubs", label: "Clubs", icon: Shield },
   { id: "players", label: "Players", icon: Users },
-  { id: "stats", label: "Match Stats", icon: Activity },
+  { id: "rounds", label: "Rounds", icon: Activity },
 ];
 
 export default function AdminPage() {
@@ -852,7 +569,7 @@ export default function AdminPage() {
       {/* Tab content */}
       {activeTab === "clubs" && <ClubsTab seasonId={season.id} />}
       {activeTab === "players" && <PlayersTab seasonId={season.id} clubs={clubs} />}
-      {activeTab === "stats" && <StatsTab season={season} />}
+      {activeTab === "rounds" && <RoundsTab season={season} clubs={clubs} />}
     </div>
   );
 }

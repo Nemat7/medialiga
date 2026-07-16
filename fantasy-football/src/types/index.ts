@@ -31,7 +31,7 @@ export interface Round {
   starts_at: string;
   ends_at: string;
   deadline_at: string;
-  status: "upcoming" | "live" | "finished";
+  status: "upcoming" | "live" | "finished" | "finalized";
 }
 
 export interface ScoringRules {
