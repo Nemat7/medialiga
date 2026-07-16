@@ -30,9 +30,10 @@ export const fantasyApi = {
     club_id?: number;
     search?: string;
   }): Promise<Player[]> => {
+    // The endpoint paginates at 50 by default — request everything at once
     const { data } = await apiClient.get<ApiResponse<Player[]>>(
       "/v1/fantasy/players",
-      { params }
+      { params: { per_page: 500, ...params } }
     );
     return data.data;
   },

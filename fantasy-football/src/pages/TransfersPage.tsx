@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useMyTeam, usePlayers, useMakeTransfer } from "@/hooks/useFantasy";
 import { extractApiError } from "@/api/auth";
+import { resolveMediaUrl } from "@/api/admin";
 import Spinner from "@/components/Spinner";
 import { X, Search, CheckCircle } from "lucide-react";
 import { clsx } from "clsx";
@@ -20,6 +21,7 @@ interface NormalizedPlayer {
   position: Position;
   price?: number;
   clubName?: string;
+  photo?: string | null;
   isStarting: boolean;
   isCaptain: boolean;
   isViceCaptain: boolean;
@@ -40,11 +42,14 @@ function normalize(raw: Raw): NormalizedPlayer | null {
   if (!pos) return null;
   return {
     rawId: raw.id ?? raw.player_id ?? inner.id,
-    playerId: inner.id ?? raw.player_id,
+    // The real fantasy player id — team/me rows carry it as fantasy_player_id,
+    // while raw.id is the team-roster row id (invalid for transfers)
+    playerId: raw.fantasy_player_id ?? raw.player_id ?? inner.id,
     displayName: inner.display_name ?? inner.name ?? `#${inner.id}`,
     position: pos,
-    price: inner.price,
+    price: inner.price ?? raw.current_price ?? raw.purchase_price,
     clubName: inner.club?.short_name ?? inner.club?.name ?? raw.club?.short_name,
+    photo: inner.photo ?? raw.photo ?? null,
     isStarting: raw.is_starting ?? false,
     isCaptain: raw.is_captain ?? false,
     isViceCaptain: raw.is_vice_captain ?? false,
@@ -69,98 +74,80 @@ const POS_COLOR: Record<Position, string> = {
   FWD: "bg-red-500 text-white border-red-300",
 };
 
-const POSITION_ROWS: Position[] = ["FWD", "MID", "DEF", "GK"];
+const POSITION_ROWS: Position[] = ["GK", "DEF", "MID", "FWD"];
 
 function shortName(name: string) {
   const parts = name.trim().split(" ");
   return parts.length > 1 ? parts[parts.length - 1] : name;
 }
 
-// ─── Pitch player dot ───────────────────────────────────────────────────────────
-function PitchPlayer({
+// ─── Player card (FPL-style: photo card + white name/club plates) ──────────────
+function PlayerCard({
   p,
   selected,
   onClick,
+  small = false,
 }: {
   p: NormalizedPlayer;
   selected: boolean;
   onClick: () => void;
+  small?: boolean;
 }) {
   const label = shortName(p.displayName);
   return (
-    <button
-      onClick={onClick}
-      className="flex flex-col items-center gap-[3px] focus:outline-none"
-    >
+    <button onClick={onClick} className="flex flex-col items-center focus:outline-none group">
       <div
         className={clsx(
-          "relative w-9 h-9 sm:w-11 sm:h-11 rounded-full border-2 flex items-center justify-center text-[10px] sm:text-xs font-bold transition-all",
+          "relative aspect-[3/4] rounded-lg border-2 flex items-center justify-center font-bold transition-all",
+          small ? "w-10 sm:w-12 text-[10px] sm:text-xs" : "w-12 sm:w-16 text-xs sm:text-base",
           POS_COLOR[p.position],
-          selected
-            ? "ring-2 ring-white ring-offset-1 ring-offset-green-700 scale-110"
-            : "hover:scale-105"
+          selected ? "ring-2 ring-white scale-105" : "group-hover:scale-105"
         )}
       >
-        {label.substring(0, 2).toUpperCase()}
+        {p.photo ? (
+          <img
+            src={resolveMediaUrl(p.photo)!}
+            alt=""
+            className="w-full h-full rounded-md object-cover"
+          />
+        ) : (
+          label.substring(0, 2).toUpperCase()
+        )}
         {p.isCaptain && (
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-yellow-400 text-yellow-900 rounded-full text-[8px] font-bold flex items-center justify-center border border-yellow-200 shadow">
+          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-900 text-white rounded-full text-[10px] font-bold flex items-center justify-center shadow border border-white/30">
             C
           </span>
         )}
         {p.isViceCaptain && (
-          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gray-200 text-gray-800 rounded-full text-[8px] font-bold flex items-center justify-center border border-gray-300 shadow">
+          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-900 text-white rounded-full text-[10px] font-bold flex items-center justify-center shadow border border-white/30">
             V
           </span>
         )}
-        {selected && (
-          <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow" />
-        )}
       </div>
-      <div className="bg-black/70 backdrop-blur-sm rounded px-1.5 py-px text-white text-[9px] sm:text-[10px] font-medium max-w-[56px] sm:max-w-[64px] truncate text-center leading-tight">
-        {label.length > 9 ? label.slice(0, 8) + "…" : label}
-      </div>
-    </button>
-  );
-}
-
-// ─── Bench player row ───────────────────────────────────────────────────────────
-function BenchPlayer({
-  p,
-  selected,
-  onClick,
-}: {
-  p: NormalizedPlayer;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={clsx(
-        "flex flex-col items-center gap-[3px] px-1 py-2 rounded-xl border transition-all w-full",
-        selected
-          ? "border-white/40 bg-white/10"
-          : "border-white/10 hover:border-white/25 hover:bg-white/5"
-      )}
-    >
+      {/* Name & club plates */}
       <div
         className={clsx(
-          "relative w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center text-[9px] sm:text-[10px] font-bold",
-          POS_COLOR[p.position],
-          "opacity-70"
+          "relative z-10 -mt-1 rounded-md overflow-hidden shadow-md",
+          small ? "w-16 sm:w-20" : "w-[76px] sm:w-24"
         )}
       >
-        {shortName(p.displayName).substring(0, 2).toUpperCase()}
-        {selected && (
-          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rounded-full" />
-        )}
+        <p
+          className={clsx(
+            "bg-white text-gray-900 font-bold truncate px-1.5 text-center leading-tight",
+            small ? "text-[8px] sm:text-[10px] py-[3px]" : "text-[10px] sm:text-xs py-1"
+          )}
+        >
+          {label}
+        </p>
+        <p
+          className={clsx(
+            "bg-gray-200 text-gray-600 font-medium truncate px-1.5 text-center leading-tight",
+            small ? "text-[7px] sm:text-[9px] py-[2px]" : "text-[9px] sm:text-[10px] py-[3px]"
+          )}
+        >
+          {p.clubName ?? p.position}
+        </p>
       </div>
-      <span className="text-[8px] sm:text-[9px] text-white/70 font-medium max-w-[48px] truncate text-center leading-tight">
-        {shortName(p.displayName).length > 7
-          ? shortName(p.displayName).slice(0, 6) + "…"
-          : shortName(p.displayName)}
-      </span>
-      <span className="text-[7px] sm:text-[8px] text-white/40 font-semibold">{p.position}</span>
     </button>
   );
 }
@@ -180,70 +167,86 @@ function Pitch({
   const grouped: Record<Position, NormalizedPlayer[]> = { GK: [], DEF: [], MID: [], FWD: [] };
   for (const p of starting) grouped[p.position].push(p);
 
+  // Bench slot labels like FPL: GKP, 1. DEF, 2. FWD...
+  let benchN = 0;
+  const benchTags = bench.map((p) => (p.position === "GK" ? "GKP" : `${++benchN}. ${p.position}`));
+
   return (
     <div className="flex gap-2 sm:gap-3">
-      {/* ── Pitch ── */}
-      <div
-        className="relative flex-1 rounded-xl overflow-hidden"
-        style={{ background: "linear-gradient(180deg, #1a6b2e 0%, #1d7a33 40%, #1a6b2e 100%)" }}
+    {/* ── Pitch ── */}
+    <div
+      className="relative flex-1 rounded-2xl overflow-hidden flex flex-col border border-white/10 shadow-2xl"
+      style={{
+        // bright FPL-style grass with mowing stripes
+        background:
+          "repeating-linear-gradient(0deg, #3da35b 0px, #3da35b 44px, #47b167 44px, #47b167 88px)",
+      }}
+    >
+      {/* Half-pitch markings in perspective (goal at the top) */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        viewBox="0 0 400 640"
+        preserveAspectRatio="none"
       >
-        {/* Pitch markings */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Outer border */}
-          <div className="absolute inset-2 border border-white/20 rounded-sm" />
-          {/* Center line */}
-          <div className="absolute left-4 right-4 top-1/2 h-px bg-white/25" />
-          {/* Center circle */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/25" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/40" />
-          {/* Top penalty box */}
-          <div className="absolute top-2 left-[28%] right-[28%] h-[16%] border border-white/20 border-t-0" />
-          {/* Bottom penalty box */}
-          <div className="absolute bottom-2 left-[28%] right-[28%] h-[16%] border border-white/20 border-b-0" />
-          {/* Top 6-yard box */}
-          <div className="absolute top-2 left-[38%] right-[38%] h-[7%] border border-white/15 border-t-0" />
-          {/* Bottom 6-yard box */}
-          <div className="absolute bottom-2 left-[38%] right-[38%] h-[7%] border border-white/15 border-b-0" />
-        </div>
+        <g stroke="rgba(255,255,255,0.85)" strokeWidth="2" fill="none">
+          {/* goal line */}
+          <path d="M78 52 H322" />
+          {/* touchlines running towards the viewer */}
+          <path d="M78 52 L4 640" />
+          <path d="M322 52 L396 640" />
+          {/* penalty box */}
+          <path d="M136 52 L122 158 H278 L264 52" />
+          {/* six-yard box */}
+          <path d="M170 52 L164 100 H236 L230 52" />
+          {/* goal */}
+          <path d="M176 52 V26 H224 V52" opacity="0.8" />
+          {/* penalty arc */}
+          <path d="M162 158 Q200 190 238 158" />
+        </g>
+        <circle cx="200" cy="128" r="3" fill="rgba(255,255,255,0.85)" />
+      </svg>
 
-        {/* Player rows — FWD at top, GK at bottom */}
-        <div className="relative h-full flex flex-col justify-around py-5 sm:py-7">
-          {POSITION_ROWS.map((pos) => {
-            const row = grouped[pos];
-            if (!row.length) return null;
-            return (
-              <div key={pos} className="flex justify-around items-center px-2">
-                {row.map((p) => (
-                  <PitchPlayer
-                    key={p.rawId}
-                    p={p}
-                    selected={selected?.rawId === p.rawId}
-                    onClick={() => onSelect(p)}
-                  />
-                ))}
-              </div>
-            );
-          })}
-        </div>
+      {/* Player rows — GK at the top near the goal */}
+      <div className="relative flex flex-col justify-around gap-3 sm:gap-5 pt-14 sm:pt-20 pb-4 px-2 min-h-[420px] sm:min-h-[530px]">
+        {POSITION_ROWS.map((pos) => {
+          const row = grouped[pos];
+          if (!row.length) return null;
+          return (
+            <div key={pos} className="flex justify-around items-start px-1">
+              {row.map((p) => (
+                <PlayerCard
+                  key={p.rawId}
+                  p={p}
+                  selected={selected?.rawId === p.rawId}
+                  onClick={() => onSelect(p)}
+                />
+              ))}
+            </div>
+          );
+        })}
       </div>
 
-      {/* ── Bench ── */}
-      <div
-        className="flex flex-col gap-1.5 justify-around py-4 px-1 rounded-xl"
-        style={{ background: "rgba(0,0,0,0.35)", minWidth: "56px" }}
-      >
-        <p className="text-center text-[8px] text-white/40 font-bold uppercase tracking-widest mb-1">
-          Bench
-        </p>
-        {bench.map((p) => (
-          <BenchPlayer
-            key={p.rawId}
+    </div>
+
+    {/* ── Bench (right side) ── */}
+    <div className="flex flex-col gap-2 justify-around py-3 px-1.5 sm:px-2 rounded-2xl bg-gray-900/70 border border-gray-800">
+      <p className="text-center text-[8px] sm:text-[9px] text-white/40 font-bold uppercase tracking-widest">
+        Bench
+      </p>
+      {bench.map((p, i) => (
+        <div key={p.rawId} className="flex flex-col items-center gap-1">
+          <span className="text-[8px] sm:text-[9px] font-bold text-white/60 uppercase tracking-wide">
+            {benchTags[i]}
+          </span>
+          <PlayerCard
             p={p}
+            small
             selected={selected?.rawId === p.rawId}
             onClick={() => onSelect(p)}
           />
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }
@@ -384,7 +387,20 @@ export default function TransfersPage() {
   const [successMsg, setSuccessMsg] = useState("");
   const [transferError, setTransferError] = useState("");
 
-  const players = useMemo(() => extractPlayers(teamData), [teamData]);
+  // team/me rows carry no photo — take it from the public players list by id
+  const { data: allPlayers = [] } = usePlayers();
+  const photoMap = useMemo(
+    () => new Map(allPlayers.map((p) => [p.id, p.photo])),
+    [allPlayers]
+  );
+
+  const players = useMemo(
+    () =>
+      extractPlayers(teamData).map((p) =>
+        p.photo ? p : { ...p, photo: photoMap.get(p.playerId) ?? null }
+      ),
+    [teamData, photoMap]
+  );
   const starting = useMemo(() => players.filter((p) => p.isStarting), [players]);
   const bench = useMemo(() => players.filter((p) => !p.isStarting), [players]);
   const playerIds = useMemo(() => players.map((p) => p.playerId), [players]);
