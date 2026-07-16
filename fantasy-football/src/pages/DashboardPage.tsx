@@ -60,10 +60,10 @@ function RoundBadge({ status }: { status: string }) {
         {t("rounds.live")}
       </span>
     );
-  if (status === "finished")
+  if (status === "finished" || status === "finalized")
     return (
       <span className="text-xs font-semibold text-gray-500 bg-gray-800 px-2.5 py-1 rounded-full">
-        {t("rounds.finished")}
+        {t(status === "finalized" ? "rounds.finalized" : "rounds.finished")}
       </span>
     );
   return (
@@ -115,11 +115,18 @@ function DashboardContent() {
   const totalPoints = team?.total_points ?? "—";
   const globalRank = team?.rank ?? "—";
   const nextRound = data?.next_round ?? null;
+  // The API's next_round is computed by dates and may point to an already
+  // finalized round — trust it only when it is actually live/upcoming.
+  const nextRoundOpen =
+    nextRound && (nextRound.status === "live" || nextRound.status === "upcoming")
+      ? nextRound
+      : null;
+  const sortedRounds = [...(season?.rounds ?? [])].sort((a, b) => a.number - b.number);
   const currentRound =
-    nextRound ??
-    season?.rounds.find((r) => r.status === "live") ??
-    season?.rounds.find((r) => r.status === "upcoming") ??
-    season?.rounds[season.rounds.length - 1];
+    sortedRounds.find((r) => r.status === "live") ??
+    sortedRounds.find((r) => r.status === "upcoming") ??
+    nextRoundOpen ??
+    sortedRounds[sortedRounds.length - 1];
 
   return (
     <div className="space-y-8 animate-slide-up">

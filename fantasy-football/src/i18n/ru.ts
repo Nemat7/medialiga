@@ -68,6 +68,7 @@ export default {
   rounds: {
     live: "В ЭФИРЕ",
     finished: "ЗАВЕРШЁН",
+    finalized: "ЗАКРЫТ",
     upcoming: "ПРЕДСТОИТ",
   },
   players: {

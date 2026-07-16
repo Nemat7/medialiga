@@ -68,6 +68,7 @@ export default {
   rounds: {
     live: "LIVE",
     finished: "FINISHED",
+    finalized: "CLOSED",
     upcoming: "UPCOMING",
   },
   players: {

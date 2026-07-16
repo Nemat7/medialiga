@@ -12,10 +12,10 @@ function RoundBadge({ status }: { status: string }) {
         {t("rounds.live")}
       </span>
     );
-  if (status === "finished")
+  if (status === "finished" || status === "finalized")
     return (
       <span className="text-xs font-semibold text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">
-        {t("rounds.finished")}
+        {t(status === "finalized" ? "rounds.finalized" : "rounds.finished")}
       </span>
     );
   return (
