@@ -1,4 +1,5 @@
 import { apiClient } from "./client";
+import type { Ruleset } from "@/types";
 
 const STORAGE_BASE = "https://apifantasy.footballplus.tv/storage";
 
@@ -72,6 +73,45 @@ export interface AdminFixture {
   points_calculated?: boolean;
   home_club_name?: string;
   away_club_name?: string;
+}
+
+export type AdminRuleset = Ruleset & { status?: boolean };
+
+export type AdminRulesetPayload = Omit<Ruleset, "id"> & { status?: boolean };
+
+export interface CompetitionFormat {
+  id: number;
+  name?: string;
+  code?: string;
+  description?: string;
+}
+
+export interface CompetitionConfig {
+  playoff_teams: number;
+  playoff_leg_mode: "single" | "double";
+  final_leg_mode: "single" | "double";
+  seeding_mode: "seeded" | "random";
+  has_third_place_match: boolean;
+}
+
+export interface AdminSeason {
+  id: number;
+  ruleset_id: number;
+  competition_format_id?: number | null;
+  name: string;
+  date_from: string;
+  date_to: string;
+  status: string;
+  competition_config?: CompetitionConfig | null;
+}
+
+export interface AdminSeasonPayload {
+  ruleset_id: number;
+  competition_format_id: number;
+  name: string;
+  date_from: string;
+  date_to: string;
+  competition_config?: CompetitionConfig;
 }
 
 // Extracts an array from either a plain `{ data: [] }` or paginated `{ data: { data: [] } }` response
@@ -270,6 +310,83 @@ export const adminApi = {
 
   calculateFixturePoints: async (fixtureId: number) => {
     const { data } = await apiClient.post(`/v1/admin/fantasy/fixtures/${fixtureId}/calculate-points`);
+    return data;
+  },
+
+  // ── Competition formats ────────────────────────────────────────────────────
+  getCompetitionFormats: async (): Promise<CompetitionFormat[]> => {
+    const { data } = await apiClient.get("/v1/admin/fantasy/competition-formats");
+    return extractList<CompetitionFormat>(data);
+  },
+
+  // ── Seasons ────────────────────────────────────────────────────────────────
+  getSeasons: async (params?: {
+    status?: string;
+    ruleset_id?: number;
+    competition_format_id?: number;
+    search?: string;
+  }): Promise<AdminSeason[]> => {
+    const { data } = await apiClient.get("/v1/admin/fantasy/seasons", {
+      params: { per_page: 100, ...params },
+    });
+    return extractList<AdminSeason>(data);
+  },
+
+  getSeason: async (seasonId: number): Promise<AdminSeason> => {
+    const { data } = await apiClient.get(`/v1/admin/fantasy/seasons/${seasonId}`);
+    return data.data;
+  },
+
+  createSeason: async (payload: AdminSeasonPayload): Promise<AdminSeason> => {
+    const { data } = await apiClient.post("/v1/admin/fantasy/seasons", payload);
+    return data.data;
+  },
+
+  updateSeason: async (seasonId: number, payload: AdminSeasonPayload): Promise<AdminSeason> => {
+    const { data } = await apiClient.put(`/v1/admin/fantasy/seasons/${seasonId}`, payload);
+    return data.data;
+  },
+
+  activateSeason: async (seasonId: number) => {
+    const { data } = await apiClient.post(`/v1/admin/fantasy/seasons/${seasonId}/activate`);
+    return data;
+  },
+
+  finishSeason: async (seasonId: number) => {
+    const { data } = await apiClient.post(`/v1/admin/fantasy/seasons/${seasonId}/finish`);
+    return data;
+  },
+
+  // ── Rulesets ───────────────────────────────────────────────────────────────
+  getRulesets: async (params?: { status?: number; search?: string }): Promise<AdminRuleset[]> => {
+    const { data } = await apiClient.get("/v1/admin/fantasy/rulesets", {
+      params: { per_page: 100, ...params },
+    });
+    return extractList<AdminRuleset>(data);
+  },
+
+  getRuleset: async (rulesetId: number): Promise<AdminRuleset> => {
+    const { data } = await apiClient.get(`/v1/admin/fantasy/rulesets/${rulesetId}`);
+    return data.data;
+  },
+
+  createRuleset: async (payload: AdminRulesetPayload): Promise<AdminRuleset> => {
+    const { data } = await apiClient.post("/v1/admin/fantasy/rulesets", payload);
+    return data.data;
+  },
+
+  updateRuleset: async (rulesetId: number, payload: AdminRulesetPayload): Promise<AdminRuleset> => {
+    const { data } = await apiClient.put(`/v1/admin/fantasy/rulesets/${rulesetId}`, payload);
+    return data.data;
+  },
+
+  activateRuleset: async (rulesetId: number) => {
+    const { data } = await apiClient.post(`/v1/admin/fantasy/rulesets/${rulesetId}/activate`);
+    return data;
+  },
+
+  deactivateRuleset: async (rulesetId: number) => {
+    const { data } = await apiClient.post(`/v1/admin/fantasy/rulesets/${rulesetId}/deactivate`);
     return data;
   },
 };

@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Shield, Users, Activity, Plus, Edit2, Upload, Trash2, Search, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { Shield, Users, Activity, Plus, Edit2, Upload, Trash2, Search, X, ToggleLeft, ToggleRight, Calendar, SlidersHorizontal } from "lucide-react";
 import { clsx } from "clsx";
 import { adminApi, resolveMediaUrl, type AdminClub, type AdminPlayer } from "@/api/admin";
 import { fantasyApi } from "@/api/fantasy";
 import { extractApiError } from "@/api/auth";
 import RoundsTab from "./AdminRoundsTab";
+import SeasonsTab from "./AdminSeasonsTab";
+import RulesetsTab from "./AdminRulesetsTab";
 import PlayerCardModal from "@/components/PlayerCardModal";
 
 // ─── Shared Modal ─────────────────────────────────────────────────────────────
@@ -515,12 +517,14 @@ function PlayersTab({ seasonId, clubs }: { seasonId: number; clubs: AdminClub[] 
 
 // ─── Main Admin Page ──────────────────────────────────────────────────────────
 
-type Tab = "clubs" | "players" | "rounds";
+type Tab = "clubs" | "players" | "rounds" | "seasons" | "rulesets";
 
 const TABS: { id: Tab; label: string; icon: typeof Shield }[] = [
   { id: "clubs", label: "Clubs", icon: Shield },
   { id: "players", label: "Players", icon: Users },
   { id: "rounds", label: "Rounds", icon: Activity },
+  { id: "seasons", label: "Seasons", icon: Calendar },
+  { id: "rulesets", label: "Rulesets", icon: SlidersHorizontal },
 ];
 
 export default function AdminPage() {
@@ -545,20 +549,23 @@ export default function AdminPage() {
     );
   }
 
-  if (isError || !season) {
-    return (
-      <div className="max-w-lg mx-auto px-4 py-16 text-center">
-        <p className="text-red-400 font-medium">Failed to load season data.</p>
-        <p className="text-gray-500 text-sm mt-1">Make sure you are logged in as an admin user.</p>
-      </div>
-    );
-  }
+  // A missing active season is NOT fatal — the Seasons/Rulesets tabs must stay
+  // reachable so the admin can create and activate one.
+  const seasonAvailable = !isError && !!season;
+
+  const noSeasonNotice = (
+    <div className="text-center py-12 text-gray-500 text-sm border border-dashed border-gray-800 rounded-xl">
+      No active season. Create and activate a season in the Seasons tab first.
+    </div>
+  );
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
-        <p className="text-gray-500 text-sm mt-1">Season: {season.name}</p>
+        <p className="text-gray-500 text-sm mt-1">
+          {seasonAvailable ? `Season: ${season!.name}` : "No active season"}
+        </p>
       </div>
 
       {/* Tabs */}
@@ -579,9 +586,11 @@ export default function AdminPage() {
       </div>
 
       {/* Tab content */}
-      {activeTab === "clubs" && <ClubsTab seasonId={season.id} />}
-      {activeTab === "players" && <PlayersTab seasonId={season.id} clubs={clubs} />}
-      {activeTab === "rounds" && <RoundsTab season={season} clubs={clubs} />}
+      {activeTab === "clubs" && (seasonAvailable ? <ClubsTab seasonId={season!.id} /> : noSeasonNotice)}
+      {activeTab === "players" && (seasonAvailable ? <PlayersTab seasonId={season!.id} clubs={clubs} /> : noSeasonNotice)}
+      {activeTab === "rounds" && (seasonAvailable ? <RoundsTab season={season!} clubs={clubs} /> : noSeasonNotice)}
+      {activeTab === "seasons" && <SeasonsTab />}
+      {activeTab === "rulesets" && <RulesetsTab />}
     </div>
   );
 }
