@@ -125,8 +125,12 @@ function extractList<T>(data: any): T[] {
 
 export const adminApi = {
   // ── Clubs ──────────────────────────────────────────────────────────────────
-  getClubs: async (): Promise<AdminClub[]> => {
-    const { data } = await apiClient.get("/v1/fantasy/clubs");
+  // Pass a season id to list clubs of a specific (e.g. draft) season — the
+  // public endpoint defaults to the active season otherwise.
+  getClubs: async (seasonId?: number): Promise<AdminClub[]> => {
+    const { data } = await apiClient.get("/v1/fantasy/clubs", {
+      params: seasonId ? { season_id: seasonId } : undefined,
+    });
     return extractList<AdminClub>(data);
   },
 

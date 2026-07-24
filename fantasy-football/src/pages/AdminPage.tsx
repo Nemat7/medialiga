@@ -297,8 +297,8 @@ function ClubsTab({ seasonId }: { seasonId: number }) {
   const [modalClub, setModalClub] = useState<AdminClub | null | "new">(null);
 
   const { data: clubs = [], isLoading } = useQuery({
-    queryKey: ["admin-clubs"],
-    queryFn: adminApi.getClubs,
+    queryKey: ["admin-clubs", seasonId],
+    queryFn: () => adminApi.getClubs(seasonId),
   });
 
   const toggleMutation = useMutation({
@@ -530,18 +530,33 @@ const TABS: { id: Tab; label: string; icon: typeof Shield }[] = [
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("clubs");
 
-  const { data: season, isLoading: seasonLoading, isError } = useQuery({
+  const { data: season, isLoading: seasonLoading } = useQuery({
     queryKey: ["season"],
     queryFn: fantasyApi.getActiveSeason,
+    retry: false,
   });
+
+  // Fallback when no season is active yet: the admin still needs to add clubs
+  // and players to a draft season before it can be activated.
+  const { data: allSeasons = [], isLoading: seasonsLoading } = useQuery({
+    queryKey: ["admin-seasons"],
+    queryFn: () => adminApi.getSeasons(),
+  });
+
+  // The season we scope Clubs/Players to: the active one, else the newest draft.
+  const draftSeason = [...allSeasons]
+    .filter((s) => s.status !== "finished")
+    .sort((a, b) => b.id - a.id)[0];
+  const workingSeasonId = season?.id ?? draftSeason?.id;
+  const workingSeasonName = season?.name ?? draftSeason?.name;
 
   const { data: clubs = [] } = useQuery({
-    queryKey: ["admin-clubs"],
-    queryFn: adminApi.getClubs,
-    enabled: !!season,
+    queryKey: ["admin-clubs", workingSeasonId],
+    queryFn: () => adminApi.getClubs(workingSeasonId),
+    enabled: !!workingSeasonId,
   });
 
-  if (seasonLoading) {
+  if (seasonLoading || seasonsLoading) {
     return (
       <div className="flex items-center justify-center min-h-64">
         <div className="text-gray-400">Loading...</div>
@@ -549,13 +564,14 @@ export default function AdminPage() {
     );
   }
 
-  // A missing active season is NOT fatal — the Seasons/Rulesets tabs must stay
-  // reachable so the admin can create and activate one.
-  const seasonAvailable = !isError && !!season;
-
   const noSeasonNotice = (
     <div className="text-center py-12 text-gray-500 text-sm border border-dashed border-gray-800 rounded-xl">
-      No active season. Create and activate a season in the Seasons tab first.
+      No season yet. Create a season in the Seasons tab first.
+    </div>
+  );
+  const activateHint = (
+    <div className="text-center py-12 text-gray-500 text-sm border border-dashed border-gray-800 rounded-xl">
+      Rounds can be managed once the season is active. Add clubs & players, then Activate it in the Seasons tab.
     </div>
   );
 
@@ -564,7 +580,11 @@ export default function AdminPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
         <p className="text-gray-500 text-sm mt-1">
-          {seasonAvailable ? `Season: ${season!.name}` : "No active season"}
+          {season
+            ? `Active season: ${season.name}`
+            : workingSeasonName
+            ? `Draft season: ${workingSeasonName} (not active yet)`
+            : "No season"}
         </p>
       </div>
 
@@ -586,9 +606,11 @@ export default function AdminPage() {
       </div>
 
       {/* Tab content */}
-      {activeTab === "clubs" && (seasonAvailable ? <ClubsTab seasonId={season!.id} /> : noSeasonNotice)}
-      {activeTab === "players" && (seasonAvailable ? <PlayersTab seasonId={season!.id} clubs={clubs} /> : noSeasonNotice)}
-      {activeTab === "rounds" && (seasonAvailable ? <RoundsTab season={season!} clubs={clubs} /> : noSeasonNotice)}
+      {activeTab === "clubs" &&
+        (workingSeasonId ? <ClubsTab seasonId={workingSeasonId} /> : noSeasonNotice)}
+      {activeTab === "players" &&
+        (workingSeasonId ? <PlayersTab seasonId={workingSeasonId} clubs={clubs} /> : noSeasonNotice)}
+      {activeTab === "rounds" && (season ? <RoundsTab season={season} clubs={clubs} /> : activateHint)}
       {activeTab === "seasons" && <SeasonsTab />}
       {activeTab === "rulesets" && <RulesetsTab />}
     </div>
